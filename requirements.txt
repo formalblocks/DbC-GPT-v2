@@ -1,0 +1,16 @@
+python-dotenv
+openai
+py-solc-x
+web3
+tiktoken
+numpy
+psutil
+pandas
+matplotlib
+seaborn
+tenacity
+scipy
+jinja2
+tqdm
+faker
+concurrent-log-handler
