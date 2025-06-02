@@ -1,0 +1,53 @@
+run,status,output
+5,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:91:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (_values[i] == 0 || (_to != address(0) && con_old._balances[_ids[i]][_from] >= _values[i]) || (con._balances[_ids[i]][_from] == con_old._balances[_ids[i]][_from] - _values[i] && con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i]))' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+6,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:91:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i] && con._balances[_ids[i]][_from] == con_old._balances[_ids[i]][_from] - _values[i]' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+9,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:93:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || con._balances[_ids[i]][_from] == con_old._balances[_ids[i]][_from] - _values[i] || con._balances[_ids[i]][_from] == con_old._balances[_ids[i]][_from]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:93:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i] || con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to]' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"

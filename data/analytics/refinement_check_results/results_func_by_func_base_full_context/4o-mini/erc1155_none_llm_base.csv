@@ -1,0 +1,454 @@
+run,status,output
+1,0,"Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+/tmp/tmpxalli4j0/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpxalli4j0/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+2,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _owners.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _ids.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'forall (uint x) !(0 <= x && x < _owners.length) || abs._balances[_ids[x]][_owners[x]] == batchBalances[x]' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:78:5: Postcondition 'abs._operatorApprovals[_from][msg.sender] || _from == msg.sender' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:78:5: Postcondition 'abs._balances[_id][_to] == abs_old._balances[_id][_to] + _value' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:78:5: Postcondition 'abs._balances[_id][_from] == abs_old._balances[_id][_from] - _value' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:78:5: Postcondition 'forall (address _from) abs._operatorApprovals[_from][msg.sender] == con._operatorApprovals[_from][msg.sender]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:78:5: Postcondition 'abs_old._balances[_id][_from] >= _value    ' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:92:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_to] == abs_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:92:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_from] == abs_old._balances[_ids[i]][_from] - _values[i])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+3,0,"Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+/tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl(161,484): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpsu7r1tvw/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+4,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _owners.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _ids.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'forall (uint x) !(0 <= x && x < _owners.length) || abs._balances[_ids[x]][_owners[x]] == batchBalances[x]' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'forall (address _from) abs._operatorApprovals[_from][msg.sender] == con._operatorApprovals[_from][msg.sender]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._operatorApprovals[_from][msg.sender] || _from == msg.sender' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs_old._balances[_id][_from] >= _value    ' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition '_to != address(0)' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._balances[_id][_from] == abs_old._balances[_id][_from] - _value' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_to] == abs_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_from] == abs_old._balances[_ids[i]][_from] - _values[i])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+5,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _owners.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _ids.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'forall (uint x) !(0 <= x && x < _owners.length) || abs._balances[_ids[x]][_owners[x]] == batchBalances[x]' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:48:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'forall (address _from) abs._operatorApprovals[_from][msg.sender] == con._operatorApprovals[_from][msg.sender]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._operatorApprovals[_from][msg.sender] || _from == msg.sender' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs_old._balances[_id][_from] >= _value    ' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition '_to != address(0)' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._balances[_id][_from] == abs_old._balances[_id][_from] - _value' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_to] == abs_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_from] == abs_old._balances[_ids[i]][_from] - _values[i])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+6,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _owners.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _ids.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'forall (uint x) !(0 <= x && x < _owners.length) || abs._balances[_ids[x]][_owners[x]] == batchBalances[x]' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:48:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'forall (address _from) abs._operatorApprovals[_from][msg.sender] == con._operatorApprovals[_from][msg.sender]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._operatorApprovals[_from][msg.sender] || _from == msg.sender' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs_old._balances[_id][_from] >= _value    ' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition '_to != address(0)' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._balances[_id][_from] == abs_old._balances[_id][_from] - _value' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_to] == abs_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_from] == abs_old._balances[_ids[i]][_from] - _values[i])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+7,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _owners.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _ids.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'forall (uint x) !(0 <= x && x < _owners.length) || abs._balances[_ids[x]][_owners[x]] == batchBalances[x]' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'forall (address _from) abs._operatorApprovals[_from][msg.sender] == con._operatorApprovals[_from][msg.sender]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._operatorApprovals[_from][msg.sender] || _from == msg.sender' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs_old._balances[_id][_from] >= _value    ' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition '_to != address(0)' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._balances[_id][_from] == abs_old._balances[_id][_from] - _value' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_to] == abs_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:90:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length && _from != _to) || (abs._balances[_ids[i]][_from] == abs_old._balances[_ids[i]][_from] - _values[i])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+8,0,"Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+/tmp/tmpx14evwc6/ERC1155_merge.sol.bpl(161,556): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpx14evwc6/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+9,0,"Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+/tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpaapl5u5p/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+10,0,"Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+/tmp/tmpfhiukd33/ERC1155_merge.sol.bpl(161,443): Error: old expressions allowed only in two-state contexts
+1 name resolution errors detected in /tmp/tmpfhiukd33/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"

@@ -1,0 +1,767 @@
+run,status,output
+1,0,"Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+/tmp/tmpgra2uccx/ERC1155_merge.sol.bpl(163,278): Error: old expressions allowed only in two-state contexts
+3 name resolution errors detected in /tmp/tmpgra2uccx/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+2,251,"Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _owners.length' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:38:5: Postcondition 'batchBalances.length == _ids.length' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:48:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'forall (address _from) abs._operatorApprovals[_from][msg.sender] == con._operatorApprovals[_from][msg.sender]' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._operatorApprovals[_from][msg.sender] || _from == msg.sender' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs_old._balances[_id][_from] >= _value    ' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition '_to != address(0)' might not hold at end of function.
+ - ./solc_verify_generator/ERC1155/imp/ERC1155_merge.sol:76:5: Postcondition 'abs._balances[_id][_from] == abs_old._balances[_id][_from] - _value' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: OK
+Refinement::[implicit_constructor]: OK
+Use --show-warnings to see 1 warning.
+Errors were found by the verifier.
+"
+3,0,"Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpq_5avrt3/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+4,0,"Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp64uhcwtv/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+5,0,"Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl(162,478): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpenxjzdp4/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+6,0,"Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpnwo1vfqs/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+7,0,"Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpiazqh0fo/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+8,0,"Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_38bisit/ERC1155_merge.sol.bpl(162,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_38bisit/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+9,0,"Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(161,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl(162,455): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmpk71h8sx3/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"
+10,0,"Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Error while running verifier, details:
+Parsing /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(164,245): Error: old expressions allowed only in two-state contexts
+/tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl(165,242): Error: old expressions allowed only in two-state contexts
+2 name resolution errors detected in /tmp/tmp_u6l8exb/ERC1155_merge.sol.bpl
+
+Use --show-warnings to see 1 warning.
+No errors found.
+"

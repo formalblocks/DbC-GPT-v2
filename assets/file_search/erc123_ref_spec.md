@@ -3,14 +3,8 @@
 pragma solidity ^0.5.0;
 
 contract ERC123Identity {
-
-    
     address public owner;
     address public trustedVerifier;
-
-    constructor() public {
-        owner = msg.sender;
-    }
 
     struct Identity {
         address owner;
@@ -20,12 +14,6 @@ contract ERC123Identity {
 
     mapping(bytes32 => Identity) private identities;
     mapping(address => mapping(bytes32 => bool)) private consents;
-
-    event IdentityCreated(address indexed owner, bytes32 identityId);
-    event IdentityUpdated(address indexed owner, bytes32 identityId);
-    event IdentityVerified(address indexed owner, bytes32 identityId, bool verified);
-    event ConsentGiven(address indexed owner, address indexed caller, bytes32 identityId);
-    event ConsentRevoked(address indexed owner, address indexed caller, bytes32 identityId);
 
     /// @notice postcondition identities[identityId].dataHash == address(0)
     /// @notice postcondition identities[identityId].verified == false
