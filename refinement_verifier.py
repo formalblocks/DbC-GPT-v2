@@ -5,6 +5,8 @@ from dataclasses import dataclass
 from typing import List
 import os
 import re
+import tempfile
+import shutil
 
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
@@ -13,23 +15,25 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
 # --- Configuration Constants ---
 VERIFICATION_OPTIONS = ['llm_base', 'base_llm']
-TARGET_ERC_STANDARD_DIR = "erc1155"  # This script is tailored for ERC1155 verification
+
+# Define ERC standards to process
+# Temporarily focus on ERC721 to validate fix for old() in preconditions
+ERC_STANDARDS = ['erc721']
 
 RESULT_TYPES = [
     'results_entire_contract_base_full_context',
     'results_entire_contract_fine_tuning',
     'results_func_by_func_base_full_context',
-    'results_func_by_func_fine_tuning'
+    'results_func_by_func_fine_tuning',
 ]
 
 MODELS_FOR_FINETUNING = [
-    '4o-mini', 
-    'erc-20-001-5-16', 
-    'erc-721-001-5-16', 
-    'erc-1155-001-5-16', 
-    'erc-20-721-001-5-16', 
-    'erc-20-1155-001-5-16', 
-    'erc-721-1155-001-5-16', 
+    'erc-20-001-5-16',
+    'erc-721-001-5-16',
+    'erc-1155-001-5-16',
+    'erc-20-721-001-5-16',
+    'erc-20-1155-001-5-16',
+    'erc-721-1155-001-5-16',
     'erc-20-721-1155-001-5-16'
 ]
 MODEL_FOR_BASE = '4o-mini'
@@ -39,6 +43,7 @@ TOKEN_CONTEXTS = [
     'erc20_erc721', 'erc20_erc1155', 'erc721_erc1155', 
     'erc20_erc721_erc1155'
 ]
+
 OUTPUT_BASE_DIR = './refinement_check_results'
 # --- End Configuration Constants ---
 
@@ -50,49 +55,176 @@ class VerificationResult:
 class SolcVerifyWrapper:
 
     SOLC_VERIFY_CMD = "solc-verify.py"
-    SPEC_FILE_PATH = './temp/spec.sol'
+    SOLC_VERIFY_TIMEOUT = int(os.getenv("SOLC_VERIFY_TIMEOUT", "120"))
 
-    ERC1155_TEMPLATE_PATH_BASE_LLM = './solc_verify_generator/ERC1155/templates/spec_refinement_base_llm.template'
-    ERC1155_TEMPLATE_PATH_LLM_BASE = './solc_verify_generator/ERC1155/templates/spec_refinement_llm_base.template'
-    # ERC1155_TEMPLATE_PATH = './solc_verify_generator/ERC1155/templates/spec_refinement_trivial.template'
+    # Template and merge paths for different ERC standards
+    TEMPLATE_PATHS = {
+        'erc20': {
+            'base_llm': './experiments/solc_verify_generator/ERC20/templates/spec_refinement_base_llm.template',
+            'llm_base': './experiments/solc_verify_generator/ERC20/templates/spec_refinement_llm_base.template'
+        },
+        'erc721': {
+            'base_llm': './experiments/solc_verify_generator/ERC721/templates/spec_refinement_base_llm.template',
+            'llm_base': './experiments/solc_verify_generator/ERC721/templates/spec_refinement_llm_base.template'
+        },
+        'erc1155': {
+            'base_llm': './experiments/solc_verify_generator/ERC1155/templates/spec_refinement_base_llm.template',
+            'llm_base': './experiments/solc_verify_generator/ERC1155/templates/spec_refinement_llm_base.template'
+        }
+    }
 
-    ERC1155_MERGE_PATH = './solc_verify_generator/ERC1155/imp/ERC1155_merge.sol'
+    MERGE_PATHS = {
+        'erc20': './experiments/solc_verify_generator/ERC20/imp/ERC20_merge.sol',
+        'erc721': './experiments/solc_verify_generator/ERC721/imp/ERC721_merge.sol',
+        'erc1155': './experiments/solc_verify_generator/ERC1155/imp/ERC1155_merge.sol'
+    }
 
     @classmethod
     def call_solc(cls, file_path) -> VerificationResult:
-        from subprocess import PIPE, run
-        command = [cls.SOLC_VERIFY_CMD, file_path]
-        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True)
-        return VerificationResult(result.returncode, result.stdout + result.stderr)
+        from subprocess import PIPE, run, TimeoutExpired
+        timeout = cls.SOLC_VERIFY_TIMEOUT
+        # Pass --timeout to solc-verify and also enforce Python-level kill
+        command = [
+            cls.SOLC_VERIFY_CMD,
+            "--timeout", str(timeout),
+            "--show-warnings",
+            file_path
+        ]
+        logging.info(f"Invoking solc-verify: {' '.join(command)}")
+
+        try:
+            result = run(
+                command,
+                stdout=PIPE, stderr=PIPE,
+                universal_newlines=True,
+                check=False,
+                timeout=timeout + 10
+            )
+            return VerificationResult(result.returncode, result.stdout + result.stderr)
+        except FileNotFoundError:
+            logging.error(f"Command not found: {cls.SOLC_VERIFY_CMD}. Make sure solc-verify.py is installed and in PATH.")
+            return VerificationResult(-1, f"Command not found: {cls.SOLC_VERIFY_CMD}")
+        except TimeoutExpired:
+            logging.error(f"solc-verify timed out after {timeout}s")
+            return VerificationResult(-1, f"solc-verify TIMEOUT after {timeout}s")
+        except Exception as e:
+            logging.error(f"Error running solc-verify: {e} on file {file_path}")
+            return VerificationResult(-1, f"Error running solc-verify: {e}")
     
     @classmethod
-    def verify(cls, solidity_spec_str: str, option: str) -> VerificationResult:
+    def verify(cls, solidity_spec_str: str, option: str, erc_standard: str) -> VerificationResult:
         """
         Parameters
             solidity_spec_str: Solidity code with only the function signatures
             annotated with solc-verify conditions
+            option: 'llm_base' or 'base_llm'
+            erc_standard: 'erc20', 'erc721', or 'erc1155'
         """
-        Utils.save_string_to_file(cls.SPEC_FILE_PATH, solidity_spec_str)
-        from solc_verify_generator.main import generate_merge
+        # Get template and merge paths for the specified ERC standard
+        if erc_standard not in cls.TEMPLATE_PATHS:
+            logging.error(f"Unsupported ERC standard: {erc_standard}")
+            return VerificationResult(-1, f"Unsupported ERC standard: {erc_standard}")
         
-        template_path = ""
-        if option == 'llm_base':
-            template_path = cls.ERC1155_TEMPLATE_PATH_LLM_BASE
-        elif option == 'base_llm':
-            template_path = cls.ERC1155_TEMPLATE_PATH_BASE_LLM
-        else:
-            logging.error(f"Invalid option '{option}' for template path selection. Cannot find template.")
-            return VerificationResult(-1, f"Invalid option '{option}' for template path selection. Template not found.")
+        if option not in cls.TEMPLATE_PATHS[erc_standard]:
+            logging.error(f"Invalid option '{option}' for ERC standard '{erc_standard}'. Cannot find template.")
+            return VerificationResult(-1, f"Invalid option '{option}' for ERC standard '{erc_standard}'. Template not found.")
+
+        template_path = cls.TEMPLATE_PATHS[erc_standard][option]
+        original_merge_file_path = cls.MERGE_PATHS[erc_standard]
 
         if not os.path.exists(template_path):
-            logging.error(f"Template file not found at path: {template_path} for option '{option}'.")
-            return VerificationResult(-1, f"Template file not found for option '{option}': {template_path}")
+            logging.error(f"Template file not found at path: {template_path} for option '{option}' and ERC standard '{erc_standard}'.")
+            return VerificationResult(-1, f"Template file not found for option '{option}' and ERC standard '{erc_standard}': {template_path}")
 
+        dependency_source_dir = os.path.dirname(original_merge_file_path)
+        if not os.path.isdir(dependency_source_dir):
+            logging.warning(f"Dependency source directory not found or not a directory: {dependency_source_dir}")
+
+        workdir = None
         try:
-            generate_merge(cls.SPEC_FILE_PATH, template_path, cls.ERC1155_MERGE_PATH, option, prefix='con')
-        except RuntimeError as e:
-            return VerificationResult(*e.args)
-        return cls.call_solc(cls.ERC1155_MERGE_PATH)
+            workdir = tempfile.mkdtemp(prefix="solc_verify_refinement_")
+            spec_file_in_workdir = os.path.join(workdir, "spec.sol")
+            merge_file_basename = os.path.basename(original_merge_file_path)
+
+            Utils.save_string_to_file(spec_file_in_workdir, solidity_spec_str)
+
+            # Create temp directory for AST output
+            os.makedirs(os.path.join(workdir, "temp"), exist_ok=True)
+
+            # Copy dependencies from source directory
+            if os.path.isdir(dependency_source_dir):
+                for item_name in os.listdir(dependency_source_dir):
+                    source_item_path = os.path.join(dependency_source_dir, item_name)
+                    dest_item_path = os.path.join(workdir, item_name)
+                    
+                    if os.path.isdir(source_item_path):
+                        shutil.copytree(source_item_path, dest_item_path)
+                    elif item_name.endswith(".sol") or os.path.isfile(source_item_path):
+                        shutil.copy2(source_item_path, dest_item_path)
+                logging.debug(f"Copied dependencies from {dependency_source_dir} to {workdir}")
+
+            from experiments.solc_verify_generator.main import generate_merge
+            
+            original_cwd = os.getcwd()
+            os.chdir(workdir)
+            try:
+                absolute_template_path = os.path.abspath(os.path.join(original_cwd, template_path))
+                if not os.path.exists(absolute_template_path):
+                    logging.error(f"Template file not found: {absolute_template_path}")
+                    return VerificationResult(-1, f"Template file not found: {absolute_template_path}")
+
+                generate_merge(
+                    "spec.sol",
+                    absolute_template_path, 
+                    merge_file_basename,
+                    option,
+                    prefix='con'
+                )
+            except RuntimeError as e:
+                logging.error(f"Error during generate_merge: {e}")
+                return VerificationResult(e.args[0] if len(e.args) > 0 else -1, str(e.args[1] if len(e.args) > 1 else e))
+            except Exception as e:
+                logging.error(f"Unexpected error during generate_merge: {e}")
+                return VerificationResult(-1, f"Unexpected error during generate_merge: {e}")
+            finally:
+                os.chdir(original_cwd)
+            
+            # Execute solc-verify in the working directory
+            os.chdir(workdir)
+            try:
+                verification_result = cls.call_solc(merge_file_basename)
+            finally:
+                os.chdir(original_cwd)
+            
+            return verification_result
+        except Exception as e:
+            logging.error(f"Verification error: {e}")
+            return VerificationResult(-1, f"Verification error: {e}")
+        finally:
+            # Enhanced cleanup with multiple attempts
+            if workdir and os.path.exists(workdir):
+                try:
+                    # First attempt at cleanup
+                    shutil.rmtree(workdir, ignore_errors=True)
+                except Exception as cleanup_error:
+                    logging.warning(f"First cleanup attempt failed: {cleanup_error}")
+                    try:
+                        # Second attempt with more aggressive cleanup
+                        import stat
+                        def handle_remove_readonly(func, path, exc):
+                            if os.path.exists(path):
+                                os.chmod(path, stat.S_IWRITE)
+                                func(path)
+                        shutil.rmtree(workdir, onerror=handle_remove_readonly)
+                    except Exception as second_cleanup_error:
+                        logging.warning(f"Second cleanup attempt failed: {second_cleanup_error}")
+                
+                # Force garbage collection after cleanup
+                try:
+                    import gc
+                    gc.collect()
+                except Exception as gc_error:
+                    logging.debug(f"Garbage collection failed: {gc_error}")
 
 class Utils:
 
@@ -126,7 +258,7 @@ class Utils:
         filtered_df = df[df['annotated_contract'].notna()]
 
         # Create a new DataFrame with 'run' and 'annotated_contract' columns
-        result_df = filtered_df[['run', 'annotated_contract']]
+        result_df = pd.DataFrame(filtered_df[['run', 'annotated_contract']])
         return result_df
 
     @staticmethod
@@ -160,7 +292,7 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
     file_prefix = ""
     if "func_by_func" in result_type:
         file_prefix = "fbf_"
-    elif "entire_contract" in result_type:
+    elif "base" in result_type:
         file_prefix = ""  # Assuming empty prefix for entire_contract
     else:
         logging.warning(f"Unknown or unhandled result_type pattern for file prefix: {result_type}. Skipping.")
@@ -189,7 +321,7 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
 
     for index, row in annotated_code_df.iterrows():
         run_number = row['run']
-        solidity_code = row['annotated_contract']
+        solidity_code = str(row['annotated_contract'])
 
         # Check if the specifications are trivial
         if Utils.has_trivial_specifications(solidity_code):
@@ -201,7 +333,7 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
             continue
 
         try:
-            verification_result = SolcVerifyWrapper.verify(solidity_code, option)
+            verification_result = SolcVerifyWrapper.verify(solidity_code, option, main_erc_standard_dir)
         except Exception as e:
             print(f"An error occurred during verification for run {run_number}: {e}")
             verification_results.append({
@@ -224,13 +356,15 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
 
 # --- Main Execution Logic ---
 if __name__ == "__main__":
+    # Ensure temp directory exists for compatibility
+    os.makedirs('./temp', exist_ok=True)
     os.makedirs(OUTPUT_BASE_DIR, exist_ok=True)
 
     for res_type in RESULT_TYPES:
         models_to_iterate = []
         if "fine_tuning" in res_type:
             models_to_iterate = MODELS_FOR_FINETUNING
-        elif "base_full_context" in res_type:
+        elif "base" in res_type:
             models_to_iterate = [MODEL_FOR_BASE]
         else:
             logging.warning(f"Unknown result type pattern: {res_type}. Skipping this result type.")
@@ -250,30 +384,31 @@ if __name__ == "__main__":
                 logging.info(f"Model directory {model_experiment_path_check} not found. Skipping model {model} for {res_type}.")
                 continue
             
-            # Check if the target ERC standard directory exists for this model and result type
-            # e.g. ./experiments/results_entire_contract_fine_tuning/erc-XYZ-model/erc1155/
-            target_erc_path_check = os.path.join(model_experiment_path_check, TARGET_ERC_STANDARD_DIR)
-            if not os.path.isdir(target_erc_path_check):
-                logging.info(f"Target ERC standard directory {target_erc_path_check} not found. Skipping {TARGET_ERC_STANDARD_DIR} for model {model} under {res_type}.")
-                continue
-
-
-            for token_ctx in TOKEN_CONTEXTS:
-                # Check if the specific token context directory exists
-                # e.g. ./experiments/results_entire_contract_fine_tuning/erc-XYZ-model/erc1155/none/
-                token_context_path_check = os.path.join(target_erc_path_check, token_ctx)
-                if not os.path.isdir(token_context_path_check):
-                    logging.info(f"Token context directory {token_context_path_check} not found. Skipping context {token_ctx} for model {model}, type {res_type}.")
+            # Process each ERC standard
+            for erc_standard in ERC_STANDARDS:
+                # Check if the target ERC standard directory exists for this model and result type
+                # e.g. ./experiments/results_entire_contract_fine_tuning/erc-XYZ-model/erc1155/
+                target_erc_path_check = os.path.join(model_experiment_path_check, erc_standard)
+                if not os.path.isdir(target_erc_path_check):
+                    logging.info(f"Target ERC standard directory {target_erc_path_check} not found. Skipping {erc_standard} for model {model} under {res_type}.")
                     continue
 
-                for ver_option in VERIFICATION_OPTIONS:
-                    logging.info(f"Running verification for: type={res_type}, model={model}, context={token_ctx}, option={ver_option}")
-                    run_refinement_verification_process(
-                        result_type=res_type,
-                        model_name=model,
-                        token_context=token_ctx,
-                        option=ver_option,
-                        main_erc_standard_dir=TARGET_ERC_STANDARD_DIR,
-                        output_dir_for_csv=model_output_dir
-                    )
+                for token_ctx in TOKEN_CONTEXTS:
+                    # Check if the specific token context directory exists
+                    # e.g. ./experiments/results_entire_contract_fine_tuning/erc-XYZ-model/erc1155/none/
+                    token_context_path_check = os.path.join(target_erc_path_check, token_ctx)
+                    if not os.path.isdir(token_context_path_check):
+                        logging.info(f"Token context directory {token_context_path_check} not found. Skipping context {token_ctx} for model {model}, type {res_type}.")
+                        continue
+
+                    for ver_option in VERIFICATION_OPTIONS:
+                        logging.info(f"Running verification for: type={res_type}, model={model}, context={token_ctx}, option={ver_option}, standard={erc_standard}")
+                        run_refinement_verification_process(
+                            result_type=res_type,
+                            model_name=model,
+                            token_context=token_ctx,
+                            option=ver_option,
+                            main_erc_standard_dir=erc_standard,
+                            output_dir_for_csv=model_output_dir
+                        )
     logging.info("Refinement verification process finished.")

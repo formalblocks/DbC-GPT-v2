@@ -1,173 +1,126 @@
-# EIP-X: Evolving Multi-Token Standard
+---
+eip: X
+title: Conditional Multi-State Token Standard
+description: A token standard for conditional state transitions with time-based and threshold-based mechanics
+author: DbC-GPT Research Team
+discussions-to: https://ethereum-magicians.org/t/erc-x-conditional-multi-state-token-standard
+status: Draft
+type: Standards Track
+category: ERC
+created: 2024-01-01
+requires: 165
+---
 
-## Overview
+## Abstract
 
-This standard proposes a novel multi-token contract that introduces two primary features on top of a base similar to ERC-1155: Token Evolution and Internal Exchange.
-
-Token Evolution allows tokens to change their state and metadata over time based on predefined rules, such as a required holding period. Each evolution advances the token to a new "stage," which can alter its properties and associated URI.
-Internal Exchange provides a native mechanism for users to swap one type of token for another within the same contract, based on administrator-set exchange rates.
-
-This proposal defines the interface for managing token balances, approvals, transfers, evolution, and exchanges. Function names are intentionally distinct from ERC-1155 to prevent interface clashes and highlight the unique functionality.
+This EIP proposes a standard for tokens that can exist in multiple states with conditional transitions between them. The standard introduces time-based mechanics, threshold-based state changes, and complex approval systems that challenge automated verification while remaining implementable.
 
 ## Motivation
 
-The existing ERC-1155 standard provides an excellent framework for managing multiple token types in a single contract. However, it lacks native support for dynamic tokens whose attributes or metadata can change based on on-chain conditions. Such "evolving" tokens are valuable for applications like gaming (e.g., items that level up), decentralized identity (e.g., reputation that grows over time), or dynamic art.
-Furthermore, projects utilizing multiple fungible token types often require a decentralized exchange for users to swap between them. By integrating a simple, integer-based exchange mechanism directly into the token contract, this standard reduces complexity, lowers gas costs for users, and removes reliance on external DEX protocols for basic internal token swaps.
+Existing token standards like ERC-20 and ERC-721 provide basic functionality but lack sophisticated state management capabilities. Many real-world use cases require tokens that can:
 
-This EIP aims to provide a standardized interface for these advanced functionalities, enabling richer and more self-contained token ecosystems.
+1. Transition between different states based on conditions
+2. Have time-dependent behaviors
+3. Implement threshold-based mechanics
+4. Support complex approval and delegation systems
+
+This standard addresses these needs while providing a challenging test case for formal verification tools.
 
 ## Specification
 
-The keywords "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119.
-A compliant contract MUST implement the following interface:
+### Token States
+
+Each token can exist in one of four states:
+- `INACTIVE` (0): Token is dormant
+- `ACTIVE` (1): Token is operational
+- `LOCKED` (2): Token is temporarily restricted
+- `BURNED` (3): Token is permanently destroyed
+
+### Core Interface
 
 ```solidity
 interface IERCX {
-    // --- Events ---
+    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event StateTransition(uint256 indexed tokenId, uint8 fromState, uint8 toState, uint256 timestamp);
+    event ConditionalApproval(address indexed owner, address indexed approved, uint256 indexed tokenId, uint256 condition);
+    event ThresholdReached(uint256 indexed tokenId, uint256 threshold, uint256 currentValue);
+    event TimeBasedAction(uint256 indexed tokenId, uint256 actionType, uint256 timestamp);
 
-    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 amount);
-    event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] amounts);
-    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
-    event URI(string value, uint256 indexed id);
-    event TokenEvolution(uint256 indexed tokenId, uint8 indexed oldEvolutionStage, uint8 indexed newEvolutionStage, bytes data);
-    event ConsentGiven(address indexed owner, address indexed operator, uint256 indexed tokenId);
-    event ConsentRevoked(address indexed owner, address indexed operator, uint256 indexed tokenId);
-    event TokenRateUpdated(uint256 indexed tokenId, uint256 newRate);
-    event TokensExchanged(address indexed user, uint256 indexed fromTokenId, uint256 indexed toTokenId, uint256 fromAmount, uint256 toAmount);
-
-    // --- Balance Functions ---
-
-    /**
-     * @dev Gets the balance of a single token type for a single address.
-     */
-    function getTokenBalance(address owner, uint256 tokenId) external view returns (uint256);
-
-    /**
-     * @dev Gets the balance of multiple token types for multiple addresses.
-     */
-    function getBatchTokenBalance(address[] calldata owners, uint256[] calldata tokenIds) external view returns (uint256[] memory);
-
-    // --- Approval Functions ---
-
-    /**
-     * @dev Enables or disables approval for a third party ("operator") to manage all of `msg.sender`'s assets.
-     */
-    function setProxyForAll(address operator, bool approved) external;
-
-    /**
-     * @dev Queries the approval status of an operator for a given owner.
-     */
-    function isProxyForAll(address owner, address operator) external view returns (bool);
-
-    // --- Transfer Functions ---
-
-    /**
-     * @dev Transfers `amount` tokens of `tokenId` from `from` to `to`.
-     */
-    function transferTokenFrom(address from, address to, uint256 tokenId, uint256 amount, bytes calldata data) external;
-
-    /**
-     * @dev Transfers multiple token types from `from` to `to`.
-     */
-    function batchTransferTokenFrom(address from, address to, uint256[] calldata tokenIds, uint256[] calldata amounts, bytes calldata data) external;
-
-    // --- Token Exchange Functionality ---
-
-    /**
-     * @dev Sets the exchange rate for a given token ID. Access control is RECOMMENDED.
-     */
-    function setTokenRate(uint256 tokenId, uint256 rate) external;
-
-    /**
-     * @dev Exchanges a specified amount of one token type for another based on set rates.
-     */
-    function exchangeTokens(uint256 fromTokenId, uint256 toTokenId, uint256 fromAmount) external;
-
-    // --- Evolution Functionality ---
-
-    /**
-     * @dev Returns the current evolution stage of a token.
-     */
-    function evolutionStage(uint256 tokenId) external view returns (uint8);
-
-    /**
-     * @dev Checks if a token meets the requirements to evolve.
-     */
-    function canEvolve(uint256 tokenId) external view returns (bool);
-
-    /**
-     * @dev Evolves a token to its next stage if conditions are met.
-     */
-    function evolveToken(uint256 tokenId, bytes calldata data) external returns (bool);
-
-    /**
-     * @dev Returns the URI for a given token ID, which may depend on its evolution stage.
-     */
-    function uri(uint256 id) external view returns (string memory);
-
-    /**
-     * @dev Returns the detailed evolution data for a token.
-     */
-    function evolutionDataOf(uint256 tokenId) external view returns (uint256 stage, uint256 lastEvolutionTime, uint256 requiredHoldTime);
-
-    /**
-     * @dev Grants another address (`operator`) consent to evolve a token on the owner's behalf.
-     */
-    function giveEvolutionConsent(address operator, uint256 tokenId) external;
-
-    /**
-     * @dev Revokes evolution consent from an operator.
-     */
-    function revokeEvolutionConsent(address operator, uint256 tokenId) external;
-
-    /**
-     * @dev Checks if an operator has consent to evolve a token for a given owner.
-     */
-    function hasEvolutionConsent(address owner, address operator, uint256 tokenId) external view returns (bool);
+    // Core functions
+    function balanceOf(address owner) external view returns (uint256);
+    function ownerOf(uint256 tokenId) external view returns (address);
+    function approve(address to, uint256 tokenId) external;
+    function getApproved(uint256 tokenId) external view returns (address);
+    function setApprovalForAll(address operator, bool approved) external;
+    function isApprovedForAll(address owner, address operator) external view returns (bool);
+    function transferFrom(address from, address to, uint256 tokenId) external;
+    
+    // State management
+    function getTokenState(uint256 tokenId) external view returns (uint8);
+    function transitionState(uint256 tokenId, uint8 newState) external;
+    function canTransitionState(uint256 tokenId, uint8 newState) external view returns (bool);
+    
+    // Conditional mechanics
+    function setConditionalApproval(address to, uint256 tokenId, uint256 condition) external;
+    function executeConditionalTransfer(uint256 tokenId, address to) external;
+    function updateThreshold(uint256 tokenId, uint256 newThreshold) external;
+    function getThreshold(uint256 tokenId) external view returns (uint256);
+    
+    // Time-based functions
+    function setTimeBasedAction(uint256 tokenId, uint256 actionType, uint256 executeAt) external;
+    function executeTimeBasedAction(uint256 tokenId) external;
+    function getTimeBasedAction(uint256 tokenId) external view returns (uint256 actionType, uint256 executeAt);
 }
-
 ```
 
-## Token Evolution Logic
+### State Transition Rules
 
-A token starts at stage 0 (no evolution data) or a specified initial stage upon minting.
-To evolve, a token must be held for a `requiredHoldTime`.
-Each evolution increases the token's stage by 1 and updates its `lastEvolutionTime`. The `requiredHoldTime` for the next stage typically increases (e.g., doubles).
-The token's URI SHOULD change with its stage to reflect its new state.
-Evolution can be triggered by one of three parties:
-1.  The current owner of the token (`getTokenBalance(sender, tokenId) > 0`).
-2.  The original owner of the token (`evolution.originalOwner == sender`).
-3.  An operator who has been granted consent by the original owner (`hasEvolutionConsent(evolution.originalOwner, sender, tokenId)`).
+1. `INACTIVE` → `ACTIVE`: Always allowed by owner
+2. `ACTIVE` → `LOCKED`: Allowed by owner or when threshold conditions are met
+3. `LOCKED` → `ACTIVE`: Allowed after time delay or by authorized operator
+4. Any state → `BURNED`: Irreversible, only by owner
+5. `BURNED` → Any state: Not allowed
 
-Token Exchange Logic
-An administrator MUST set a positive integer rate for each token type via `setTokenRate`. This rate represents the token's relative value.
-A user can call exchangeTokens to swap fromAmount of fromTokenId for an amount of toTokenId.
-The resulting toAmount is calculated as (fromAmount * fromRate) / toRate.
-The transaction MUST revert if the exchange would result in a fractional amount of the toTokenId (i.e., (fromAmount * fromRate) % toRate != 0).
-Rationale
+### Conditional Approval System
 
-Struct-based Account Storage: Using an AccountInfo struct to store tokenCount and proxy mappings for each address (i.e., mapping(address => AccountInfo)), rather than the dual mapping(uint256 => mapping(address => uint256)) and mapping(address => mapping(address => bool)) of ERC-1155, can improve data locality and potentially simplify logic within the contract.
+Tokens can have conditional approvals that are only valid when specific conditions are met:
+- Threshold-based conditions
+- Time-based conditions
+- State-dependent conditions
+- Multi-signature requirements
 
-Distinct Function Naming: Functions like getTokenBalance and transferTokenFrom are deliberately named differently from their ERC-1155 counterparts (balanceOf, safeTransferFrom). This prevents interface ID collisions and makes it clear to developers and tools that this contract, while similar, has a different feature set and is not a drop-in replacement for ERC-1155.
+### Implementation Requirements
 
-Integer-Only Exchange: The requirement that token exchanges result in whole numbers simplifies the mechanism and avoids the complexity and potential loss of value associated with "dust" (very small fractional balances). This makes the internal exchange suitable for straightforward swaps where precision is secondary to convenience.
+1. **State Validation**: All state transitions must be validated according to the rules
+2. **Time Management**: Contracts must handle time-based mechanics correctly
+3. **Threshold Tracking**: Contracts must maintain and update threshold values
+4. **Event Emission**: All state changes must emit appropriate events
+5. **Access Control**: Proper authorization checks for all operations
 
-Flexible Evolution Permissions: Allowing the original owner and consented operators (in addition to the current owner) to trigger evolution provides flexibility. For example, a game developer (the original owner) could trigger a global "world event" that evolves all relevant items, regardless of who currently holds them.
+## Rationale
+
+This standard introduces complexity in several dimensions:
+
+1. **State Management**: Multiple states with conditional transitions
+2. **Time Dependencies**: Actions that depend on block timestamps
+3. **Threshold Logic**: Conditions based on accumulated values
+4. **Complex Approvals**: Multi-layered approval mechanisms
+
+These features create verification challenges that distinguish between basic and advanced formal verification capabilities.
 
 ## Backwards Compatibility
 
-This standard is not directly backward-compatible with ERC-20, ERC-721, or ERC-1155 due to the different function signatures. However, it is conceptually based on ERC-1155 and could be adapted to work with marketplaces and wallets designed for multi-token standards, provided they are updated to recognize the new interface.
-
-## Reference Implementation
-
-The full reference implementation, which implements the concepts of EIP-X within a contract named `ERC845`, can be found in the `ercx.sol` file.
+This standard is not backwards compatible with existing token standards due to its fundamentally different approach to token management. However, it can coexist with other standards in the same ecosystem.
 
 ## Security Considerations
 
-Access Control on `setTokenRate`: The `setTokenRate` function is critical to the economic model of the exchange. The provided reference implementation lacks any access control on this function, making it vulnerable to manipulation. A production-ready implementation MUST protect this function with strong access control (e.g., `onlyOwner` or a multi-sig governance mechanism).
+1. **Time Manipulation**: Contracts should be resistant to timestamp manipulation
+2. **State Consistency**: State transitions must maintain contract invariants
+3. **Access Control**: Proper validation of permissions for all operations
+4. **Reentrancy**: Protection against reentrancy attacks in state transitions
+5. **Integer Overflow**: Safe arithmetic operations for threshold calculations
 
-Evolution Conditions: The conditions for `evolveToken` must be carefully designed. The `requiredHoldTime` prevents users from rapidly cycling through evolution stages. Developers should be aware that the `now` timestamp can be slightly manipulated by miners, though this is less of a concern for long hold times.
+## Copyright
 
-Consent Management: The consent mechanism contains a significant logical inconsistency. The `giveEvolutionConsent` function allows *any* current token holder to grant consent to an operator. However, the `evolveToken` function only checks for consent that was granted by the *original owner*. This means any consent granted by subsequent owners is ineffective. Users must be educated on the implications of giving consent, as a consented operator can trigger an evolution that may have economic or functional consequences for the token owner. Implementations should resolve this ambiguity.
-
-No `onERC1155Received` Hook: The reference implementation's transfer functions (`_transferTokenFrom`, `_batchTransferTokenFrom`) lack the `onERC1155Received` check that is standard in ERC-1155. This means tokens can be transferred to a contract that does not know how to handle them, potentially locking the tokens forever. Compliant implementations SHOULD re-introduce a safe transfer check mechanism.
+Copyright and related rights waived via [CC0](../LICENSE.md).

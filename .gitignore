@@ -19,3 +19,7 @@ datasets/*
 
 # __pycache__
 *.pyc
+
+.claude
+.serena
+CLAUDE.md

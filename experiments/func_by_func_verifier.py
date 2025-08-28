@@ -40,38 +40,6 @@ if not openai.api_key:
 # Configure logging
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-# OpenAI Assistant IDs for different model configurations
-# ASSISTANT_IDS = {
-#     "4o-mini": "asst_uMJ30gjHtG1VIBnqJFKpR6gm",
-#     "erc-1155-001-3-16": "asst_uMYPmlxmT9ppnPKZQ8ZTyfYb",
-#     "erc-1155-005-3-16": "asst_nsa6edZTsNNWj4SBFSPeFYPq",
-#     "erc-1155-010-3-16": "asst_BsZDuAHsmBfrlimXinHt96Cb",
-#     "erc-1155-001-5-16": "asst_Mkq2y7mUxjusd47rPSGXrrCM",
-#     "erc-1155-005-5-16": "asst_8ZL8R3zwXyurmmjkFX14kcuS",
-#     "erc-1155-010-5-16": "asst_wOnRMvawOAI1sO83lfRWWBLu",
-#     "erc-1155-001-7-16": "asst_sZLa64l2Xrb1zNhogDl7RXap",
-#     "erc-1155-005-7-16": "asst_m8y0QMRJVtvDRYcPZLVIcHW6",
-#     "erc-1155-010-7-16": "asst_MRg3E5ds4NRfFKPTPqLsx9rS",
-#     "erc-20-001-3-16": "asst_wn9R7oQTUr60VpfvvaZ5asBa",
-#     "erc-20-005-3-16": "asst_3pHhhAMFwXi9JCVPOvftRQJU",
-#     "erc-20-010-3-16": "asst_OZk81q3HVr1mrGXCfOiVKaku",
-#     "erc-20-001-5-16": "asst_M6Q7TjZTC5wLDXdA88kCre7o",
-#     "erc-20-005-5-16": "asst_XFsmrlLmDMcbQ8uPeG4EVGA0",
-#     "erc-20-010-5-16": "asst_d1TPZLOP9HSmJq0va4vD2rcW",
-#     "erc-20-001-7-16": "asst_M8jjeryyXFYdnGSiQuyOB4ij",
-#     "erc-20-005-7-16": "asst_w98aowF6diNCOJxaM9li84Hi",
-#     "erc-20-010-7-16": "asst_FEGX60kN1RpiFGQP3CaQI6vO",
-#     "erc-721-001-3-16": "asst_nPqcpEo7lJnH4nmX9sNSBmfX",
-#     "erc-721-005-3-16": "asst_wipOM1IWYzuK1jyqwqRJmDic",
-#     "erc-721-010-3-16": "asst_MnKQphy1oPqu7QUWah63JFJk",
-#     "erc-721-001-5-16": "asst_kjoZHBonf5tXKpuiJ6Z4T3Gv",
-#     "erc-721-005-5-16": "asst_u2r0eDkkqERqTmOY5soRPU7n",
-#     "erc-721-010-5-16": "asst_YNv1CBWWYuzTg4D7rRK7JVL6",
-#     "erc-721-001-7-16": "asst_odutVf248qCN3C9zlFKLNd9a",
-#     "erc-721-005-7-16": "asst_HdOeD4DYTJAHfluUAeu6cwNJ",
-#     "erc-721-010-7-16": "asst_JNnQFWooGybyzS3juCJT5GQg",
-# }
-
 ASSISTANT_IDS = {
     "4.1":"asst_zX20A8d9KI7rIK8lLoRTgHK2",
     "4o-mini": "asst_uMJ30gjHtG1VIBnqJFKpR6gm",
@@ -89,7 +57,6 @@ INTERFACE_PATHS = {
     "erc20": "../assets/file_search/erc20_interface.md",
     "erc721": "../assets/file_search/erc721_interface.md",
     "erc1155": "../assets/file_search/erc1155_interface.md",
-    "erc123": "../assets/file_search/erc123_interface.md",
 }
 
 # File paths for EIP documentation
@@ -97,7 +64,6 @@ EIP_PATHS = {
     "erc20": "../assets/file_search/erc-20.md",
     "erc721": "../assets/file_search/erc-721.md",
     "erc1155": "../assets/file_search/erc-1155.md",
-    "erc123": "../assets/file_search/erc-123.md",
 }
 
 # File paths for reference specifications
@@ -105,7 +71,6 @@ REFERENCE_SPEC_PATHS = {
     "erc20": "../assets/file_search/erc20_ref_spec.md",
     "erc721": "../assets/file_search/erc721_ref_spec.md",
     "erc1155": "../assets/file_search/erc1155_ref_spec.md",
-    "erc123": "../assets/file_search/erc123_ref_spec.md",
     "": ""
 }
 
@@ -223,7 +188,12 @@ def save_thread_to_file(thread_id, requested_type, context_str, assistant_key, r
             for message in messages.data:
                 role = message.role
                 created_time = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(message.created_at))
-                content = message.content[0].text.value if message.content else "(No content)"
+                content = "(No content)"
+                if message.content:
+                    try:
+                        content = message.content[0].text.value
+                    except (AttributeError, IndexError):
+                        content = "(Content type not supported)"
                 
                 file.write(f"=== {role.upper()} [{created_time}] ===\n")
                 file.write(f"{content}\n\n")
@@ -401,7 +371,6 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/templates/imp_spec_merge.template',
         "erc721": './solc_verify_generator/ERC721/templates/imp_spec_merge.template',
         "erc1155": './solc_verify_generator/ERC1155/templates/imp_spec_merge.template',
-        "erc123": './solc_verify_generator/ERC123/templates/imp_spec_merge.template',
     }
     
     # Merge paths for different ERC standards
@@ -409,7 +378,6 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/imp/ERC20_merge.sol',
         "erc721": './solc_verify_generator/ERC721/imp/ERC721_merge.sol',
         "erc1155": './solc_verify_generator/ERC1155/imp/ERC1155_merge.sol',
-        "erc123": './solc_verify_generator/ERC123/imp/ERC123_merge.sol',
     }
 
     @classmethod
@@ -473,8 +441,9 @@ class SolcVerifyWrapper:
         if not os.path.isdir(dependency_source_dir) and requested_type in ["erc20", "erc721", "erc1155"]:
              logging.warning(f"Dependency source directory not found or not a directory: {dependency_source_dir}")
 
-        workdir = tempfile.mkdtemp(prefix="solc_verify_fbf_")
+        workdir = None
         try:
+            workdir = tempfile.mkdtemp(prefix="solc_verify_fbf_")
             spec_file_in_workdir  = os.path.join(workdir, "spec.sol")
             merge_file_basename = os.path.basename(original_merge_file_path)
 
@@ -508,7 +477,8 @@ class SolcVerifyWrapper:
                 generate_merge(
                   "spec.sol",
                   absolute_template_path, 
-                  merge_file_basename
+                  merge_file_basename,
+                  "base_llm"  # Add the missing option parameter
                 )
             except RuntimeError as e:
                 logging.error(f"Error during generate_merge: {e}")
@@ -527,8 +497,34 @@ class SolcVerifyWrapper:
                 os.chdir(original_cwd)
             
             return verification_result
+        except Exception as e:
+            logging.error(f"Verification error: {e}")
+            return VerificationResult(-1, f"Verification error: {e}")
         finally:
-            shutil.rmtree(workdir, ignore_errors=True)
+            # Enhanced cleanup with multiple attempts
+            if workdir and os.path.exists(workdir):
+                try:
+                    # First attempt at cleanup
+                    shutil.rmtree(workdir, ignore_errors=True)
+                except Exception as cleanup_error:
+                    logging.warning(f"First cleanup attempt failed: {cleanup_error}")
+                    try:
+                        # Second attempt with more aggressive cleanup
+                        import stat
+                        def handle_remove_readonly(func, path, exc):
+                            if os.path.exists(path):
+                                os.chmod(path, stat.S_IWRITE)
+                                func(path)
+                        shutil.rmtree(workdir, onerror=handle_remove_readonly)
+                    except Exception as second_cleanup_error:
+                        logging.warning(f"Second cleanup attempt failed: {second_cleanup_error}")
+                
+                # Force garbage collection after cleanup
+                try:
+                    import gc
+                    gc.collect()
+                except Exception as gc_error:
+                    logging.debug(f"Garbage collection failed: {gc_error}")
 
 class Utils:
     """Utility class for file operations and data processing."""
@@ -700,6 +696,43 @@ def assemble_partial_contract(pragma_str: str, contract_name: str, components: d
     code += "}\n"
     return code
 
+def extract_function_specific_eip_section(eip_doc: str, func_name: str):
+    """
+    Extracts function-specific section from EIP documentation.
+    
+    Args:
+        eip_doc: Full EIP documentation
+        func_name: Name of the function to extract documentation for
+        
+    Returns:
+        Function-specific EIP section or None if not found
+    """
+    if not eip_doc or not func_name:
+        return None
+    
+    lines = eip_doc.split('\n')
+    func_section_lines = []
+    in_function_section = False
+    
+    for i, line in enumerate(lines):
+        # Look for function header patterns (#### functionName or ### functionName)
+        if line.strip().startswith('#') and func_name.lower() in line.lower():
+            in_function_section = True
+            func_section_lines.append(line)
+            continue
+        
+        if in_function_section:
+            # Stop when we hit the next function or major section
+            if line.strip().startswith('#') and line.strip() != line.strip().replace('#', ''):
+                # This is another header, stop collecting
+                break
+            func_section_lines.append(line)
+    
+    if func_section_lines:
+        return '\n'.join(func_section_lines).strip()
+    
+    return None
+
 def extract_annotations_for_function(llm_response: str, target_func_sig: str):
     """
     Extracts annotations from an LLM response.
@@ -720,7 +753,7 @@ def extract_annotations_for_function(llm_response: str, target_func_sig: str):
     final_annotations_str = "\n".join(postcondition_lines)
     return final_annotations_str
 
-def process_single_function(thread: Thread, func_info: dict, components: dict, pragma_str: str, verified_annotations: dict, eip_doc: str, base_instructions: str, examples_text: str, max_iterations_per_function: int, requested_type: str):
+def process_single_function(thread: Thread, func_info: dict, components: dict, pragma_str: str, verified_annotations: dict, eip_doc: str, base_instructions: str, examples_text: str, max_iterations_per_function: int, requested_type: str, is_first_function: bool = True):
     """
     Processes a single function for verification.
     
@@ -735,6 +768,7 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
         examples_text: Example specifications
         max_iterations_per_function: Maximum number of verification attempts
         requested_type: Type of contract being verified
+        is_first_function: Whether this is the first function in the thread (for context management)
         
     Returns:
         Tuple of (annotations, interaction_count) or (None, interaction_count) if verification fails
@@ -745,21 +779,7 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
     logging.info(f"Processing function: {func_name} ({func_sig})")
 
     func_interactions = 0
-    verified_ann_str = "\n".join([f'{fs}\n{fa}' for fs, fa in verified_annotations.items()])
-    state_vars_str = "\n".join(components.get('state_vars', []))
-    events_str = "\n".join(components.get('events', []))
 
-    # Extract EIP snippet specific to the current function
-    specific_eip_snippet = "No specific EIP segment found for this function."
-    if eip_doc and func_name:
-        pattern = rf"(/\*\*(?:[^*]|\*(?!/))*?\*/\s*function\s+{re.escape(func_name)}\s*\(.*\).*?;)"
-        match = re.search(pattern, eip_doc, re.DOTALL)
-        if match:
-            specific_eip_snippet = match.group(1).strip()
-
-    indented_state_vars = "\n".join([f"    {var}" for var in components.get('state_vars', [])])
-
-    # Check for function-specific documentation
     func_md_path = f"../assets/file_search/{requested_type.lower()}/{func_name}.md"
     func_md_content = ""
     try:
@@ -769,44 +789,89 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
     except:
         logging.info(f"No function-specific file found for {func_name} at {func_md_path}")
 
-    # Format prompt based on available documentation
-    if func_md_content:
-        current_prompt = textwrap.dedent(f"""{base_instructions}
+    # Build full contract context with all components
+    state_vars_section = ""
+    if components.get('state_vars'):
+        state_vars_section = "    // State Variables\n" + "\n".join([f"    {var}" for var in components['state_vars']]) + "\n\n"
+    
+    events_section = ""
+    if components.get('events'):
+        events_section = "    // Events\n" + "\n".join([f"    {event}" for event in components['events']]) + "\n\n"
+    
+    # Include all function signatures for context
+    all_functions_section = "    // All Functions\n"
+    for f_info in components.get('functions', []):
+        if f_info['name'] == func_name:
+            # Highlight the current function being processed
+            all_functions_section += f"    // >>> FOCUS ON THIS FUNCTION <<<\n    {f_info['signature']}\n"
+        else:
+            all_functions_section += f"    {f_info['signature']}\n"
+    
+    # Include previously verified annotations for context
+    verified_context = ""
+    if verified_annotations:
+        verified_context = "\n\n// Previously verified function annotations:\n"
+        for sig, annotations in verified_annotations.items():
+            verified_context += f"// {sig}:\n"
+            for line in annotations.split('\n'):
+                if line.strip():
+                    verified_context += f"// {line}\n"
+    
+    # Build appropriate prompt based on whether this is the first function
+    if is_first_function:
+        # First function: send full context including base instructions, EIP, and examples
+        current_prompt = f"""
+    {base_instructions}
 
-```solidity
-pragma solidity >= 0.5.0;
+    FULL CONTRACT CONTEXT:
+    ```solidity
+    {pragma_str}
 
-contract {contract_name} {{
-{func_md_content}
-}}
-```
-
-EIP markdown below:
-<eip>
-{specific_eip_snippet}
-</eip>
-""").lstrip()
+    contract {contract_name} {{
+{state_vars_section}{events_section}{all_functions_section}
+    }}
+    ```
+    
+    FUNCTION-SPECIFIC INFORMATION FOR {func_name}:
+    {func_md_content if func_md_content else f"Focus on implementing postconditions for the {func_name} function."}
+    {verified_context}
+    
+    Your task is to provide ONLY the postcondition annotations for the {func_name} function.
+    """
+        
+        # Include EIP documentation for first function
+        if eip_doc and eip_doc.strip():
+            # Try to extract function-specific section from EIP
+            func_specific_eip = extract_function_specific_eip_section(eip_doc, func_name)
+            if func_specific_eip:
+                current_prompt += f"\nEIP {requested_type.upper()} documentation for {func_name}:\n\n<eip>\n{func_specific_eip}\n</eip>\n"
+                current_prompt += f"\nFull EIP {requested_type.upper()} specification:\n\n<full_eip>\n{eip_doc}\n</full_eip>\n"
+            else:
+                current_prompt += f"\nEIP {requested_type.upper()} specification:\n\n<eip>\n{eip_doc}\n</eip>\n"
+        else:
+            current_prompt += f"\nNote: No EIP documentation available for {requested_type.upper()}\n"
+    
+        # Include examples for first function
+        if examples_text:
+            current_prompt += f"\n**Examples:**\n{examples_text}"
     else:
-        current_prompt = textwrap.dedent(f"""{base_instructions}
-
-```solidity
-pragma solidity >= 0.5.0;
-
-contract {contract_name} {{
-{indented_state_vars}
-
-{func_sig}
-}}
-```
-
-EIP Documentation Snippet (if relevant to `{func_name}`):
-<eip>
-{specific_eip_snippet}
-</eip>
-""").lstrip()
-
-    if examples_text:
-        current_prompt += f"\n**Examples:**\n{examples_text}"
+        # Subsequent functions: minimal prompt, reference existing context
+        current_prompt = f"""
+    Now let's annotate the next function: {func_name}
+    
+    FUNCTION-SPECIFIC INFORMATION FOR {func_name}:
+    {func_md_content if func_md_content else f"Focus on implementing postconditions for the {func_name} function."}
+    
+    Context reminder:
+    - You're working on the {contract_name} contract
+    - The current function to annotate is: {func_sig}
+    - You already have the full contract structure, EIP specification, and examples from our previous conversation
+    {verified_context}
+    
+    Your task is to provide ONLY the postcondition annotations for the {func_name} function.
+    
+    Remember: Use the same approach and patterns as for the previous functions, following the EIP specification and examples already provided.
+    """
 
     for attempt in range(max_iterations_per_function):
         logging.info(f"Attempt {attempt + 1}/{max_iterations_per_function} for function {func_name}")
@@ -844,9 +909,7 @@ EIP Documentation Snippet (if relevant to `{func_name}`):
         else:
             logging.warning(f"Verification failed for function {func_name} (Attempt {attempt + 1}). Error: {error_output[:500]}...")
             current_prompt = f"""
-            Verification failed for function `{func_sig}`
-
-            The verifier found the following errors:
+            Verification failed, the verifier found the following errors:
             ```
             {error_output}
             ```
@@ -902,7 +965,24 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
 
     pragma_str = parsed_components.get('pragma', "pragma solidity ^0.8.0;")
     contract_name = requested_type.upper()
-    eip_doc = Utils.extract_content_from_markdown(EIP_PATHS.get(requested_type, ""))
+    
+    # Load EIP documentation consistently for all types
+    eip_doc = ""
+    eip_path = EIP_PATHS.get(requested_type, "")
+    if eip_path:
+        try:
+            # Try to read as markdown first, then as plain text
+            eip_doc = Utils.extract_content_from_markdown(eip_path)
+            if not eip_doc or eip_doc.strip() == "":
+                eip_doc = Utils.read_file_content(eip_path)
+            eip_doc = eip_doc or ""
+            logging.info(f"Loaded EIP documentation for {requested_type}: {len(eip_doc)} characters")
+        except Exception as e:
+            logging.warning(f"Failed to load EIP documentation for {requested_type}: {e}")
+            eip_doc = ""
+    else:
+        logging.warning(f"No EIP path configured for {requested_type}")
+        
     base_instructions = INSTRUCTIONS
 
     # Generate example texts from context types
@@ -933,10 +1013,14 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
         total_interactions = 0
         threads_info = []
 
-        for func_info in parsed_components.get('functions', []):
-            assistant = Assistant(assistant_id)
-            thread = Thread(assistant)
-            threads_info.append((func_info['name'], thread.id))
+        # Create single assistant and thread for this entire contract run
+        assistant = Assistant(assistant_id)
+        thread = Thread(assistant)
+        threads_info.append(("contract_run", thread.id))
+        
+        for func_idx, func_info in enumerate(parsed_components.get('functions', [])):
+            # First function gets full context, subsequent functions get minimal prompts
+            is_first_function = (func_idx == 0)
             
             func_annotations, func_interactions_count = process_single_function(
                 thread=thread,
@@ -948,7 +1032,8 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
                 base_instructions=base_instructions,
                 examples_text=examples_section_for_prompt,
                 max_iterations_per_function=max_iterations_per_function,
-                requested_type=requested_type
+                requested_type=requested_type,
+                is_first_function=is_first_function
             )
             total_interactions += func_interactions_count
 
@@ -957,10 +1042,11 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
                 function_verification_status[func_info['name']] = "Verified"
             else:
                 function_verification_status[func_info['name']] = "Failed"
-            
-            thread_save_result = save_thread_to_file(thread.id, requested_type, f"{context_str}_{func_info['name']}", assistant_key, current_run_number)
-            if not thread_save_result:
-                print(f"WARNING: Failed to save thread file for function {func_info['name']} in run {current_run_number}")
+        
+        # Save thread once per contract run (not per function)
+        thread_save_result = save_thread_to_file(thread.id, requested_type, context_str, assistant_key, current_run_number)
+        if not thread_save_result:
+            print(f"WARNING: Failed to save thread file for run {current_run_number}")
 
         run_end_time = time.time()
         duration = run_end_time - run_start_time
@@ -968,7 +1054,7 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
         final_contract_code = assemble_partial_contract(pragma_str, contract_name, parsed_components, verified_annotations)
         all_functions_verified = all(status == "Verified" for status in function_verification_status.values())
 
-        print(f"Run {current_run_number} used {len(threads_info)} threads: {', '.join([f'{name}:{tid}' for name, tid in threads_info])}")
+        print(f"Run {current_run_number} used {len(threads_info)} thread: {', '.join([f'{name}:{tid}' for name, tid in threads_info])}")
 
         results.append({
             "run": current_run_number,
@@ -980,6 +1066,11 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
             "status": verification_status, 
             "threads": [tid for _, tid in threads_info] 
         })
+
+        # Add garbage collection after each run to prevent memory accumulation
+        import gc
+        gc.collect()
+        logging.info(f"Completed run {current_run_number}, forced garbage collection")
 
     results_df = pd.DataFrame(results)
     if 'run' in results_df.columns:
@@ -996,10 +1087,10 @@ def main():
     """
     parser = argparse.ArgumentParser(description='Run contract verification with different contexts')
     parser.add_argument('--requested', type=str, required=True, 
-                        choices=['erc20', 'erc721', 'erc1155', 'erc123'],
+                        choices=['erc20', 'erc721', 'erc1155'],
                         help='The contract type to verify')
     parser.add_argument('--context', type=str, required=True,
-                        help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155,erc123")')
+                        help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155")')
     parser.add_argument('--assistant', type=str, default='4o-mini',
                         choices=list(ASSISTANT_IDS.keys()),
                         help='The assistant to use')
@@ -1024,4 +1115,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main() 
+    main()

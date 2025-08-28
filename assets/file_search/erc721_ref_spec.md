@@ -17,8 +17,8 @@ contract ERC721 {
     /// @notice postcondition _tokenApprovals[_tokenId] == _approved 
     function approve(address _approved, uint256 _tokenId) external;
     
-    /// @notice postcondition _tokenOwner[tokenId] != address(0)
-    /// @notice postcondition _tokenApprovals[tokenId] == approved
+    /// @notice postcondition _tokenOwner[_tokenId] != address(0)
+    /// @notice postcondition _tokenApprovals[_tokenId] == approved
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -28,13 +28,13 @@ contract ERC721 {
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _owned_kensCount[to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
+    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
     /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
     
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
