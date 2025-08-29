@@ -710,6 +710,8 @@ def assemble_partial_contract(pragma_str: str, contract_name: str, components: d
     code += "}\n"
     return code
 
+
+
 def extract_function_specific_eip_section(eip_doc: str, func_name: str):
     """
     Extracts function-specific section from EIP documentation.
@@ -849,70 +851,9 @@ def classify_verifier_error(error_output: str) -> str:
     # Fallback
     return ("General verification error: check naming, types, and logical consistency.")
 
-# Token budget for context optimization
-TOKEN_BUDGET = 3500  # Conservative limit for model context
 
-def estimate_token_count(text: str) -> int:
-    """Rough token estimation: ~1.3 tokens per word"""
-    return int(len(text.split()) * 1.3)
 
-def build_tiered_prompt(critical_sections: list, helpful_sections: list, reference_sections: list, budget: int = TOKEN_BUDGET) -> str:
-    """
-    Build prompt with priority tiers:
-    🔴 Critical: Always include (instructions, function signature, core requirements)
-    🟠 Helpful: Include if space allows (state vars, past verified examples)  
-    🟢 Reference: Include only if budget allows (EIP docs, examples)
-    
-    Args:
-        critical_sections: List of (name, content) tuples - always included
-        helpful_sections: List of (name, content) tuples - included if space allows
-        reference_sections: List of (name, content) tuples - included if budget allows
-        budget: Token budget limit
-    
-    Returns:
-        Optimized prompt string
-    """
-    
-    # 🔴 CRITICAL - Always include
-    critical_content = ""
-    for name, content in critical_sections:
-        critical_content += f"{content}\n\n"
-    
-    # 🟠 HELPFUL - Include if space allows  
-    helpful_content = ""
-    current_tokens = estimate_token_count(critical_content)
-    
-    for name, content in helpful_sections:
-        test_content = helpful_content + f"{content}\n\n"
-        test_tokens = current_tokens + estimate_token_count(test_content)
-        if test_tokens < budget * 0.7:  # Use 70% of budget for critical + helpful
-            helpful_content = test_content
-        else:
-            logging.info(f"Skipping helpful section '{name}' - would exceed budget")
-            break
-    
-    # 🟢 REFERENCE - Include only if budget allows
-    reference_content = ""
-    current_tokens = estimate_token_count(critical_content + helpful_content)
-    
-    for name, content in reference_sections:
-        test_content = reference_content + f"{content}\n\n"
-        test_tokens = current_tokens + estimate_token_count(test_content)
-        if test_tokens < budget:
-            reference_content = test_content
-        else:
-            logging.info(f"Skipping reference section '{name}' - would exceed budget")
-            break
-    
-    final_prompt = critical_content + helpful_content + reference_content
-    
-    # Log token usage for monitoring
-    final_tokens = estimate_token_count(final_prompt)
-    logging.info(f"Final prompt tokens: {final_tokens} (budget: {budget})")
-    
-    return final_prompt.strip()
-
-def process_single_function(thread: Thread, func_info: dict, components: dict, pragma_str: str, verified_annotations: dict, eip_doc: str, base_instructions: str, examples_text: str, max_iterations_per_function: int, requested_type: str, is_first_function: bool = True):
+def process_single_function(thread: Thread, func_info: dict, components: dict, pragma_str: str, verified_annotations: dict, eip_doc: str, base_instructions: str, examples_text: str, max_iterations_per_function: int, requested_type: str):
     """
     Processes a single function for verification.
     
@@ -927,7 +868,6 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
         examples_text: Example specifications
         max_iterations_per_function: Maximum number of verification attempts
         requested_type: Type of contract being verified
-        is_first_function: Whether this is the first function in the thread (for context management)
         
     Returns:
         Tuple of (annotations, interaction_count) or (None, interaction_count) if verification fails
@@ -939,7 +879,7 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
 
     func_interactions = 0
     
-    # --- Phase 5: Function-Type Templates ---
+    # --- Function-Type Detection ---
     # Detect whether the function is read-only (view/pure) or mutating
     func_modifiers = func_sig.lower()
     
@@ -965,126 +905,50 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
     except:
         logging.info(f"No function-specific file found for {func_name} at {func_md_path}")
 
-    # Build full contract context with all components
-    state_vars_section = ""
-    if components.get('state_vars'):
-        state_vars_section = "    // State Variables\n" + "\n".join([f"    {var}" for var in components['state_vars']]) + "\n\n"
-    
-    events_section = ""
-    if components.get('events'):
-        events_section = "    // Events\n" + "\n".join([f"    {event}" for event in components['events']]) + "\n\n"
-    
-    # Include all function signatures for context
-    all_functions_section = "    // All Functions\n"
-    for f_info in components.get('functions', []):
-        if f_info['name'] == func_name:
-            # Highlight the current function being processed
-            all_functions_section += f"    // >>> FOCUS ON THIS FUNCTION <<<\n    {f_info['signature']}\n"
-        else:
-            all_functions_section += f"    {f_info['signature']}\n"
-    
-    # Include previously verified annotations for context
-    verified_context = ""
-    if verified_annotations:
-        verified_context = "\n\n// Previously verified function annotations:\n"
-        for sig, annotations in verified_annotations.items():
-            verified_context += f"// {sig}:\n"
-            for line in annotations.split('\n'):
-                if line.strip():
-                    verified_context += f"// {line}\n"
-    
-    # Build contract context section
-    contract_context = f"""
-    FULL CONTRACT CONTEXT:
-    ```solidity
-    {pragma_str}
+    indented_state_vars = "\n".join([f"    {var}" for var in components.get('state_vars', [])])
 
-    contract {contract_name} {{
-{state_vars_section}{events_section}{all_functions_section}
-    }}
-    ```
-    """
-    
-    # Build function-specific section
-    function_specific_content = ""
+    # Format prompt based on available documentation
     if func_md_content:
-        function_specific_content = f"""
-    FUNCTION-SPECIFIC REFERENCE FOR {func_name}:
-    ```solidity
-    {func_md_content}
-    ```
-    """
+        current_prompt = textwrap.dedent(f"""{base_instructions}
+
+{function_type_hint}
+
+```solidity
+pragma solidity >= 0.5.0;
+
+contract {contract_name} {{
+{func_md_content}
+}}
+```
+
+EIP markdown below:
+<eip>
+{eip_doc}
+</eip>
+""").lstrip()
     else:
-        function_specific_content = f"""
-    Focus on implementing postconditions for the {func_name} function.
-    """
-    
-    function_specific = f"""
-    {function_specific_content}
-    {verified_context}
-    
-    Your task is to provide ONLY the postcondition annotations for the {func_name} function.
-    """
-    
-    # Build prompt based on whether this is the first function
-    if is_first_function:
-        # First function: use tiered approach for maximum context
-        
-        # Prepare tiered sections
-        critical_sections = [
-            ("instructions", base_instructions),
-            ("contract_context", contract_context),
-            ("function_specific", function_specific),
-            ("function_type_hint", function_type_hint)
-        ]
-        
-        helpful_sections = []
-        if examples_text:
-            helpful_sections.append(("examples", f"**Examples:**\n{examples_text}"))
-        
-        reference_sections = []
-        if eip_doc and eip_doc.strip():
-            # Try to extract function-specific section from EIP
-            func_specific_eip = extract_function_specific_eip_section(eip_doc, func_name)
-            if func_specific_eip:
-                reference_sections.append(("eip_specific", f"EIP {requested_type.upper()} documentation for {func_name}:\n\n<eip>\n{func_specific_eip}\n</eip>"))
-                reference_sections.append(("eip_full", f"Full EIP {requested_type.upper()} specification:\n\n<full_eip>\n{eip_doc}\n</full_eip>"))
-            else:
-                reference_sections.append(("eip", f"EIP {requested_type.upper()} specification:\n\n<eip>\n{eip_doc}\n</eip>"))
-        else:
-            reference_sections.append(("no_eip", f"Note: No EIP documentation available for {requested_type.upper()}"))
-            
-        current_prompt = build_tiered_prompt(critical_sections, helpful_sections, reference_sections)
-    else:
-        # Subsequent functions: minimal prompt, reference existing context
-        # Build function-specific content for subsequent functions
-        subsequent_func_content = ""
-        if func_md_content:
-            subsequent_func_content = f"""
-    FUNCTION-SPECIFIC REFERENCE FOR {func_name}:
-    ```solidity
-    {func_md_content}
-    ```
-    """
-        else:
-            subsequent_func_content = f"Focus on implementing postconditions for the {func_name} function."
-            
-        current_prompt = f"""
-    Now let's annotate the next function: {func_name}
-    
-    {subsequent_func_content}
-    
-    Context reminder:
-    - You're working on the {contract_name} contract
-    - The current function to annotate is: {func_sig}
-    - You already have the full contract structure, EIP specification, and examples from our previous conversation
-    {verified_context}
-    {function_type_hint}
-    
-    Your task is to provide ONLY the postcondition annotations for the {func_name} function.
-    
-    Remember: Use the same approach and patterns as for the previous functions, following the EIP specification and examples already provided.
-    """
+        current_prompt = textwrap.dedent(f"""{base_instructions}
+
+{function_type_hint}
+
+```solidity
+pragma solidity >= 0.5.0;
+
+contract {contract_name} {{
+{indented_state_vars}
+
+{func_sig}
+}}
+```
+
+EIP Documentation Snippet (if relevant to `{func_name}`):
+<eip>
+{eip_doc}
+</eip>
+""").lstrip()
+
+    if examples_text:
+        current_prompt += f"\n**Examples:**\n{examples_text}"
 
     for attempt in range(max_iterations_per_function):
         logging.info(f"Attempt {attempt + 1}/{max_iterations_per_function} for function {func_name}")
@@ -1232,14 +1096,10 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
         total_interactions = 0
         threads_info = []
 
-        # Create single assistant and thread for this entire contract run
-        assistant = Assistant(assistant_id)
-        thread = Thread(assistant)
-        threads_info.append(("contract_run", thread.id))
-        
-        for func_idx, func_info in enumerate(parsed_components.get('functions', [])):
-            # First function gets full context, subsequent functions get minimal prompts
-            is_first_function = (func_idx == 0)
+        for func_info in parsed_components.get('functions', []):
+            assistant = Assistant(assistant_id)
+            thread = Thread(assistant)
+            threads_info.append((func_info['name'], thread.id))
             
             func_annotations, func_interactions_count = process_single_function(
                 thread=thread,
@@ -1251,8 +1111,7 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
                 base_instructions=base_instructions,
                 examples_text=examples_section_for_prompt,
                 max_iterations_per_function=max_iterations_per_function,
-                requested_type=requested_type,
-                is_first_function=is_first_function
+                requested_type=requested_type
             )
             total_interactions += func_interactions_count
 
@@ -1261,11 +1120,10 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
                 function_verification_status[func_info['name']] = "Verified"
             else:
                 function_verification_status[func_info['name']] = "Failed"
-        
-        # Save thread once per contract run (not per function)
-        thread_save_result = save_thread_to_file(thread.id, requested_type, context_str, assistant_key, current_run_number)
-        if not thread_save_result:
-            print(f"WARNING: Failed to save thread file for run {current_run_number}")
+            
+            thread_save_result = save_thread_to_file(thread.id, requested_type, f"{context_str}_{func_info['name']}", assistant_key, current_run_number)
+            if not thread_save_result:
+                print(f"WARNING: Failed to save thread file for function {func_info['name']} in run {current_run_number}")
 
         run_end_time = time.time()
         duration = run_end_time - run_start_time
@@ -1273,7 +1131,7 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
         final_contract_code = assemble_partial_contract(pragma_str, contract_name, parsed_components, verified_annotations)
         all_functions_verified = all(status == "Verified" for status in function_verification_status.values())
 
-        print(f"Run {current_run_number} used {len(threads_info)} thread: {', '.join([f'{name}:{tid}' for name, tid in threads_info])}")
+        print(f"Run {current_run_number} used {len(threads_info)} threads: {', '.join([f'{name}:{tid}' for name, tid in threads_info])}")
 
         results.append({
             "run": current_run_number,
