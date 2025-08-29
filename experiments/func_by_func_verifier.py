@@ -76,30 +76,45 @@ REFERENCE_SPEC_PATHS = {
 
 # Instructions for the AI model to generate contract specifications
 INSTRUCTIONS = """
-Task:
-    - You are given a smart contract interface and need to add formal postconditions to a function using solc-verify syntax (`/// @notice postcondition condition`). Postconditions must not end with a semicolon (";").
-    - You MUST use the EIP documentation below to understand the required behavior.
-    - Replace `$ADD POSTCONDITION HERE` with appropriate postconditions above each function. Postconditions placed below the function signature are invalid. For instance:
-    ```/// @notice postcondition condition1\\n
-    /// @notice postcondition condition2\\n
-    function foo(uint256 bar, address par) public;```
+TASK:
+    - You are given a smart contract interface and need to add formal postconditions to a function using solc-verify syntax.
+    - Postconditions MUST start with: /// @notice postcondition ...
+    - Postconditions MUST NOT end with a semicolon (";").
+    - Return ONLY what is inside the <postconditions>...</postconditions> block.
 
-Requirements:
-    - Ensure conditions correctly represent the expected state changes and return values.
-    - View functions should relate return values directly to state variables.
-    - Postconditions MUST ONLY use state variables exactly as declared. Referencing undeclared variables will fail if they aren't in the contract. For instance, a state variable `uint256 var` can be referenced as `var` only.
-    - Postconditions MUST ONLY use parameter names exactly as they appear in function signatures. For instance, `function foo(uint256 bar,  address par)` has parameter names `bar` and `par` only. 
-    - Use `__verifier_old_uint(stateVariable)` or `__verifier_old_bool(stateVariable)` to reference values from the start of the function execution.
-    - A quantified postcondition MUST start with `forall`. For instance, a quantified postcondition look like `/// @notice postcondition forall (uint x) condition`. Without the `forall` at the beginning, the postcondition is invalid.
-    - YOU MUST SPECIFY THE RANGE when postconditions quantify over arrays. For example, for array `arr` a postcondition quantification would look like `/// @notice postcondition forall (uint i) !(0 <= i && i < arr.length) || condition`. Without the range, the postcondition is likely to be invalid.
-    - The implication operator "==>" is not valid in solc-verify notation, so it must appear NOWHERE in a postcondition. For instance, a postcondition of the form `/// @notice postcondition condition1 ==> condition2` is invalid. Similarly, a postcondition of the form `/// @notice postcondition (forall uint x) condition1 ==> condition2` is also invalid. You can use instead the notation `!(condition) || condition2` to simulate the implication operator. For instance, `/// @notice postcondition (forall uint x) condition1 ==> condition2` can be written as `/// @notice postcondition !(condition1) || condition2`.
+RULES:
+    1. Use ONLY declared state variables exactly as written in the contract.
+    2. Use ONLY parameter names exactly as written in the function signature.
+    3. For old values, use __verifier_old_uint(stateVariable) or __verifier_old_bool(stateVariable).
+    4. Quantified postconditions MUST start with 'forall' and MUST define the iteration range:
+       /// @notice postcondition forall (uint i) !(0 <= i && i < arr.length) || condition
+    5. The implication operator "==>" is NOT valid. Replace with logical form:
+       !(condition1) || condition2
+    6. One postcondition per line, placed directly ABOVE the target function signature.
+    7. Do not include explanations, comments, or natural language outside postconditions.
+
+POSITIVE EXAMPLES (Abstract / ERC-Agnostic):
+<postconditions>
+/// @notice postcondition mappingVar[key] == value
+/// @notice postcondition value != address(0)
+</postconditions>
+
+<postconditions>
+/// @notice postcondition __verifier_old_uint(counter) + delta == counter
+/// @notice postcondition mappingVar[user] == __verifier_old_uint(mappingVar[user]) - delta
+</postconditions>
+
+OUTPUT FORMAT:
+<postconditions>
+/// @notice postcondition ...
+/// @notice postcondition ...
+</postconditions>
 
 Your task is to annotate the function in the contract below:
 """
 
 # Global state for tracking verification progress
 interaction_counter = 0
-verification_status = []
 
 def parse_solidity_interface(solidity_code: str):
     """
@@ -478,7 +493,6 @@ class SolcVerifyWrapper:
                   "spec.sol",
                   absolute_template_path, 
                   merge_file_basename,
-                  "base_llm"  # Add the missing option parameter
                 )
             except RuntimeError as e:
                 logging.error(f"Error during generate_merge: {e}")
@@ -735,23 +749,168 @@ def extract_function_specific_eip_section(eip_doc: str, func_name: str):
 
 def extract_annotations_for_function(llm_response: str, target_func_sig: str):
     """
-    Extracts annotations from an LLM response.
-    
+    Extracts annotations from an LLM response inside <postconditions> tags.
+
     Args:
         llm_response: Response from the language model
-        target_func_sig: Function signature to extract annotations for
-        
+        target_func_sig: Function signature (used for logging/debugging)
+
     Returns:
-        Extracted annotations or None if not found
+        Extracted annotations string or None if not found
     """
     if not llm_response or not llm_response.strip():
         print(f"LLM response for {target_func_sig} is empty or whitespace.")
         return None
 
-    processed_llm_response = llm_response.strip()
-    postcondition_lines = [line.strip().rstrip(";") for line in processed_llm_response.split('\n') if "@notice postcondition" in line.strip()]
+    # Normalize whitespace
+    response = llm_response.strip()
+
+    # Locate the <postconditions> block
+    start_tag = "<postconditions>"
+    end_tag = "</postconditions>"
+
+    start_idx = response.find(start_tag)
+    end_idx = response.find(end_tag)
+
+    if start_idx == -1 or end_idx == -1 or end_idx <= start_idx:
+        print(f"Could not find <postconditions> block in LLM response for {target_func_sig}")
+        return None
+
+    # Extract content between the tags
+    content = response[start_idx + len(start_tag):end_idx].strip()
+
+    # Ensure each line is a postcondition, strip any trailing semicolons just in case
+    postcondition_lines = [
+        line.strip().rstrip(";")
+        for line in content.splitlines()
+        if "@notice postcondition" in line
+    ]
+
+    if not postcondition_lines:
+        print(f"No valid postconditions found inside <postconditions> for {target_func_sig}")
+        return None
+
+    # Return joined string of clean postconditions
     final_annotations_str = "\n".join(postcondition_lines)
     return final_annotations_str
+
+def classify_verifier_error(error_output: str) -> str:
+    """
+    Classify verification error messages and return targeted hints for the LLM.
+    Framework-agnostic implementation that works with any verification backend.
+    
+    Args:
+        error_output: Error message from the verification tool
+        
+    Returns:
+        Specific hint string for the error category
+    """
+    if not error_output:
+        return "General verification error: check variable names and constraints."
+
+    e = error_output.lower()
+
+    # 1. Assertion misuse
+    if "assertion might not hold" in e or "failing assert" in e:
+        return ("Use `require` for input validation and permissions; keep `assert` for invariants.")
+
+    # 5. External calls/reentrancy (check before invariant to catch reentrancy patterns)
+    if "external call" in e or "reentrancy" in e:
+        return ("Maintain state consistency before external calls.")
+
+    # 2. Missing invariant
+    if "invariant violation" in e or "loop invariant" in e or "contract invariant" in e:
+        return ("Move persistent property into `contract-level invariant` or loop invariant.")
+
+    # 4. Range/loop bounds (check before arithmetic to avoid overlap)
+    if ("counter overflow" in e or "array.length" in e or "loop counter" in e or 
+        ("counter" in e and ("overflow" in e or "bounds" in e))):
+        return ("Add loop invariants to constrain counters and array lengths.")
+
+    # 3. Arithmetic issues  
+    if "possible overflow" in e or "possible underflow" in e or "overflow" in e or "underflow" in e:
+        return ("Add guards/invariants to prevent overflows, underflows, or unsafe math.")
+
+    # 6. Type mismatch
+    if "type error" in e or "invalid operation" in e or "invalid operator" in e:
+        return ("Ensure operand and return types are consistent (uint256, address, etc.).")
+
+    # 7. Syntax/scope
+    if "unexpected token" in e or "parser error" in e or "undeclared identifier" in e:
+        return ("Only use declared variables/params, one postcondition per line.")
+
+    # 8. Unsupported construct
+    if (("not supported" in e) or 
+        ("struct" in e and "postcondition" in e) or 
+        ("tuple" in e and ("not supported" in e or "specifications" in e)) or
+        ("inline assembly" in e and ("not supported" in e or "specifications" in e))):
+        return ("Avoid complex/unsupported language features in specs.")
+
+    # Fallback
+    return ("General verification error: check naming, types, and logical consistency.")
+
+# Token budget for context optimization
+TOKEN_BUDGET = 3500  # Conservative limit for model context
+
+def estimate_token_count(text: str) -> int:
+    """Rough token estimation: ~1.3 tokens per word"""
+    return int(len(text.split()) * 1.3)
+
+def build_tiered_prompt(critical_sections: list, helpful_sections: list, reference_sections: list, budget: int = TOKEN_BUDGET) -> str:
+    """
+    Build prompt with priority tiers:
+    🔴 Critical: Always include (instructions, function signature, core requirements)
+    🟠 Helpful: Include if space allows (state vars, past verified examples)  
+    🟢 Reference: Include only if budget allows (EIP docs, examples)
+    
+    Args:
+        critical_sections: List of (name, content) tuples - always included
+        helpful_sections: List of (name, content) tuples - included if space allows
+        reference_sections: List of (name, content) tuples - included if budget allows
+        budget: Token budget limit
+    
+    Returns:
+        Optimized prompt string
+    """
+    
+    # 🔴 CRITICAL - Always include
+    critical_content = ""
+    for name, content in critical_sections:
+        critical_content += f"{content}\n\n"
+    
+    # 🟠 HELPFUL - Include if space allows  
+    helpful_content = ""
+    current_tokens = estimate_token_count(critical_content)
+    
+    for name, content in helpful_sections:
+        test_content = helpful_content + f"{content}\n\n"
+        test_tokens = current_tokens + estimate_token_count(test_content)
+        if test_tokens < budget * 0.7:  # Use 70% of budget for critical + helpful
+            helpful_content = test_content
+        else:
+            logging.info(f"Skipping helpful section '{name}' - would exceed budget")
+            break
+    
+    # 🟢 REFERENCE - Include only if budget allows
+    reference_content = ""
+    current_tokens = estimate_token_count(critical_content + helpful_content)
+    
+    for name, content in reference_sections:
+        test_content = reference_content + f"{content}\n\n"
+        test_tokens = current_tokens + estimate_token_count(test_content)
+        if test_tokens < budget:
+            reference_content = test_content
+        else:
+            logging.info(f"Skipping reference section '{name}' - would exceed budget")
+            break
+    
+    final_prompt = critical_content + helpful_content + reference_content
+    
+    # Log token usage for monitoring
+    final_tokens = estimate_token_count(final_prompt)
+    logging.info(f"Final prompt tokens: {final_tokens} (budget: {budget})")
+    
+    return final_prompt.strip()
 
 def process_single_function(thread: Thread, func_info: dict, components: dict, pragma_str: str, verified_annotations: dict, eip_doc: str, base_instructions: str, examples_text: str, max_iterations_per_function: int, requested_type: str, is_first_function: bool = True):
     """
@@ -779,6 +938,23 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
     logging.info(f"Processing function: {func_name} ({func_sig})")
 
     func_interactions = 0
+    
+    # --- Phase 5: Function-Type Templates ---
+    # Detect whether the function is read-only (view/pure) or mutating
+    func_modifiers = func_sig.lower()
+    
+    if "view" in func_modifiers or "pure" in func_modifiers:
+        function_type_hint = (
+            "\nFunction-Type Hint: This is a read-only function. "
+            "Postconditions must tie return values directly to state variables. "
+            "Do NOT describe state changes, since no state can be modified.\n"
+        )
+    else:
+        function_type_hint = (
+            "\nFunction-Type Hint: This is a mutating function. "
+            "Postconditions must describe the relationship between OLD and NEW state. "
+            "Use __verifier_old_... where needed to capture previous values.\n"
+        )
 
     func_md_path = f"../assets/file_search/{requested_type.lower()}/{func_name}.md"
     func_md_content = ""
@@ -817,12 +993,8 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
                 if line.strip():
                     verified_context += f"// {line}\n"
     
-    # Build appropriate prompt based on whether this is the first function
-    if is_first_function:
-        # First function: send full context including base instructions, EIP, and examples
-        current_prompt = f"""
-    {base_instructions}
-
+    # Build contract context section
+    contract_context = f"""
     FULL CONTRACT CONTEXT:
     ```solidity
     {pragma_str}
@@ -831,42 +1003,83 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
 {state_vars_section}{events_section}{all_functions_section}
     }}
     ```
+    """
     
-    FUNCTION-SPECIFIC INFORMATION FOR {func_name}:
-    {func_md_content if func_md_content else f"Focus on implementing postconditions for the {func_name} function."}
+    # Build function-specific section
+    function_specific_content = ""
+    if func_md_content:
+        function_specific_content = f"""
+    FUNCTION-SPECIFIC REFERENCE FOR {func_name}:
+    ```solidity
+    {func_md_content}
+    ```
+    """
+    else:
+        function_specific_content = f"""
+    Focus on implementing postconditions for the {func_name} function.
+    """
+    
+    function_specific = f"""
+    {function_specific_content}
     {verified_context}
     
     Your task is to provide ONLY the postcondition annotations for the {func_name} function.
     """
+    
+    # Build prompt based on whether this is the first function
+    if is_first_function:
+        # First function: use tiered approach for maximum context
         
-        # Include EIP documentation for first function
+        # Prepare tiered sections
+        critical_sections = [
+            ("instructions", base_instructions),
+            ("contract_context", contract_context),
+            ("function_specific", function_specific),
+            ("function_type_hint", function_type_hint)
+        ]
+        
+        helpful_sections = []
+        if examples_text:
+            helpful_sections.append(("examples", f"**Examples:**\n{examples_text}"))
+        
+        reference_sections = []
         if eip_doc and eip_doc.strip():
             # Try to extract function-specific section from EIP
             func_specific_eip = extract_function_specific_eip_section(eip_doc, func_name)
             if func_specific_eip:
-                current_prompt += f"\nEIP {requested_type.upper()} documentation for {func_name}:\n\n<eip>\n{func_specific_eip}\n</eip>\n"
-                current_prompt += f"\nFull EIP {requested_type.upper()} specification:\n\n<full_eip>\n{eip_doc}\n</full_eip>\n"
+                reference_sections.append(("eip_specific", f"EIP {requested_type.upper()} documentation for {func_name}:\n\n<eip>\n{func_specific_eip}\n</eip>"))
+                reference_sections.append(("eip_full", f"Full EIP {requested_type.upper()} specification:\n\n<full_eip>\n{eip_doc}\n</full_eip>"))
             else:
-                current_prompt += f"\nEIP {requested_type.upper()} specification:\n\n<eip>\n{eip_doc}\n</eip>\n"
+                reference_sections.append(("eip", f"EIP {requested_type.upper()} specification:\n\n<eip>\n{eip_doc}\n</eip>"))
         else:
-            current_prompt += f"\nNote: No EIP documentation available for {requested_type.upper()}\n"
-    
-        # Include examples for first function
-        if examples_text:
-            current_prompt += f"\n**Examples:**\n{examples_text}"
+            reference_sections.append(("no_eip", f"Note: No EIP documentation available for {requested_type.upper()}"))
+            
+        current_prompt = build_tiered_prompt(critical_sections, helpful_sections, reference_sections)
     else:
         # Subsequent functions: minimal prompt, reference existing context
+        # Build function-specific content for subsequent functions
+        subsequent_func_content = ""
+        if func_md_content:
+            subsequent_func_content = f"""
+    FUNCTION-SPECIFIC REFERENCE FOR {func_name}:
+    ```solidity
+    {func_md_content}
+    ```
+    """
+        else:
+            subsequent_func_content = f"Focus on implementing postconditions for the {func_name} function."
+            
         current_prompt = f"""
     Now let's annotate the next function: {func_name}
     
-    FUNCTION-SPECIFIC INFORMATION FOR {func_name}:
-    {func_md_content if func_md_content else f"Focus on implementing postconditions for the {func_name} function."}
+    {subsequent_func_content}
     
     Context reminder:
     - You're working on the {contract_name} contract
     - The current function to annotate is: {func_sig}
     - You already have the full contract structure, EIP specification, and examples from our previous conversation
     {verified_context}
+    {function_type_hint}
     
     Your task is to provide ONLY the postcondition annotations for the {func_name} function.
     
@@ -908,13 +1121,21 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
             return proposed_annotations, func_interactions
         else:
             logging.warning(f"Verification failed for function {func_name} (Attempt {attempt + 1}). Error: {error_output[:500]}...")
+            # Classify error and build smarter hint
+            error_hint = classify_verifier_error(error_output)
+            
             current_prompt = f"""
-            Verification failed, the verifier found the following errors:
-            ```
-            {error_output}
-            ```
+            Verification failed.
+            Issue type: {error_hint}
+            Error details (truncated): {error_output[:500]}
 
-            Can you fix the specification accordingly?
+            Please regenerate ONLY the <postconditions> block:
+
+            - Do NOT repeat the function signature or any Solidity code.
+            - Do NOT include explanations, comments, or natural language.
+            - Provide exactly one postcondition per line.
+            - Each line MUST start with: /// @notice postcondition
+            - Do NOT end lines with semicolons.
             """
 
     logging.error(f"Failed to verify annotations for function {func_name} after {max_iterations_per_function} attempts.")
@@ -934,7 +1155,6 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
     Returns:
         List of dictionaries containing verification results
     """
-    global verification_status
     if requested_type not in INTERFACE_PATHS:
         raise ValueError(f"Requested type '{requested_type}' not supported.")
     for ct in context_types:
@@ -1009,7 +1229,6 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
         
         verified_annotations = {}
         function_verification_status = {}
-        verification_status = []
         total_interactions = 0
         threads_info = []
 
@@ -1063,7 +1282,6 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
             "verified": all_functions_verified,
             "annotated_contract": final_contract_code,
             "function_status": function_verification_status, 
-            "status": verification_status, 
             "threads": [tid for _, tid in threads_info] 
         })
 
