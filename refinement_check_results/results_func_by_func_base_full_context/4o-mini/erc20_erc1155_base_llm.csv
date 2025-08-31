@@ -1,0 +1,600 @@
+run,status,output
+1,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == remaining
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || _allowed[msg.sender][_spender] != _value
+^------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || _allowed[msg.sender][_spender] != _value
+                                  ^------^
+Annotation:1:69: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || _allowed[msg.sender][_spender] != _value
+                                                                    ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_to == _from || _balances[_to] == _balances[_to] + _value
+                ^-------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_to == _from || _balances[_to] == _balances[_to] + _value
+                                  ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value || _allowed[_from][msg.sender] == 0
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value || _allowed[_from][msg.sender] == 0
+                               ^------^
+Annotation:1:72: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value || _allowed[_from][msg.sender] == 0
+                                                                       ^------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:76:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:76:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+2,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:14: solc-verify error: Undeclared identifier.
+remaining == _allowed[_owner][_spender]
+             ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || success == true
+^------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || success == true
+                                  ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+^-------^
+Annotation:1:19: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                  ^-------^
+Annotation:1:46: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                                             ^-------^
+Annotation:1:64: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                                                               ^-------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:77:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:77:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+3,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:14: solc-verify error: Undeclared identifier.
+remaining == _allowed[_owner][_spender]
+             ^------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+
+"
+4,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:14: solc-verify error: Undeclared identifier.
+remaining == _allowed[_owner][_spender]
+             ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+                               ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                ^-------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                                  ^-------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+5,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == _allowed[_owner][_spender]
+^------^
+Annotation:1:31: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == _allowed[_owner][_spender]
+                              ^------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+
+"
+6,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:14: solc-verify error: Undeclared identifier.
+remaining == _allowed[_owner][_spender]
+             ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || success == true
+^------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || success == true
+                                  ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+                               ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                ^-------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                                  ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= 0
+^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + (_from != _to ? _value : 0)
+^-------^
+Annotation:1:19: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + (_from != _to ? _value : 0)
+                  ^-------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:77:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:77:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+7,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:14: solc-verify error: Undeclared identifier.
+remaining == _allowed[_owner][_spender]
+             ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || _allowed[msg.sender][_spender] != _value
+^------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || _allowed[msg.sender][_spender] != _value
+                                  ^------^
+Annotation:1:69: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] || _allowed[msg.sender][_spender] != _value
+                                                                    ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                ^-------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                                  ^-------^
+Annotation:1:62: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                                                             ^-------^
+Annotation:1:80: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value || _balances[_to] == _balances[_to]
+                                                                               ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+                               ^------^
+Annotation:1:63: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+                                                              ^------^
+Annotation:1:94: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+                                                                                             ^------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:77:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:77:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:109:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:109:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:109:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:109:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+8,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == _allowed[_owner][_spender]
+^------^
+Annotation:1:31: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == _allowed[_owner][_spender]
+                              ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+                               ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                ^-------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                                  ^-------^
+Annotation:1:64: solc-verify error: Undeclared identifier.
+forall (address account) account == _from || account == _to || _balances[account] == _balances[account]
+                                                               ^-------^
+Annotation:1:86: solc-verify error: Undeclared identifier.
+forall (address account) account == _from || account == _to || _balances[account] == _balances[account]
+                                                                                     ^-------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+9,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == _allowed[_owner][_spender]
+^------^
+Annotation:1:31: solc-verify error: Undeclared identifier.
+_allowed[_owner][_spender] == _allowed[_owner][_spender]
+                              ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] != _value || _allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] != _value || _allowed[msg.sender][_spender] == _value
+                                            ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] + _value || _allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] + _value || _allowed[msg.sender][_spender] == _value
+                                  ^------^
+Annotation:1:78: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _allowed[msg.sender][_spender] + _value || _allowed[msg.sender][_spender] == _value
+                                                                             ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] - _value
+                               ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                ^-------^
+Annotation:1:35: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_to] == _balances[_to] + _value
+                                  ^-------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:78:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:78:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:78:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:111:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"
+10,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC20_merge.sol =======
+Annotation:1:14: solc-verify error: Undeclared identifier.
+remaining == _allowed[_owner][_spender]
+             ^------^
+Annotation:1:36: solc-verify error: Undeclared identifier. Did you mean ""balance""?
+_owner == address(0) || balance == _balances[_owner]
+                                   ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value
+^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value || _allowed[msg.sender][_spender] != _value
+^------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_allowed[msg.sender][_spender] == _value || _allowed[msg.sender][_spender] != _value
+                                            ^------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_from] >= _value
+^-------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                ^-------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_from == _to || _balances[_from] == _balances[_from] - _value
+                                    ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + _value || _from == _to
+^-------^
+Annotation:1:19: solc-verify error: Undeclared identifier.
+_balances[_to] == _balances[_to] + _value || _from == _to
+                  ^-------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+^------^
+Annotation:1:32: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+                               ^------^
+Annotation:1:63: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+                                                              ^------^
+Annotation:1:94: solc-verify error: Undeclared identifier.
+_allowed[_from][msg.sender] >= _allowed[_from][msg.sender] || _allowed[_from][msg.sender] == _allowed[_from][msg.sender] - _value
+                                                                                             ^------^
+ERC20_merge.sol:54:5: solc-verify error: Error(s) while translating annotation for node
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:64:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256){}
+    ^--------------------------------------------------------------------------------------^
+ERC20_merge.sol:76:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:76:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
+    ^----------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+ERC20_merge.sol:108:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
+    ^-------------------------------------------------------------------------------------------------------------^
+
+"

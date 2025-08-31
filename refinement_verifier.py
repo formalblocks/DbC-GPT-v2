@@ -17,8 +17,7 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 VERIFICATION_OPTIONS = ['llm_base', 'base_llm']
 
 # Define ERC standards to process
-# Temporarily focus on ERC721 to validate fix for old() in preconditions
-ERC_STANDARDS = ['erc721']
+ERC_STANDARDS = ['erc20', 'erc721']
 
 RESULT_TYPES = [
     'results_entire_contract_base_full_context',
@@ -292,11 +291,6 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
     file_prefix = ""
     if "func_by_func" in result_type:
         file_prefix = "fbf_"
-    elif "base" in result_type:
-        file_prefix = ""  # Assuming empty prefix for entire_contract
-    else:
-        logging.warning(f"Unknown or unhandled result_type pattern for file prefix: {result_type}. Skipping.")
-        return
 
     input_csv_path = f"./experiments/{result_type}/{model_name}/{main_erc_standard_dir}/{token_context}/{file_prefix}{main_erc_standard_dir}_[{token_context}].csv"
 

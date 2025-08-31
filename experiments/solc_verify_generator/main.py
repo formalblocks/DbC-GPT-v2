@@ -19,13 +19,21 @@ def call_solc(file_path):
     return result
 
 
-def process_annotations(annotations, state_variables, prefix):
+def process_annotations(annotations, state_variables, option, prefix):
     for key, value in annotations.items():
+        # If a function has no docstring, its value will be None.
+        # Treat it as an empty string to avoid errors and signify no annotation.
+        if value is None:
+            annotations[key] = ""
+            continue
+
         processed_annotation = value
         if prefix:
             prefixed_value = add_prefix(value, state_variables, prefix)
             old_prefixed_value = remove_old_ref(prefixed_value, prefix)
             processed_annotation = old_prefixed_value
+            if option == "llm_base":
+                processed_annotation = replace_postcondition_by_precondition(processed_annotation)
 
         annotations[key] = add_triple_bars(processed_annotation)
 
@@ -37,9 +45,39 @@ def add_prefix(annotation: str, state_variables: Dict[str, dict], prefix: str) -
 
 
 def remove_old_ref(annotation: str, prefix: str) -> str:
-    pattern = r'__verifier_old_uint\s*\(\s*(nw.*?)\s*\)'
-    replacement = lambda match: match.group(1).replace(prefix, f'{prefix}_old')
-    return re.sub(pattern, replacement, annotation)
+    """
+    Rewrite occurrences of __verifier_old_*(con....) into con_old.... so that
+    the resulting expression does not use an "old" construct (which solc-verify
+    only allows in post-state contexts). This enables us to safely place the
+    generated conditions in preconditions for refinement checks.
+
+    We handle multiple variants used by specs: uint, bool, address.
+    """
+    # Build a regex that matches any of the supported __verifier_old_* wrappers
+    # and captures the inner expression that should start with the given prefix
+    # (e.g., 'con'). We then replace only the first occurrence of the prefix
+    # with '<prefix>_old' and drop the wrapper entirely.
+    old_funcs_pattern = r"__verifier_old_(?:uint|bool|address)\s*\(\s*(" + re.escape(prefix) + r".*?)\s*\)"
+
+    def _replace_to_old(match: re.Match) -> str:
+        inner = match.group(1)
+        # Replace only the leading '<prefix>.' with '<prefix>_old.' to avoid
+        # cascading replacements if the substring appears elsewhere
+        return re.sub(r"^" + re.escape(prefix) + r"\.", f"{prefix}_old.", inner, count=1)
+
+    processed = re.sub(old_funcs_pattern, _replace_to_old, annotation)
+
+    # Second pass: unwrap any remaining __verifier_old_* wrappers that did not
+    # start with the provided prefix (e.g., parameters or local expressions).
+    # We simply drop the wrapper and keep the inner expression.
+    generic_old_pattern = r"__verifier_old_(?:uint|bool|address)\s*\(\s*(.+?)\s*\)"
+    processed = re.sub(generic_old_pattern, r"\1", processed)
+
+    return processed
+
+
+def replace_postcondition_by_precondition(annotation: str) -> str:
+    return annotation.replace("postcondition", "precondition")
 
 
 def add_triple_bars(value: str) -> str:
@@ -50,14 +88,14 @@ def add_triple_bars(value: str) -> str:
     return new_annotation
 
 
-def generate_merge(spec: str, imp_template: str, merge_file_path: str, prefix: str = None):
+def generate_merge(spec: str, imp_template: str, merge_file_path: str, option: str, prefix: str = None):
     result = call_solc(spec)
     if result.returncode:
         # Something has gone wrong compiling the solidity code
         print("Something has gone wrong compiling the solidity code")
         raise RuntimeError(result.returncode, result.stdout + result.stderr)
     annotations, state_variables = parse_ast()
-    process_annotations(annotations, state_variables, prefix)
+    process_annotations(annotations, state_variables, option, prefix)
 
     with open(imp_template, 'r') as impl_template_file:
         template_str = impl_template_file.read()
@@ -105,8 +143,10 @@ if __name__ == "__main__":
     parser.add_argument("spec_file_path", help="The path to the specification file.", type=str)
     parser.add_argument("--prefix", help="The prefix to be added to each variable name in a spec annotation",
                         default=None, type=str)
+    parser.add_argument("--option", help="The refinement check option.",
+                        default='base_llm', type=str)
     parser.add_argument("merge_template_file_path", help="The path to the merge template file.", type=str)
     parser.add_argument("merge_output_file_path", help="The path to the merge output file.", type=str)
     args = parser.parse_args()
 
-    generate_merge(args.spec_file_path, args.merge_template_file_path, args.merge_output_file_path, prefix=args.prefix)
+    generate_merge(args.spec_file_path, args.merge_template_file_path, args.merge_output_file_path, option=args.option, prefix=args.prefix)

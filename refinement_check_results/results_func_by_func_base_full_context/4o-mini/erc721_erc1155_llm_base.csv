@@ -1,0 +1,1005 @@
+run,status,output
+1,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                                                  ^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:99:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+2,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - (_from != _to ? 1 : 0)
+^---------------^
+Annotation:1:29: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - (_from != _to ? 1 : 0)
+                            ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + (_from != _to ? 1 : 0)
+^---------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + (_from != _to ? 1 : 0)
+                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:99:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+3,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - 1 || _ownedTokensCount[_from] == _ownedTokensCount[_from]
+^---------------^
+Annotation:1:29: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - 1 || _ownedTokensCount[_from] == _ownedTokensCount[_from]
+                            ^---------------^
+Annotation:1:61: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - 1 || _ownedTokensCount[_from] == _ownedTokensCount[_from]
+                                                            ^---------------^
+Annotation:1:89: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - 1 || _ownedTokensCount[_from] == _ownedTokensCount[_from]
+                                                                                        ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
+^---------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
+                          ^---------------^
+Annotation:1:57: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
+                                                        ^---------------^
+Annotation:1:83: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
+                                                                                  ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+4,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] != _approved || _tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] != _approved || _tokenApprovals[_tokenId] == _approved
+                                          ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == msg.sender || _tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:44: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == msg.sender || _tokenApprovals[_tokenId] == _approved
+                                           ^-------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _tokenApprovals[_tokenId]
+            ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != address(0) || approved == address(0)
+^---------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                                                  ^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                                            ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+^---------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+^---------------^
+Annotation:1:29: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                            ^---------------^
+Annotation:1:57: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                                        ^---------------^
+Annotation:1:85: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                                                                    ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+^---------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                          ^---------------^
+Annotation:1:53: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                                                    ^---------------^
+Annotation:1:79: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                                                                              ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:68:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:68:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:68:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:81:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:81:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:102:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:154:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:154:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:154:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:154:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+
+"
+5,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] != address(0) || _tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:44: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] != address(0) || _tokenApprovals[_tokenId] == _approved
+                                           ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[msg.sender] == _ownedTokensCount[msg.sender]
+^---------------^
+Annotation:1:34: solc-verify error: Undeclared identifier.
+_ownedTokensCount[msg.sender] == _ownedTokensCount[msg.sender]
+                                 ^---------------^
+Annotation:1:37: solc-verify error: Undeclared identifier.
+_tokenId == _tokenId || approved == _tokenApprovals[_tokenId]
+                                    ^-------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+approved == address(0) || _tokenOwner[_tokenId] != address(0)
+                          ^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:50: solc-verify error: Undeclared identifier.
+forall (address owner) !(msg.sender == owner) || _ownedTokensCount[owner] == _ownedTokensCount[owner]
+                                                 ^---------------^
+Annotation:1:78: solc-verify error: Undeclared identifier.
+forall (address owner) !(msg.sender == owner) || _ownedTokensCount[owner] == _ownedTokensCount[owner]
+                                                                             ^---------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                                                  ^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:68:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:68:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:68:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:81:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:81:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:93:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:93:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:103:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:124:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:124:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:124:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:124:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:124:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+6,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _tokenApprovals[_tokenId]
+            ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != address(0) || approved == address(0)
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+forall (address operator) _operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator] || operator == _operator
+                          ^----------------^
+Annotation:1:71: solc-verify error: Undeclared identifier.
+forall (address operator) _operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator] || operator == _operator
+                                                                      ^----------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                                                  ^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                                          ^---------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:79:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:79:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:91:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:91:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:101:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+7,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != address(0)
+^---------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _tokenApprovals[_tokenId]
+            ^-------------^
+Annotation:1:30: solc-verify error: Undeclared identifier.
+!(approved == address(0)) || _tokenApprovals[_tokenId] == address(0)
+                             ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:50: solc-verify error: Undeclared identifier.
+forall (address owner) !(msg.sender == owner) || _ownedTokensCount[owner] == _ownedTokensCount[owner]
+                                                 ^---------------^
+Annotation:1:78: solc-verify error: Undeclared identifier.
+forall (address owner) !(msg.sender == owner) || _ownedTokensCount[owner] == _ownedTokensCount[owner]
+                                                                             ^---------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                                                  ^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:80:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:80:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:80:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:102:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:123:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+8,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:50: solc-verify error: Undeclared identifier.
+forall (address owner) !(msg.sender == owner) || _ownedTokensCount[owner] == _ownedTokensCount[owner]
+                                                 ^---------------^
+Annotation:1:78: solc-verify error: Undeclared identifier.
+forall (address owner) !(msg.sender == owner) || _ownedTokensCount[owner] == _ownedTokensCount[owner]
+                                                                             ^---------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenApprovals[_tokenId] == address(0)
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenApprovals[_tokenId] == address(0)
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenApprovals[_tokenId] == address(0)
+                                                  ^-------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                                          ^---------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:90:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:90:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+
+"
+9,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] != address(0) || _tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:44: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] != address(0) || _tokenApprovals[_tokenId] == _approved
+                                           ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] == _approved
+^-------------^
+Annotation:1:44: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] == _approved
+                                           ^-------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _tokenApprovals[_tokenId]
+            ^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != address(0) || approved == address(0)
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+forall (address operator) _operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator] || operator == _operator
+                          ^----------------^
+Annotation:1:71: solc-verify error: Undeclared identifier.
+forall (address operator) _operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator] || operator == _operator
+                                                                      ^----------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - ( _from == _to ? 0 : 1 )
+^---------------^
+Annotation:1:29: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_from] == _ownedTokensCount[_from] - ( _from == _to ? 0 : 1 )
+                            ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + ( _from == _to ? 0 : 1 )
+^---------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + ( _from == _to ? 0 : 1 )
+                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                            ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 - (_from == _to ? 1 : 0))
+^---------------^
+Annotation:1:27: solc-verify error: Undeclared identifier.
+_ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 - (_from == _to ? 1 : 0))
+                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:55:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
+    function approve_post(address _approved, uint256 _tokenId) public;
+    ^----------------------------------------------------------------^
+ERC721_merge.sol:80:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:80:5: solc-verify error: Error(s) while translating annotation for node
+    function getApproved_post(uint256 _tokenId, address approved) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------------^
+ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:102:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:122:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:122:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:122:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:122:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:153:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:153:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:153:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:153:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+
+"
+10,255,"Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+contract Refinement {
+^ (Relevant source part starts here and spans across multiple lines).
+
+======= Converting to Boogie IVL =======
+
+======= ERC721_merge.sol =======
+Annotation:1:12: solc-verify error: Undeclared identifier.
+balance == _ownedTokensCount[_owner]
+           ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _owner
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] != _approved || _operatorApprovals[msg.sender][_operator] == _approved
+^----------------^
+Annotation:1:59: solc-verify error: Undeclared identifier.
+_operatorApprovals[msg.sender][_operator] != _approved || _operatorApprovals[msg.sender][_operator] == _approved
+                                                          ^----------------^
+Annotation:1:13: solc-verify error: Undeclared identifier.
+approved == _operatorApprovals[_owner][_operator]
+            ^----------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+^---------^
+Annotation:1:26: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                         ^---------^
+Annotation:1:51: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] != _tokenOwner[_tokenId] || _tokenOwner[_tokenId] == _from
+                                                  ^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - (1 * (_from != _to ? 1 : 0))
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + (1 * (_from != _to ? 1 : 0))
+                                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenOwner[_tokenId] == _to
+^---------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                ^---------------^
+Annotation:1:45: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
+                                            ^---------------^
+Annotation:1:17: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                ^---------------^
+Annotation:1:43: solc-verify error: Undeclared identifier.
+_from == _to || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
+                                          ^---------------^
+Annotation:1:1: solc-verify error: Undeclared identifier.
+_tokenApprovals[_tokenId] == address(0)
+^-------------^
+ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
+    ^---------------------------------------------------------------------------------------^
+ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
+    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
+    ^--------------------------------------------------------------------------------------^
+ERC721_merge.sol:90:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:90:5: solc-verify error: Error(s) while translating annotation for node
+    function setApprovalForAll_post(address _operator, bool _approved) public {}
+    ^--------------------------------------------------------------------------^
+ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
+    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
+    ^------------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:121:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:121:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:121:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:121:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:121:5: solc-verify error: Error(s) while translating annotation for node
+    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
+    ^--------------------------------------------------------------------------------^
+ERC721_merge.sol:152:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:152:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:152:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+ERC721_merge.sol:152:5: solc-verify error: Error(s) while translating annotation for node
+    function safeTransferFrom_post(address _from, address _to, uint256 _tokenId, bytes memory data) public {}
+    ^-------------------------------------------------------------------------------------------------------^
+
+"
