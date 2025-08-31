@@ -1,5 +1,5 @@
-run,time_taken,iterations,verified,annotated_contract,function_status,threads
-1,692.5267381668091,33,False,"pragma solidity >=0.5.0;
+run,time_taken,iterations,verified,annotated_contract,function_status,status,threads
+1,258.02307057380676,20,True,"pragma solidity >=0.5.0;
 
 contract ERC721 {
 
@@ -8,39 +8,42 @@ contract ERC721 {
     // State Variables
 
     // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    /// @notice postcondition _owner != address(0)
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    /// @notice postcondition _tokenId != 0 || _owner != address(0)
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
     /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _tokenApprovals[_tokenId] != address(0)
+    /// @notice postcondition _tokenApprovals[_tokenId] == __verifier_old_address(_tokenApprovals[_tokenId]) || _approved != __verifier_old_address(_tokenApprovals[_tokenId])
     function approve(address _approved, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenApprovals[_tokenId] == approved
+    /// @notice postcondition _tokenOwner[_tokenId] != address(0)
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    /// @notice postcondition _operator == _operator && _approved == _approved
+    /// @notice postcondition _operatorApprovals[__verifier_old_address(msg.sender)][_operator] != _approved || _operatorApprovals[msg.sender][_operator] == _approved
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
     /// @notice postcondition _tokenOwner[_tokenId] == _to
-    /// @notice postcondition __verifier_old_uint(_ownedTokensCount[_from]) - 1 == _ownedTokensCount[_from] || _from == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition true
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Failed'}","['thread_qc6k1AZERU4e5YW4Kgikc2LR', 'thread_AiN0ohpm2K7PseiBbZvJFeLL', 'thread_Mre8CW5kiXTEo7uMAtwSQSwI', 'thread_outxJn2ZeaKTUSKwTWxHQZdh', 'thread_ga8V7oUzr9RXNbE99NLQ6VBn', 'thread_xgsswqcB7XvcfxhBm0JhYzKe', 'thread_UGBIHpcppMGGSAHN4yehkec5', 'thread_BYeKtAG7VAqrtAWt4a014thq', 'thread_8zgCxCC91dqHxEinNec4DDdP']"
-2,1014.1185808181763,48,False,"pragma solidity >=0.5.0;
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_nqnb2JIVx8qD9XXwrqEfXQUa', 'thread_vrQOX5Qh70yv9Qkdkf7IcWXg', 'thread_xCCKrEDwDY2mMVh0zL7Gmiqv', 'thread_caYK3fZzLaThk5eSK9UF1Hgz', 'thread_us8CwoyS06Q2rYRhvkqGPimd', 'thread_Wv25uKpxTCFbEfOLddvYRuui', 'thread_DI247dFszjpvJVG2MrmL8BP1', 'thread_XMm0E0fwTdAu2os4eRmCdcgm', 'thread_BzHLx0b4sDNEJbjFb2JMv9TJ']"
+2,227.06549382209778,19,True,"pragma solidity >=0.5.0;
 
 contract ERC721 {
 
@@ -49,38 +52,42 @@ contract ERC721 {
     // State Variables
 
     // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    /// @notice postcondition _owner != address(0)
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    /// @notice postcondition _tokenId != 0 || _owner != address(0)
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
     /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _approved != address(0)
+    /// @notice postcondition __verifier_old_address(_tokenApprovals[_tokenId]) == _approved || __verifier_old_address(_tokenApprovals[_tokenId]) != _approved
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
+    /// @notice postcondition approved == _tokenApprovals[_tokenId]
+    /// @notice postcondition !(0 <= _tokenId && _tokenId < _ownedTokensCount[__verifier_old_address(msg.sender)]) || approved == _tokenApprovals[_tokenId]
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
-    /// @notice postcondition true
+    /// @notice postcondition _operator == _operator && _approved == _approved
+    /// @notice postcondition _operatorApprovals[__verifier_old_address(msg.sender)][_operator] != _approved || _operatorApprovals[msg.sender][_operator] == _approved
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
-    /// @notice postcondition true
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition true
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Failed', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_tS4H4ysHDL73vGMLHTomoRy9', 'thread_s4BzG7AEdPsUWsWChtMIihOq', 'thread_LFsPGElwvoI6VWk8Z3yuSaaY', 'thread_Axq07VZAKtoW7q5vpBp9YWAj', 'thread_Cr0xXe7XTJ3DJTs7WAZDFk2k', 'thread_NaiZcfLwjSsEjF31YL3EbI9J', 'thread_tqHw3VCFuolgE5Qy6GQLTt6L', 'thread_HiXpZ3xh68cP23ZwcvX0nAcS', 'thread_sLyIY0FTAplBG9NCAXKeHyf2']"
-3,947.2009227275848,41,False,"pragma solidity >=0.5.0;
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_AKAVOaOiAd2y7oBuQw8DwRRI', 'thread_kJO57B2ohb3RtW006Mh6gnGj', 'thread_w10z79YQMnN2dkXDm2dHc7Wl', 'thread_pQlyfb36D8sjKXQkxl3heOlY', 'thread_340etcRsbPDXxZ8KldI9pQqh', 'thread_jx1LnnZd1MEQtCoKvrg8oeC0', 'thread_A6NVzApxmdGRM8NhkB6J9GNp', 'thread_cZgxZ22emkG21R2KWFGGUBYp', 'thread_pSyid7ct1mVU301HWrehTax0']"
+3,173.1377465724945,14,True,"pragma solidity >=0.5.0;
 
 contract ERC721 {
 
@@ -89,292 +96,44 @@ contract ERC721 {
     // State Variables
 
     // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
     /// @notice postcondition _owner != address(0) || balance == 0
     function balanceOf(address _owner) external view returns (uint256 balance);
 
-    /// @notice postcondition _tokenOwner[_tokenId] == _owner
-    /// @notice postcondition _owner != address(0)
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    /// @notice postcondition _tokenId != 0 || _owner != address(0)
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
     /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _tokenApprovals[_tokenId] == _approved
-    function approve(address _approved, uint256 _tokenId) external;
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved || approved == address(0)
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition _operator != msg.sender || _operatorApprovals[msg.sender][_operator] == __verifier_old_bool(_operatorApprovals[msg.sender][_operator])
-    /// @notice postcondition msg.sender != _operator || _operatorApprovals[msg.sender][_operator] != __verifier_old_bool(_operatorApprovals[msg.sender][_operator])
-    function setApprovalForAll(address _operator, bool _approved) external;
-
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    /// @notice postcondition _owner == address(0) || approved == true || approved == false
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice postcondition true
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-
-}
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_NESTgDOgEalHO0zlZhomprjk', 'thread_9jl50CkH0Tyj9m5kznQQdOyX', 'thread_oGrJOsIuWmW6qJzx8wzl47nY', 'thread_fI5usnKWBw5u6vnKmiOE16jM', 'thread_cVo4czEfIzmhB5HtYl3PFATj', 'thread_DfTfKCDFY3Tve4dijBA9uBVe', 'thread_YaqjcyB9zyfuU47lBttXsMgT', 'thread_CC6Mmnm40qH2C0LFrNNYfYoD', 'thread_6KaCpaldFIvJNVToYhuE1LTT']"
-4,946.8832890987396,41,False,"pragma solidity >=0.5.0;
-
-contract ERC721 {
-
-    // Events
-
-    // State Variables
-
-    // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    /// @notice postcondition _owner != address(0)
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    /// @notice postcondition _tokenOwner[_tokenId] == _owner
-    /// @notice postcondition _owner != address(0)
-    function ownerOf(uint256 _tokenId) external view returns (address _owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _approved != address(0)
+    /// @notice postcondition _approved != __verifier_old_address(_tokenApprovals[_tokenId]) || _tokenApprovals[_tokenId] == _approved
     function approve(address _approved, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    /// @notice postcondition approved == address(0) || _tokenApprovals[_tokenId] != address(0)
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition _operator != msg.sender || _operatorApprovals[msg.sender][_operator] == __verifier_old_bool(_operatorApprovals[msg.sender][_operator])
-    /// @notice postcondition msg.sender != _operator || _operatorApprovals[msg.sender][_operator] != __verifier_old_bool(_operatorApprovals[msg.sender][_operator])
-    function setApprovalForAll(address _operator, bool _approved) external;
-
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice postcondition true
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-
-}
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_SkbNEKSZRDm4JK36Ie9GJ7ZZ', 'thread_RzDs2qITyy9bIgt8xQfQpDPb', 'thread_TKqOrOh3Z1cacWUxFdusOTRV', 'thread_QcoQOWvCF4k54bZCLpyvNhL2', 'thread_scEjTCAFjNZVRr9cmQcivYLu', 'thread_hvRiN0eiaiORXvuMTMfbTLrS', 'thread_evBZlDh6eH48TIlBlTcY42yv', 'thread_RPoFO2XPKNrlIwJrHuV6GaQJ', 'thread_anFIuBDnAWus7PcvqKlOpSYI']"
-5,1104.7419652938843,48,False,"pragma solidity >=0.5.0;
-
-contract ERC721 {
-
-    // Events
-
-    // State Variables
-
-    // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    /// @notice postcondition _owner != address(0)
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    /// @notice postcondition _owner == _tokenOwner[_tokenId]
-    /// @notice postcondition _tokenId == 0 || _owner != address(0)
-    function ownerOf(uint256 _tokenId) external view returns (address _owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _approved != address(0)
-    function approve(address _approved, uint256 _tokenId) external;
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition true
-    function setApprovalForAll(address _operator, bool _approved) external;
-
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    /// @notice postcondition approved == true || approved == false
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice postcondition true
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-
-}
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Failed', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_UalWfmOpw4QKJLpaMsQlksqo', 'thread_UOHauqGXEwYYcQAdNQYqUlWn', 'thread_Tj62BrMnS0ZsdichT9n3d9qG', 'thread_1JA3wxbFOXYf56mCnCVSnSJn', 'thread_pdJVeBmmq2Qs9x2f3rvwsY2y', 'thread_xNWSUnQ4YPPZjHe3g8vZE0HE', 'thread_jcw0YKK6dyJ8BUyUlx1TkR0T', 'thread_Q2rpMhQrtzkjIfa5NZX0q3MQ', 'thread_wS5dlGVztB7FTIbtw0znRzOb']"
-6,889.6743865013123,40,False,"pragma solidity >=0.5.0;
-
-contract ERC721 {
-
-    // Events
-
-    // State Variables
-
-    // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    /// @notice postcondition _owner != address(0)
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    /// @notice postcondition _tokenOwner[_tokenId] == _owner
-    /// @notice postcondition _owner != address(0)
-    function ownerOf(uint256 _tokenId) external view returns (address _owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _approved != address(0)
-    function approve(address _approved, uint256 _tokenId) external;
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    /// @notice postcondition !(approved == address(0)) || _tokenApprovals[_tokenId] == approved
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
-    function setApprovalForAll(address _operator, bool _approved) external;
-
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice postcondition true
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-
-}
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_2x5MHZuUwBam3Cj9pfrEcInp', 'thread_LiFP47BBJKMwke4Rlx6A6RlC', 'thread_kEfyiYdaYLCr72MYk3l4TTpK', 'thread_EDXR6uQanGiXQrVkKQKceklX', 'thread_y1xHOe0fhxiehXLoJRZVwMCT', 'thread_nqqI8A3LU1MOzMyliOmh60q8', 'thread_vWNxCfOYdwWDQfi9zpPc7k0t', 'thread_cg1TaXecVeROiUYXyRYD7PTl', 'thread_5TTsnnoy5abWSvlETwujkipq']"
-7,842.7726719379425,40,False,"pragma solidity >=0.5.0;
-
-contract ERC721 {
-
-    // Events
-
-    // State Variables
-
-    // Functions
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    /// @notice postcondition _owner != address(0)
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    /// @notice postcondition _owner == _tokenOwner[_tokenId]
-    function ownerOf(uint256 _tokenId) external view returns (address _owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _approved != address(0)
-    function approve(address _approved, uint256 _tokenId) external;
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved || approved == address(0)
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == __verifier_old_bool(_operatorApprovals[msg.sender][_operator]) || _approved != __verifier_old_bool(_operatorApprovals[msg.sender][_operator])
-    function setApprovalForAll(address _operator, bool _approved) external;
-
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice postcondition true
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-
-}
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_rjAvxKLcFaQs8JutBIY2QE9F', 'thread_mbQZEJaM8Iit0Ye3NcrH2Mw5', 'thread_hiiD9WoXca3B2PXUHcLLN7sX', 'thread_gMd2j0A4LYpR9ROV5BP9kl9O', 'thread_etuF0Jsd7Vv67e5zsmIoUoHQ', 'thread_ByS9TFkxFtw5NeMWgVdZxkDC', 'thread_m708jxeSrZTZdhZcnJXTYSrD', 'thread_rJA0VpPaCOyWkmKlkayDllDz', 'thread_mE9JtzHcusXNUSegSpgqA8ES']"
-8,1007.4927203655243,47,False,"pragma solidity >=0.5.0;
-
-contract ERC721 {
-
-    // Events
-
-    // State Variables
-
-    // Functions
-    /// @notice postcondition balance == _ownedTokensCount[_owner]
-    /// @notice postcondition _owner != address(0)
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    /// @notice postcondition _owner == _tokenOwner[_tokenId]
-    function ownerOf(uint256 _tokenId) external view returns (address _owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _approved != address(0)
-    function approve(address _approved, uint256 _tokenId) external;
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    /// @notice postcondition !(approved == address(0)) || _tokenApprovals[_tokenId] == approved
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition true
-    function setApprovalForAll(address _operator, bool _approved) external;
-
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice postcondition true
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice postcondition true
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-
-}
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Failed', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_dHle3TosbHk7f2WiraWIb6jL', 'thread_6VPCPOlj5PCK8TKi614QX34D', 'thread_Dp2dcvgz0oF1drAmoEehsEca', 'thread_9ryqgIXCbCtTdvRxRPWXj8nt', 'thread_ZVsYN3jEWUdkuDbiTmm5pBp3', 'thread_8GLEdIT8EB8lRpb7uUkI0g3J', 'thread_wdRevWc7LZT2WOfpXIHRlq2s', 'thread_9AiOSx60hN8zZeZfmQWJLnYZ', 'thread_0J20Nf2zpcS6JXMx7Ki05YDG']"
-9,965.1766469478607,49,False,"pragma solidity >=0.5.0;
-
-contract ERC721 {
-
-    // Events
-
-    // State Variables
-
-    // Functions
-    /// @notice postcondition balance == _ownedTokensCount[_owner]
-    /// @notice postcondition _owner != address(0)
-    function balanceOf(address _owner) external view returns (uint256 balance);
-
-    /// @notice postcondition _owner == _tokenOwner[_tokenId]
     /// @notice postcondition _tokenOwner[_tokenId] != address(0)
-    function ownerOf(uint256 _tokenId) external view returns (address _owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _tokenApprovals[_tokenId] == _approved
-    function approve(address _approved, uint256 _tokenId) external;
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    /// @notice postcondition !(approved == address(0)) || __verifier_old_bool(approved == address(0))
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
-    /// @notice postcondition true
+    /// @notice postcondition _operator == _operator
+    /// @notice postcondition _approved == _approved
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
-    /// @notice postcondition true
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition _tokenOwner[_tokenId] == _to || _from == _from
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from || _from == _from
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Failed', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_bkZlh6IxWlpgkBjULMeFw2pD', 'thread_SKg6NMj4Jw5owiPd3fhErZdK', 'thread_zV3gyr2ZG9cTFR37WEdKcYp1', 'thread_VPpCyugpuHqba1f4Tl89YVhA', 'thread_qMjXEu33fVtP2w6gToApcKxy', 'thread_uKQH7BXHOSyuqNAmkaPm7Nct', 'thread_TATh4wBQDXxHoE7BnRRzZx78', 'thread_alc37tmhccIDhmVmzgRxipF8', 'thread_6bNnLgfp1S86WWzj5FX7SpTe']"
-10,738.0818200111389,41,False,"pragma solidity >=0.5.0;
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_7CpLsVuSjORdWUpIidagtWox', 'thread_Rb1Ib48WRjG2QjbzqvCSXD2G', 'thread_nPuYGjEAlIOzzfGfXusu6GiQ', 'thread_GXJl8gXs2eGv9nSly1CQJ0Hl', 'thread_wyQ7PqkcaOjmApE3xhZAKR2U', 'thread_uuTA3DD6xL6NzPkfWRHWyypS', 'thread_z8i7iHFe355VwM29mnal9MfB', 'thread_ddlE657udae7TgRLV82a81eA', 'thread_iq4v3OhiCA4vMaWwa9Z1pVTI']"
+4,313.1682162284851,28,False,"pragma solidity >=0.5.0;
 
 contract ERC721 {
 
@@ -386,22 +145,65 @@ contract ERC721 {
     /// @notice postcondition balance == _ownedTokensCount[_owner]
     function balanceOf(address _owner) external view returns (uint256 balance);
 
-    /// @notice postcondition _tokenOwner[_tokenId] == _owner
-    /// @notice postcondition _owner != address(0)
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    /// @notice postcondition _tokenId != 0 || _owner != address(0)
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
     /// @notice postcondition _tokenApprovals[_tokenId] == _approved
-    /// @notice postcondition _approved == address(0) || _tokenApprovals[_tokenId] != address(0)
+    /// @notice postcondition __verifier_old_address(_tokenApprovals[_tokenId]) != _approved || _tokenApprovals[_tokenId] == _approved
     function approve(address _approved, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    /// @notice postcondition !(approved == address(0)) || _tokenApprovals[_tokenId] == approved
+    /// @notice postcondition forall (address addr) !(addr == approved && _tokenOwner[_tokenId] == __verifier_old_address(addr)) || _tokenApprovals[_tokenId] == addr
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    /// @notice postcondition true
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+
+}
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Failed', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_pu8R9Wz6hU9s2O34rQrpl8cg', 'thread_1w7ynP06Ry65sP7ZmdmATfJQ', 'thread_vJUJYaATANsmfNKggOzwjbGG', 'thread_HU8EZludWiUz1zrGhd1cOYja', 'thread_7yft5td44DA9WZcoFbxGCbYZ', 'thread_u5xIIm2v07DF4hgK9b1u3OMs', 'thread_nwQN55Ur4dK1L9War3hBfhas', 'thread_vJ93x6XvYnCC3zQfs3kti0jR', 'thread_scvyf3cmenJ26kD9sru2o34M']"
+5,555.4185123443604,46,False,"pragma solidity >=0.5.0;
+
+contract ERC721 {
+
+    // Events
+
+    // State Variables
+
+    // Functions
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition true
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    /// @notice postcondition __verifier_old_address(_tokenApprovals[_tokenId]) != _approved || _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == approved
+    /// @notice postcondition forall (address addr) !(addr == approved && _tokenOwner[_tokenId] == __verifier_old_address(addr)) || _tokenApprovals[_tokenId] == addr
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operator == _operator
+    /// @notice postcondition _approved == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
     /// @notice postcondition true
@@ -414,4 +216,218 @@ contract ERC721 {
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
-","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}","['thread_owLJ2pwdCvP8Fa0daasVCt3Y', 'thread_kErivPYwG33zetI2mW8oBVgJ', 'thread_GWt4yPw1zV8RFm7XnWdtEvxU', 'thread_y4iecTmFvON1Syn6wSD9GZjT', 'thread_FKapGtCeR8VDUtAA9sRoINJF', 'thread_jhcRog1s0O9G9oCr4vGuGIzL', 'thread_Hb4Eu97kqPZ3OqDYl4WIdbdS', 'thread_oZsIzg2aH1rWZmoNph5lVnIu', 'thread_YCcIwejSwbuSJjj85fQ1HXY6']"
+","{'balanceOf': 'Verified', 'ownerOf': 'Failed', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}",[],"['thread_ORBDId6IPwAoLRPAszfDP4o7', 'thread_VDNXwPHi8CZtbDSYWcqSCjv5', 'thread_I3O0nX9D49yyawNH0XNPinsE', 'thread_OJRRtl8ISIO8hsQFQa8Biq4L', 'thread_QKN4I7CkfsBVDcJ9Khmd0HDJ', 'thread_rWkmIh8990T43cEQmXnlbShX', 'thread_yQeHAXr4NhttnOQpMqd1PfcP', 'thread_9Elwg4G6GQXCyeimsUdPa6jO', 'thread_291M2cauV9Rv5k0SPlXQr0mC']"
+6,558.8945651054382,47,False,"pragma solidity >=0.5.0;
+
+contract ERC721 {
+
+    // Events
+
+    // State Variables
+
+    // Functions
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition true
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    /// @notice postcondition _tokenApprovals[_tokenId] != __verifier_old_address(_tokenApprovals[_tokenId]) || _approved == __verifier_old_address(_tokenApprovals[_tokenId])
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition approved == _tokenApprovals[_tokenId]
+    /// @notice postcondition !(0 <= _tokenId && _tokenId < _ownedTokensCount[__verifier_old_address(msg.sender)]) || approved == _tokenApprovals[_tokenId]
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operator == _operator
+    /// @notice postcondition _approved == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition true
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+
+}
+","{'balanceOf': 'Verified', 'ownerOf': 'Failed', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Failed', 'safeTransferFrom': 'Failed'}",[],"['thread_qARdyeFsJj6CuHFkZZOtsm2Y', 'thread_zSvhHTGkvpsv7jPBz03s86Ox', 'thread_eFk2Mlwnhp3yNyO0v4vpRbIi', 'thread_qpPBqLdpoL8BSgGtpTwQZq1o', 'thread_pa0tyZ48kzvFY8MIzrfFfTtH', 'thread_iWaQkvtth6ywQAtLGlvGZBFG', 'thread_xmtcrcn3fT9p50HY4wsTEEkA', 'thread_1O9Ur5adC9rJ0OWWC5AlXlO2', 'thread_22xf6lcUSVPIRVsxzwe99MDx']"
+7,279.05505537986755,24,True,"pragma solidity >=0.5.0;
+
+contract ERC721 {
+
+    // Events
+
+    // State Variables
+
+    // Functions
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    /// @notice postcondition _tokenId == _tokenId
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    /// @notice postcondition __verifier_old_address(_tokenApprovals[_tokenId]) != _approved || _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == approved
+    /// @notice postcondition forall (address addr) !(addr == approved && _tokenOwner[_tokenId] == __verifier_old_address(addr)) || _tokenApprovals[_tokenId] == addr
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operator == _operator
+    /// @notice postcondition _approved == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+
+}
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_ZHZ8fF3xnPG9hTnCKlKqyvOz', 'thread_rQzGmwJRC3mWcroUtm53mjVo', 'thread_mEn7Yn7nTt9aMFmhmR3HVqME', 'thread_a1ycWAMM56jKUv2wN9d66apv', 'thread_GmmX1U8iInFe7wM4II2LnmCz', 'thread_QiifgqJGhOiKVgzWKrcaZjYY', 'thread_tWqlIuHkdqe63a03fJu9ycxc', 'thread_kLGIrl73N54wQXQMRu1ZEroY', 'thread_FIa2jHd8DA8uQSrPRzsItIB6']"
+8,242.36925721168518,20,True,"pragma solidity >=0.5.0;
+
+contract ERC721 {
+
+    // Events
+
+    // State Variables
+
+    // Functions
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    /// @notice postcondition _tokenId != 0 || _owner != address(0)
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    /// @notice postcondition __verifier_old_address(_tokenApprovals[_tokenId]) != _approved || _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == approved || _tokenApprovals[_tokenId] != approved
+    /// @notice postcondition forall (address x) !(x == approved && x == __verifier_old_address(_tokenOwner[_tokenId])) || _tokenOwner[_tokenId] == x
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operator == _operator && _approved == _approved
+    /// @notice postcondition _operatorApprovals[__verifier_old_address(msg.sender)][_operator] != _approved || _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+
+}
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_9UdjbCnuBUyASCKh7UB1aEMi', 'thread_Q1MQUBiTrxVtrBkRgjuVZREF', 'thread_h2Nmp6ezgosDp8ExDSR8hVkt', 'thread_f3eNrJ7Nkdkv4qYOdMdCj91x', 'thread_JfPPRPgjM8uKPDRBF9sfRSbi', 'thread_LU1Xe376kPzU2DoLFHXHDhtW', 'thread_oZMZen8BsTaR5vmhz3wn3p0m', 'thread_JM3hZPOGKYWfOTl5E4AzvF1h', 'thread_yElejFBgPNN77ld69YyvmddJ']"
+9,471.3819570541382,40,False,"pragma solidity >=0.5.0;
+
+contract ERC721 {
+
+    // Events
+
+    // State Variables
+
+    // Functions
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition true
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    /// @notice postcondition _tokenApprovals[_tokenId] == __verifier_old_address(_tokenApprovals[_tokenId]) || _approved != __verifier_old_address(_tokenApprovals[_tokenId])
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == approved || __verifier_old_address(_tokenApprovals[_tokenId]) == approved
+    /// @notice postcondition !(0 <= _tokenId && _tokenId < 2**256 - 1) || _tokenOwner[_tokenId] != address(0)
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operator == _operator && _approved == _approved
+    /// @notice postcondition _operatorApprovals[__verifier_old_address(msg.sender)][_operator] != _approved || _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition _from == _to || __verifier_old_address(_tokenOwner[_tokenId]) == _from || _from != _to
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from || _from == _to || _from == address(0) || _from != _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+
+}
+","{'balanceOf': 'Verified', 'ownerOf': 'Failed', 'approve': 'Verified', 'getApproved': 'Verified', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_G6umLcbwa94vupxMsYX3qduy', 'thread_R2dqeqXxNG0vwUQwdbjL0oIV', 'thread_EEEUUx1CvvuAQk9pjuSXG45h', 'thread_eoRNAsgT0L00EN9pZplXND0y', 'thread_VcZTEh2Bg7D0LJyDlzFhClym', 'thread_SyBzgcm0wbw8kdox2iB2ECGU', 'thread_lC6y7wLIH4bgsabsEKEqgqBy', 'thread_aW8RLRxdhrYSptXRFSZWtXba', 'thread_NS5Bkk3qQU7KwiqGfVSGHUi0']"
+10,347.6878311634064,29,False,"pragma solidity >=0.5.0;
+
+contract ERC721 {
+
+    // Events
+
+    // State Variables
+
+    // Functions
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    /// @notice postcondition _tokenApprovals[_tokenId] == __verifier_old_address(_tokenApprovals[_tokenId]) || _approved != __verifier_old_address(_tokenApprovals[_tokenId])
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operator == __verifier_old_address(_operator) || _operatorApprovals[msg.sender][_operator] == _approved
+    /// @notice postcondition forall (address addr) !(msg.sender == addr) || _operatorApprovals[addr][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition true
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+
+}
+","{'balanceOf': 'Verified', 'ownerOf': 'Verified', 'approve': 'Verified', 'getApproved': 'Failed', 'setApprovalForAll': 'Verified', 'isApprovedForAll': 'Verified', 'transferFrom': 'Verified', 'safeTransferFrom': 'Verified'}",[],"['thread_71Y9IybuMidIc25W4NZiqcla', 'thread_GtMB5q1tawyxXtM4EHKgTpJF', 'thread_KNKnDh8rFZXPGVJyvLcvtMXA', 'thread_CjceCTVf1UDjwIgWkzfYo2f2', 'thread_NNs101kw9EpUQjFz3ttbLmzF', 'thread_FFAvwP60x2NVYjWMTNwqokUi', 'thread_0L82UfF1TyYssPBSfB7i5LYE', 'thread_aEzA1WRyoWlBE1xcpcuM07pi', 'thread_FtKuW7tC9QI8oH1dX8oMqvhG']"
