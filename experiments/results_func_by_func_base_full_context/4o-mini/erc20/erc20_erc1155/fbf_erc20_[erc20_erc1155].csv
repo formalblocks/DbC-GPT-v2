@@ -3,10 +3,12 @@ run,time_taken,iterations,verified,annotated_contract,function_status,status,thr
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -37,10 +39,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -71,10 +75,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -105,10 +111,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -139,10 +147,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -173,10 +183,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -207,10 +219,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -241,10 +255,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -275,10 +291,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply
@@ -310,10 +328,12 @@ contract ERC20 {
 
 contract ERC20 {
 
-    // Events
-
-    // State Variables
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
     uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
 
     // Functions
     /// @notice postcondition supply == _totalSupply

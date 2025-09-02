@@ -3,9 +3,17 @@ run,time_taken,iterations,verified,annotated_contract,function_status,status,thr
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -37,7 +45,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenOwner[_tokenId] == _to
@@ -52,9 +60,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -86,7 +102,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -100,9 +116,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -133,7 +157,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -147,9 +171,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -181,7 +213,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -195,9 +227,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -228,7 +268,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -242,9 +282,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -275,7 +323,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -289,9 +337,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -322,7 +378,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenOwner[_tokenId] == _to
@@ -337,9 +393,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -370,7 +434,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -384,9 +448,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -417,7 +489,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
@@ -431,9 +503,17 @@ contract ERC721 {
 
 contract ERC721 {
 
-    // Events
+    event Transfer(address indexed from, address indexed to, uint256 indexed tokenId);
+    event Approval(address indexed owner, address indexed approved, uint256 indexed tokenId);
+    event ApprovalForAll(address indexed owner, address indexed operator, bool approved);
 
-    // State Variables
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    mapping (uint256 => address) private _tokenOwner;
+    mapping (uint256 => address) private _tokenApprovals;
+    mapping (address => uint256) private _ownedTokensCount;
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
     /// @notice postcondition _ownedTokensCount[_owner] == balance
@@ -465,7 +545,7 @@ contract ERC721 {
 
     /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
     /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == to
+    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenOwner[_tokenId] == _to

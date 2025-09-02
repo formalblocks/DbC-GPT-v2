@@ -1,549 +1,370 @@
 run,status,output
-1,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:11: solc-verify error: Undeclared identifier.
-_owner == _tokenOwner[_tokenId]
-          ^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:66: solc-verify error: Undeclared identifier.
-forall (address addr) (addr == _approved || addr != _approved || _tokenApprovals[_tokenId] == _approved)
-                                                                 ^-------------^
-Annotation:1:14: solc-verify error: Undeclared identifier.
-approved == (_operatorApprovals[_owner][_operator] == true)
-             ^----------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenOwner[_tokenId] == _to
-^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenOwner[_tokenId] == _from
-^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-^---------------^
-Annotation:1:29: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                            ^---------------^
-Annotation:1:57: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                                                        ^---------------^
-Annotation:1:85: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                                                                                    ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-^---------------^
-Annotation:1:27: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-                          ^---------------^
-Annotation:1:53: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-                                                    ^---------------^
-Annotation:1:79: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-                                                                              ^---------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
-    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
-    ^--------------------------------------------------------------------------------------^
-ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:119:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-
+1,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:56:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:119:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:119:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:132:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:132:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:132:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:146:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:146:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:146:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-2,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:27: solc-verify error: Undeclared identifier.
-forall (address operator) _operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator]
-                          ^----------------^
-Annotation:1:71: solc-verify error: Undeclared identifier.
-forall (address operator) _operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator]
-                                                                      ^----------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[msg.sender] == _ownedTokensCount[msg.sender]
-^---------------^
-Annotation:1:34: solc-verify error: Undeclared identifier.
-_ownedTokensCount[msg.sender] == _ownedTokensCount[msg.sender]
-                                 ^---------------^
-Annotation:1:13: solc-verify error: Undeclared identifier.
-approved == _operatorApprovals[_owner][_operator]
-            ^----------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:91:5: solc-verify error: Error(s) while translating annotation for node
-    function setApprovalForAll_post(address _operator, bool _approved) public {}
-    ^--------------------------------------------------------------------------^
-ERC721_merge.sol:101:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-
+2,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:91:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:117:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:117:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:117:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:130:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:130:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:130:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:144:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:144:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:144:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-3,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-forall (address operator) (_operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator])
-                           ^----------------^
-Annotation:1:72: solc-verify error: Undeclared identifier.
-forall (address operator) (_operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator])
-                                                                       ^----------------^
-Annotation:1:13: solc-verify error: Undeclared identifier.
-approved == _operatorApprovals[_owner][_operator] || _owner == _operator
-            ^----------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenOwner[_tokenId] == _to
-^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-^---------------^
-Annotation:1:29: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                            ^---------------^
-Annotation:1:57: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                                                        ^---------------^
-Annotation:1:85: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                                                                                    ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
-^---------------^
-Annotation:1:27: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
-                          ^---------------^
-Annotation:1:57: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
-                                                        ^---------------^
-Annotation:1:83: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] + 1 || _ownedTokensCount[_to] == _ownedTokensCount[_to]
-                                                                                  ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0)
-^-------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:99:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-ERC721_merge.sol:118:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:118:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:118:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:118:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-
+3,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:89:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: ERROR
+ - ERC721_merge.sol:99:5: Postcondition 'abs._operatorApprovals[_owner][_operator] == approved' might not hold at end of function.
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:118:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:118:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:131:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:131:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:131:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:145:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:145:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:145:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-4,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:30: solc-verify error: Undeclared identifier.
-!(0 < _tokenId) || _owner == _tokenOwner[_tokenId]
-                             ^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-forall (address operator) (_operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator])
-                           ^----------------^
-Annotation:1:72: solc-verify error: Undeclared identifier.
-forall (address operator) (_operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator])
-                                                                       ^----------------^
-Annotation:1:13: solc-verify error: Undeclared identifier.
-approved == _operatorApprovals[_owner][_operator]
-            ^----------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
-    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
-    ^--------------------------------------------------------------------------------------^
-ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-
+4,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:56:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:56:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:143:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-5,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-forall (address operator) (_operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator])
-                           ^----------------^
-Annotation:1:72: solc-verify error: Undeclared identifier.
-forall (address operator) (_operatorApprovals[msg.sender][operator] == _operatorApprovals[msg.sender][operator])
-                                                                       ^----------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-_operator != address(0) || _operatorApprovals[msg.sender][_operator] == _approved
-                           ^----------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:90:5: solc-verify error: Error(s) while translating annotation for node
-    function setApprovalForAll_post(address _operator, bool _approved) public {}
-    ^--------------------------------------------------------------------------^
-
+5,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: ERROR
+ - ERC721_merge.sol:100:5: Postcondition 'abs._operatorApprovals[_owner][_operator] == approved' might not hold at end of function.
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:143:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-6,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-^-------------^
-Annotation:1:44: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-                                           ^-------------^
-Annotation:1:73: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-                                                                        ^-------------^
-Annotation:1:115: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-                                                                                                                  ^-------------^
-Annotation:1:13: solc-verify error: Undeclared identifier.
-approved == _operatorApprovals[_owner][_operator]
-            ^----------------^
-Annotation:1:40: solc-verify error: Undeclared identifier.
-_operator == address(0) || approved == _operatorApprovals[_owner][_operator]
-                                       ^----------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-
+6,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:89:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:143:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-7,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:56: solc-verify error: Undeclared identifier.
-!(0 <= _tokenId && _tokenId < 2**256 - 1) || _owner == _tokenOwner[_tokenId]
-                                                       ^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] != address(0) || _approved == address(0)
-^-------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-_operator != address(0) || _operatorApprovals[msg.sender][_operator] == _approved
-                           ^----------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-_operator != address(0) || _operatorApprovals[msg.sender][_operator] != _operatorApprovals[msg.sender][_operator] || _approved == _approved
-                           ^----------------^
-Annotation:1:73: solc-verify error: Undeclared identifier.
-_operator != address(0) || _operatorApprovals[msg.sender][_operator] != _operatorApprovals[msg.sender][_operator] || _approved == _approved
-                                                                        ^----------------^
-Annotation:1:28: solc-verify error: Undeclared identifier.
-_operator != address(0) || _ownedTokensCount[msg.sender] == _ownedTokensCount[msg.sender]
-                           ^---------------^
-Annotation:1:61: solc-verify error: Undeclared identifier.
-_operator != address(0) || _ownedTokensCount[msg.sender] == _ownedTokensCount[msg.sender]
-                                                            ^---------------^
-Annotation:1:14: solc-verify error: Undeclared identifier.
-approved == (_operatorApprovals[_owner][_operator] == true)
-             ^----------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:56:5: solc-verify error: Error(s) while translating annotation for node
-    function ownerOf_post(uint256 _tokenId, address _owner) public view returns (address) {}
-    ^--------------------------------------------------------------------------------------^
-ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:67:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
-    function setApprovalForAll_post(address _operator, bool _approved) public {}
-    ^--------------------------------------------------------------------------^
-ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
-    function setApprovalForAll_post(address _operator, bool _approved) public {}
-    ^--------------------------------------------------------------------------^
-ERC721_merge.sol:92:5: solc-verify error: Error(s) while translating annotation for node
-    function setApprovalForAll_post(address _operator, bool _approved) public {}
-    ^--------------------------------------------------------------------------^
-ERC721_merge.sol:102:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-
+7,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:56:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+ - ERC721_merge.sol:56:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:92:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:118:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:118:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:118:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:131:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:131:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:131:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:145:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:145:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:145:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-8,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] != _approved || _tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:43: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] != _approved || _tokenApprovals[_tokenId] == _approved
-                                          ^-------------^
-Annotation:1:13: solc-verify error: Undeclared identifier.
-approved == _operatorApprovals[_owner][_operator]
-            ^----------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:99:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-
+8,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:89:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:115:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:115:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:115:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:128:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:128:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:128:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:142:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:142:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:142:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-9,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-
+9,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:77:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:77:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:88:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: ERROR
+ - ERC721_merge.sol:98:5: Postcondition 'abs._operatorApprovals[_owner][_operator] == approved' might not hold at end of function.
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:114:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:114:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:114:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:127:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:127:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:127:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:141:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:141:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:141:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
-10,255,"Error while running compiler, details:
-Warning: This is a pre-release compiler version, please do not use it in production.
-ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
-contract Refinement {
-^ (Relevant source part starts here and spans across multiple lines).
-
-======= Converting to Boogie IVL =======
-
-======= ERC721_merge.sol =======
-Annotation:1:12: solc-verify error: Undeclared identifier.
-balance == _ownedTokensCount[_owner]
-           ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == _approved
-^-------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-^-------------^
-Annotation:1:44: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-                                           ^-------------^
-Annotation:1:73: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-                                                                        ^-------------^
-Annotation:1:115: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0) || _tokenApprovals[_tokenId] != _tokenApprovals[_tokenId] || _approved == _tokenApprovals[_tokenId]
-                                                                                                                  ^-------------^
-Annotation:1:13: solc-verify error: Undeclared identifier.
-approved == _operatorApprovals[_owner][_operator]
-            ^----------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenOwner[_tokenId] == _to
-^---------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-^---------------^
-Annotation:1:29: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                            ^---------------^
-Annotation:1:57: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                                                        ^---------------^
-Annotation:1:85: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_from] == _ownedTokensCount[_from] || _ownedTokensCount[_from] == _ownedTokensCount[_from] - 1
-                                                                                    ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-^---------------^
-Annotation:1:27: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-                          ^---------------^
-Annotation:1:53: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-                                                    ^---------------^
-Annotation:1:79: solc-verify error: Undeclared identifier.
-_ownedTokensCount[_to] == _ownedTokensCount[_to] || _ownedTokensCount[_to] == _ownedTokensCount[_to] + 1
-                                                                              ^---------------^
-Annotation:1:1: solc-verify error: Undeclared identifier.
-_tokenApprovals[_tokenId] == address(0)
-^-------------^
-ERC721_merge.sol:44:5: solc-verify error: Error(s) while translating annotation for node
-    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256) {}
-    ^---------------------------------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:66:5: solc-verify error: Error(s) while translating annotation for node
-    function approve_post(address _approved, uint256 _tokenId) public;
-    ^----------------------------------------------------------------^
-ERC721_merge.sol:100:5: solc-verify error: Error(s) while translating annotation for node
-    function isApprovedForAll_post(address _owner, address _operator, bool approved) public view returns (bool) {}
-    ^------------------------------------------------------------------------------------------------------------^
-ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-ERC721_merge.sol:120:5: solc-verify error: Error(s) while translating annotation for node
-    function transferFrom_post(address _from, address _to, uint256 _tokenId) public {}
-    ^--------------------------------------------------------------------------------^
-
+10,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:55:5: Postcondition 'abs._tokenOwner[_tokenId] == _owner' might not hold at end of function.
+ - ERC721_merge.sol:55:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+ - ERC721_merge.sol:78:5: Postcondition 'abs._tokenApprovals[_tokenId] == approved' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:89:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:120:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:120:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:133:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:133:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:133:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:147:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:147:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:147:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
 "
