@@ -21,5 +21,4 @@ datasets/*
 *.pyc
 
 .claude
-.serena
 CLAUDE.md
