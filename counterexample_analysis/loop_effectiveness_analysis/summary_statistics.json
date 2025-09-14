@@ -1,0 +1,12 @@
+{
+  "total_runs": 450,
+  "total_successful": 216,
+  "success_rate": 48.0,
+  "first_time_success_count": 96,
+  "first_time_success_rate": 21.333333333333336,
+  "second_iteration_success_count": 44,
+  "second_iteration_success_rate": 9.777777777777779,
+  "loop_useful_count": 120,
+  "loop_useful_rate": 26.666666666666668,
+  "avg_iterations_successful": 1.4953703703703705
+}
