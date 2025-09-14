@@ -14,8 +14,8 @@ Success rates for generating postconditions that pass formal verification.
 | erc20_erc1155        | 100.00            | 10             | 10         | 433.0861841917038  | 13.4           |
 | erc20_erc721         | 100.00            | 10             | 10         | 640.2869050979614  | 14.2           |
 | erc20_erc721_erc1155 | 100.00            | 10             | 10         | 277.0920076131821  | 13.4           |
-| erc721               | 10.00             | 1              | 10         | 1000.0655307531357 | 25.6           |
 | erc721_erc1155       | 10.00             | 1              | 10         | 466.64506659507754 | 24.8           |
+| erc721               | 10.00             | 1              | 10         | 1000.0655307531357 | 25.6           |
 | erc1155              | 0.00              | 0              | 10         | 1082.5364722251893 | 32.0           |
 | none                 | 0.00              | 0              | 10         | 983.2470988512039  | 32.8           |
 
@@ -37,9 +37,9 @@ Analysis of iterations and time required for successful vs failed verification a
 | none                 | 32.8                | 0.0                    | 983.2470988512039  | 0.0               | 100.00    |
 | erc721               | 27.11111111111111   | 12.0                   | 1057.9426667425369 | 479.171306848526  | 90.00     |
 | erc721_erc1155       | 25.555555555555557  | 18.0                   | 478.83533239364624 | 356.932674407959  | 90.00     |
-| erc20                | 0.0                 | 15.0                   | 0.0                | 699.8511210203171 | 0.00      |
-| erc20_erc1155        | 0.0                 | 13.4                   | 0.0                | 433.0861841917038 | 0.00      |
 | erc20_erc721         | 0.0                 | 14.2                   | 0.0                | 640.2869050979614 | 0.00      |
+| erc20_erc1155        | 0.0                 | 13.4                   | 0.0                | 433.0861841917038 | 0.00      |
+| erc20                | 0.0                 | 15.0                   | 0.0                | 699.8511210203171 | 0.00      |
 | erc20_erc721_erc1155 | 0.0                 | 13.4                   | 0.0                | 277.0920076131821 | 0.00      |
 
 ## Function-level Verification Analysis
@@ -55,4 +55,4 @@ Analysis of which specific smart contract functions are most successfully verifi
 1. Top performing contexts: `erc20`, `erc20_erc1155`, `erc20_erc721`
 2. Base model without context: 0.00%
 
-_Report generated on 2025-08-31 11:36:45_
+_Report generated on 2025-09-11 14:45:51_
