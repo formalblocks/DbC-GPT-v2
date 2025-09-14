@@ -1,6 +1,6 @@
 ## Refinement Quality Statistics for Entire Contract Mode
 
-_Note: Trivial specifications (e.g., `@postcondition true`) are excluded from quality analysis but shown in brackets when present._
+_Note: Trivial specifications (e.g., `@postcondition true`) are excluded from quality analysis and not counted in totals._
 
 ### ERC20 Functions
 
@@ -85,7 +85,7 @@ _Note: Trivial specifications (e.g., `@postcondition true`) are excluded from qu
 
 ## Refinement Quality Statistics for Func By Func Mode
 
-_Note: Trivial specifications (e.g., `@postcondition true`) are excluded from quality analysis but shown in brackets when present._
+_Note: Trivial specifications (e.g., `@postcondition true`) are excluded from quality analysis and not counted in totals._
 
 ### ERC20 Functions
 
@@ -93,26 +93,26 @@ _Note: Trivial specifications (e.g., `@postcondition true`) are excluded from qu
 
 | Dem. Context         | Total Comp. | Weaker (≤) | Stronger (≥) | Equivalent (≡) | Not Comp. (\|\|) |
 | :------------------- | ----------: | ---------: | -----------: | -------------: | ---------------: |
-| epsilon              |          60 | 29 (48.3%) |   10 (16.7%) |     20 (33.3%) |         1 (1.7%) |
+| epsilon              |          31 |   0 (0.0%) |   10 (32.3%) |     20 (64.5%) |         1 (3.2%) |
 | erc20                |          60 |   0 (0.0%) |     0 (0.0%) |    60 (100.0%) |         0 (0.0%) |
-| erc721               |          60 | 19 (31.7%) |     4 (6.7%) |     24 (40.0%) |       13 (21.7%) |
-| erc1155              |          60 | 26 (43.3%) |     4 (6.7%) |     17 (28.3%) |       13 (21.7%) |
+| erc721               |          41 |   0 (0.0%) |     4 (9.8%) |     24 (58.5%) |       13 (31.7%) |
+| erc1155              |          35 |   1 (2.9%) |    4 (11.4%) |     17 (48.6%) |       13 (37.1%) |
 | erc20_erc721         |          60 |   0 (0.0%) |     0 (0.0%) |     58 (96.7%) |         2 (3.3%) |
 | erc20_erc1155        |          60 |   1 (1.7%) |     1 (1.7%) |     56 (93.3%) |         2 (3.3%) |
-| erc721_erc1155       |          60 | 16 (26.7%) |     5 (8.3%) |     25 (41.7%) |       14 (23.3%) |
+| erc721_erc1155       |          44 |   0 (0.0%) |    5 (11.4%) |     25 (56.8%) |       14 (31.8%) |
 | erc20_erc721_erc1155 |          60 |   1 (1.7%) |     2 (3.3%) |     54 (90.0%) |         3 (5.0%) |
 
 #### Fine-Tuned Models - ERC20
 
 | Model                    | Total Comp. | Weaker (≤) | Stronger (≥) | Equivalent (≡) | Not Comp. (\|\|) |
 | :----------------------- | ----------: | ---------: | -----------: | -------------: | ---------------: |
-| erc-20-001-5-16          |          60 | 26 (43.3%) |     5 (8.3%) |     19 (31.7%) |       10 (16.7%) |
-| erc-721-001-5-16         |          60 | 22 (36.7%) |   10 (16.7%) |     20 (33.3%) |        8 (13.3%) |
-| erc-1155-001-5-16        |          60 | 10 (16.7%) |     3 (5.0%) |     27 (45.0%) |       20 (33.3%) |
-| erc-20-721-001-5-16      |          60 | 24 (40.0%) |     3 (5.0%) |     30 (50.0%) |         3 (5.0%) |
-| erc-20-1155-001-5-16     |          60 |  9 (15.0%) |   10 (16.7%) |     30 (50.0%) |       11 (18.3%) |
-| erc-721-1155-001-5-16    |          60 |   2 (3.3%) |    7 (11.7%) |     30 (50.0%) |       21 (35.0%) |
-| erc-20-721-1155-001-5-16 |          60 |   4 (6.7%) |    7 (11.7%) |     28 (46.7%) |       21 (35.0%) |
+| erc-20-001-5-16          |          55 |   0 (0.0%) |     4 (7.3%) |     30 (54.5%) |       21 (38.2%) |
+| erc-721-001-5-16         |          38 |   0 (0.0%) |   10 (26.3%) |     20 (52.6%) |        8 (21.1%) |
+| erc-1155-001-5-16        |          50 |   0 (0.0%) |     3 (6.0%) |     27 (54.0%) |       20 (40.0%) |
+| erc-20-721-001-5-16      |          58 |   0 (0.0%) |    7 (12.1%) |     30 (51.7%) |       21 (36.2%) |
+| erc-20-1155-001-5-16     |          56 |   0 (0.0%) |    7 (12.5%) |     28 (50.0%) |       21 (37.5%) |
+| erc-721-1155-001-5-16    |          57 |   0 (0.0%) |     5 (8.8%) |     26 (45.6%) |       26 (45.6%) |
+| erc-20-721-1155-001-5-16 |          58 |   0 (0.0%) |    6 (10.3%) |     30 (51.7%) |       22 (37.9%) |
 
 ### ERC721 Functions
 
@@ -120,12 +120,12 @@ _Note: Trivial specifications (e.g., `@postcondition true`) are excluded from qu
 
 | Dem. Context         | Total Comp. | Weaker (≤) | Stronger (≥) | Equivalent (≡) | Not Comp. (\|\|) |
 | :------------------- | ----------: | ---------: | -----------: | -------------: | ---------------: |
-| epsilon              |          80 | 47 (58.8%) |   10 (12.5%) |       7 (8.8%) |       16 (20.0%) |
-| erc20                |          80 | 30 (37.5%) |     2 (2.5%) |     18 (22.5%) |       30 (37.5%) |
+| epsilon              |          36 |  4 (11.1%) |   10 (27.8%) |      7 (19.4%) |       15 (41.7%) |
+| erc20                |          53 | 10 (18.9%) |     2 (3.8%) |     22 (41.5%) |       19 (35.8%) |
 | erc721               |          80 |   0 (0.0%) |   15 (18.8%) |     55 (68.8%) |       10 (12.5%) |
-| erc1155              |          80 | 22 (27.5%) |   25 (31.2%) |     21 (26.2%) |       12 (15.0%) |
-| erc20_erc721         |          80 |   5 (6.2%) |     0 (0.0%) |     64 (80.0%) |       11 (13.8%) |
-| erc20_erc1155        |          80 | 22 (27.5%) |   25 (31.2%) |     21 (26.2%) |       12 (15.0%) |
+| erc1155              |          52 |   4 (7.7%) |   23 (44.2%) |     21 (40.4%) |         4 (7.7%) |
+| erc20_erc721         |          77 |   4 (5.2%) |     0 (0.0%) |     62 (80.5%) |       11 (14.3%) |
+| erc20_erc1155        |          55 | 10 (18.2%) |   21 (38.2%) |     21 (38.2%) |         3 (5.5%) |
 | erc721_erc1155       |          80 |   0 (0.0%) |   24 (30.0%) |     46 (57.5%) |       10 (12.5%) |
 | erc20_erc721_erc1155 |          80 |   0 (0.0%) |     2 (2.5%) |     58 (72.5%) |       20 (25.0%) |
 
@@ -133,13 +133,13 @@ _Note: Trivial specifications (e.g., `@postcondition true`) are excluded from qu
 
 | Model                    | Total Comp. | Weaker (≤) | Stronger (≥) | Equivalent (≡) | Not Comp. (\|\|) |
 | :----------------------- | ----------: | ---------: | -----------: | -------------: | ---------------: |
-| erc-20-001-5-16          |          80 | 52 (65.0%) |     0 (0.0%) |      8 (10.0%) |       20 (25.0%) |
-| erc-721-001-5-16         |          80 | 38 (47.5%) |     0 (0.0%) |     21 (26.2%) |       21 (26.2%) |
-| erc-1155-001-5-16        |          80 | 26 (32.5%) |     5 (6.2%) |     13 (16.2%) |       36 (45.0%) |
-| erc-20-721-001-5-16      |          80 | 44 (55.0%) |     0 (0.0%) |     21 (26.2%) |       15 (18.8%) |
-| erc-20-1155-001-5-16     |          80 | 37 (46.2%) |     4 (5.0%) |     16 (20.0%) |       23 (28.7%) |
-| erc-721-1155-001-5-16    |          80 | 36 (45.0%) |   14 (17.5%) |       5 (6.2%) |       25 (31.2%) |
-| erc-20-721-1155-001-5-16 |          80 | 32 (40.0%) |     1 (1.2%) |     22 (27.5%) |       25 (31.2%) |
+| erc-20-001-5-16          |          48 | 22 (45.8%) |     0 (0.0%) |      8 (16.7%) |       18 (37.5%) |
+| erc-721-001-5-16         |          62 | 21 (33.9%) |     1 (1.6%) |     24 (38.7%) |       16 (25.8%) |
+| erc-1155-001-5-16        |          59 | 15 (25.4%) |     5 (8.5%) |     13 (22.0%) |       26 (44.1%) |
+| erc-20-721-001-5-16      |          57 | 22 (38.6%) |    8 (14.0%) |      9 (15.8%) |       18 (31.6%) |
+| erc-20-1155-001-5-16     |          52 | 18 (34.6%) |     4 (7.7%) |     16 (30.8%) |       14 (26.9%) |
+| erc-721-1155-001-5-16    |          54 | 14 (25.9%) |   14 (25.9%) |       5 (9.3%) |       21 (38.9%) |
+| erc-20-721-1155-001-5-16 |          64 | 22 (34.4%) |     1 (1.6%) |     22 (34.4%) |       19 (29.7%) |
 
 ### ERC1155 Functions
 
@@ -207,11 +207,10 @@ The 'Annotated Contract CSV' column below points to the CSV file containing the 
 | func*by_func | base_models | erc721_erc1155 | erc20 | erc721_erc1155 | 8 | allowance_post | experiments/results_func_by_func_base_full_context/4o-mini/erc20/erc721_erc1155/erc20*[erc721_erc1155].csv |
 | func*by_func | base_models | erc20_erc721_erc1155 | erc20 | erc20_erc721_erc1155 | 1 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc20/erc20_erc721_erc1155/erc20*[erc20_erc721_erc1155].csv |
 | func*by_func | base_models | erc20_erc721_erc1155 | erc20 | erc20_erc721_erc1155 | 8 | approve_post | experiments/results_func_by_func_base_full_context/4o-mini/erc20/erc20_erc721_erc1155/erc20*[erc20_erc721_erc1155].csv |
+| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 3 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 4 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 5 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 6 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 8 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 10 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 10 | transfer_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-001-5-16 | erc20 | none | 7 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-721-001-5-16 | erc20 | none | 1 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-721-001-5-16 | erc20 | none | 2 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-721-001-5-16 | erc20 | none | 3 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-001-5-16/erc20/none/erc20*[none].csv |
@@ -225,32 +224,30 @@ The 'Annotated Contract CSV' column below points to the CSV file containing the 
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc20 | none | 3 | approve_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc20 | none | 7 | approve_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc20 | none | 10 | approve_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 2 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 3 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 4 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 5 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 6 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 8 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 7 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc20 | none | 10 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 1 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 1 | transfer_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 1 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 2 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 3 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 4 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 5 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 6 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 6 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 7 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 9 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 10 | transfer_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 2 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc20 | none | 10 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 2 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 3 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 3 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 4 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 5 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 6 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 7 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 10 | approve_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 1 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 4 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-721-1155-001-5-16 | erc20 | none | 10 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-721-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 2 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 4 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 5 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 6 | allowance_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 6 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
-| func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 9 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 8 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-721-1155-001-5-16 | erc20 | none | 10 | approve_post | experiments/results_func_by_func_fine_tuning/erc-20-721-1155-001-5-16/erc20/none/erc20*[none].csv |
 | entire*contract | base_models | erc1155 | erc721 | erc1155 | 1 | balanceOf_post | experiments/results_entire_contract_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | entire*contract | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 3 | balanceOf_post | experiments/results_entire_contract_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
@@ -303,11 +300,9 @@ The 'Annotated Contract CSV' column below points to the CSV file containing the 
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 8 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 8 | setApprovalForAll_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 8 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
-| func*by_func | base_models | erc1155 | erc721 | erc1155 | 9 | safeTransferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 9 | setApprovalForAll_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 9 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 10 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
-| func*by_func | base_models | erc1155 | erc721 | erc1155 | 10 | safeTransferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc1155 | erc721 | erc1155 | 10 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc1155/erc721*[erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 1 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 1 | setApprovalForAll_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
@@ -317,20 +312,16 @@ The 'Annotated Contract CSV' column below points to the CSV file containing the 
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 2 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 3 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 4 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
-| func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 4 | safeTransferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 4 | setApprovalForAll_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 4 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 5 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 5 | isApprovedForAll_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
-| func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 5 | safeTransferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 5 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 6 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
-| func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 6 | safeTransferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 6 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 7 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 7 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 8 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
-| func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 8 | safeTransferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 8 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 9 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
 | func*by_func | base_models | erc20_erc1155 | erc721 | erc20_erc1155 | 10 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc1155/erc721*[erc20_erc1155].csv |
@@ -360,11 +351,20 @@ The 'Annotated Contract CSV' column below points to the CSV file containing the 
 | func*by_func | base_models | erc721_erc1155 | erc721 | erc721_erc1155 | 10 | transferFrom_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc721_erc1155/erc721*[erc721_erc1155].csv |
 | func*by_func | base_models | erc20_erc721_erc1155 | erc721 | erc20_erc721_erc1155 | 1 | balanceOf_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc721_erc1155/erc721*[erc20_erc721_erc1155].csv |
 | func*by_func | base_models | erc20_erc721_erc1155 | erc721 | erc20_erc721_erc1155 | 4 | isApprovedForAll_post | experiments/results_func_by_func_base_full_context/4o-mini/erc721/erc20_erc721_erc1155/erc721*[erc20_erc721_erc1155].csv |
+| func*by_func | fine_tuning_models | erc-721-001-5-16 | erc721 | none | 4 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-721-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc721 | none | 3 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc721 | none | 5 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc721 | none | 8 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc721 | none | 9 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-1155-001-5-16 | erc721 | none | 10 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-1155-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 1 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 3 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 4 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 5 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 6 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 7 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 8 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
+| func*by_func | fine_tuning_models | erc-20-721-001-5-16 | erc721 | none | 9 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-721-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc721 | none | 1 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc721 | none | 5 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc721/none/erc721*[none].csv |
 | func*by_func | fine_tuning_models | erc-20-1155-001-5-16 | erc721 | none | 7 | balanceOf_post | experiments/results_func_by_func_fine_tuning/erc-20-1155-001-5-16/erc721/none/erc721*[none].csv |
