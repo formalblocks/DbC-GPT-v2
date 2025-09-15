@@ -23,7 +23,7 @@ contract ERC20 {
     /// @notice postcondition _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) || _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) - _value
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition balance == _balances[_owner]
@@ -46,7 +46,7 @@ contract ERC20 {
     event Approval(address indexed _owner, address indexed _spender, uint _value);
     
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function totalSupply() public view returns (uint256 supply);
 
     /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _to == msg.sender
@@ -122,7 +122,7 @@ contract ERC20 {
     event Approval(address indexed _owner, address indexed _spender, uint _value);
     
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function totalSupply() public view returns (uint256 supply);
 
     /// @notice postcondition _to == msg.sender || _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value
@@ -169,7 +169,7 @@ contract ERC20 {
     /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0 || _from == _to
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition balance == _balances[_owner]
@@ -205,7 +205,7 @@ contract ERC20 {
     /// @notice postcondition _allowed[_from][msg.sender] >= 0
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition balance == _balances[_owner]
@@ -271,10 +271,10 @@ contract ERC20 {
     /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value || _value == 0 || _to == msg.sender
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition balance == _balances[_owner]
@@ -300,7 +300,7 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) || _balances[_from] == __verifier_old_uint(_balances[_from]) - _value
@@ -308,7 +308,7 @@ contract ERC20 {
     /// @notice postcondition _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) || _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) - _value
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition balance == _balances[_owner]
@@ -331,7 +331,7 @@ contract ERC20 {
     event Approval(address indexed _owner, address indexed _spender, uint _value);
     
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function totalSupply() public view returns (uint256 supply);
 
     /// @notice postcondition _to == msg.sender || _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0

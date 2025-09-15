@@ -41,7 +41,7 @@ contract ERC721 {
     /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from || _from == address(0) || _tokenOwner[_tokenId] == _to
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenOwner[_tokenId] == _to
@@ -67,7 +67,7 @@ contract ERC721 {
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition (_tokenId < 0 || _tokenId >= __verifier_old_uint(_ownedTokensCount[msg.sender]) || _owner == _tokenOwner[_tokenId]) && ( _tokenId == 0 || _owner != address(0))
@@ -77,10 +77,10 @@ contract ERC721 {
     /// @notice postcondition msg.sender == __verifier_old_address(_tokenOwner[_tokenId]) || msg.sender == __verifier_old_address(msg.sender)
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function setApprovalForAll(address _operator, bool _approved) external;
 
     /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
@@ -90,10 +90,10 @@ contract ERC721 {
     /// @notice postcondition !(__verifier_old_address(_to) != address(0)) || _tokenOwner[_tokenId] == _to || _tokenOwner[_tokenId] == __verifier_old_address(_from)
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -115,7 +115,7 @@ contract ERC721 {
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition _tokenId == __verifier_old_uint(_tokenId) || _owner == _tokenOwner[_tokenId]
@@ -133,16 +133,16 @@ contract ERC721 {
     /// @notice postcondition forall (address operator) !(operator == _operator) || _approved == _approved || __verifier_old_bool(_approved)
     function setApprovalForAll(address _operator, bool _approved) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -164,14 +164,14 @@ contract ERC721 {
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition _tokenOwner[_tokenId] == _owner
     /// @notice postcondition _owner != address(0) || __verifier_old_uint(_tokenId) != _tokenId
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _approved, uint256 _tokenId) external;
 
     /// @notice postcondition !(0 < _tokenId) || approved == _tokenApprovals[_tokenId]
@@ -189,10 +189,10 @@ contract ERC721 {
     /// @notice postcondition __verifier_old_address(_tokenOwner[_tokenId]) == _from
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -226,10 +226,10 @@ contract ERC721 {
     /// @notice postcondition _approved != __verifier_old_address(_approved) || _tokenApprovals[_tokenId] == _approved
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function setApprovalForAll(address _operator, bool _approved) external;
 
     /// @notice postcondition approved == __verifier_old_bool(_operatorApprovals[_owner][_operator]) || (_operator == _owner)
@@ -239,10 +239,10 @@ contract ERC721 {
     /// @notice postcondition _tokenApprovals[_tokenId] == address(0)
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -270,10 +270,10 @@ contract ERC721 {
     /// @notice postcondition _tokenId == 0 || _owner == __verifier_old_address(_tokenOwner[_tokenId]) || _owner == _tokenOwner[_tokenId]
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved || __verifier_old_bool(_operatorApprovals[msg.sender][_operator]) == _operatorApprovals[msg.sender][_operator]
@@ -283,10 +283,10 @@ contract ERC721 {
     /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
     /// @notice postcondition _tokenOwner[_tokenId] == _to || __verifier_old_address(_from) == _from
@@ -312,7 +312,7 @@ contract ERC721 {
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition _tokenId < 0 || _tokenId >= 2**256 - 1 || _owner == _tokenOwner[_tokenId]
@@ -322,7 +322,7 @@ contract ERC721 {
     /// @notice postcondition !(msg.sender == _tokenOwner[_tokenId] || _tokenApprovals[_tokenId] == __verifier_old_address(_tokenApprovals[_tokenId])) || _tokenApprovals[_tokenId] == _approved
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
     /// @notice postcondition !(msg.sender == _operator && _approved) || _operatorApprovals[msg.sender][_operator]
@@ -332,13 +332,13 @@ contract ERC721 {
     /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -370,7 +370,7 @@ contract ERC721 {
     /// @notice postcondition forall (address addr) !(addr == _approved && __verifier_old_bool(_tokenApprovals[_tokenId] == addr)) || _tokenApprovals[_tokenId] == addr
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
     /// @notice postcondition _operator == _operator && _approved == _approved
@@ -384,10 +384,10 @@ contract ERC721 {
     /// @notice postcondition _from != __verifier_old_address(_from) || _tokenOwner[_tokenId] == _to
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -409,7 +409,7 @@ contract ERC721 {
     mapping (address => mapping (address => bool)) private _operatorApprovals;
 
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOf(address _owner) external view returns (uint256 balance);
 
     /// @notice postcondition _owner == _tokenOwner[_tokenId] || _tokenId == 0
@@ -419,7 +419,7 @@ contract ERC721 {
     /// @notice postcondition _approved != __verifier_old_address(_approved) || _tokenApprovals[_tokenId] == _approved
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
     /// @notice postcondition _operator == __verifier_old_address(_operator) && _approved == __verifier_old_bool(_approved) || _operatorApprovals[msg.sender][_operator] == _approved
@@ -432,10 +432,10 @@ contract ERC721 {
     /// @notice postcondition _from != _to || _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from])
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }
@@ -461,14 +461,14 @@ contract ERC721 {
     /// @notice postcondition !(balance >= 0) || _owner != address(0)
     function balanceOf(address _owner) external view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function ownerOf(uint256 _tokenId) external view returns (address _owner);
 
     /// @notice postcondition _tokenApprovals[_tokenId] == _approved
     /// @notice postcondition forall (address operator) (_operatorApprovals[__verifier_old_address(msg.sender)][operator] == _operatorApprovals[msg.sender][operator])
     function approve(address _approved, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function getApproved(uint256 _tokenId) external view returns (address approved);
 
     /// @notice postcondition _operator == __verifier_old_address(_operator) && _approved == __verifier_old_bool(_approved) || _operatorApprovals[msg.sender][_operator] == _approved
@@ -479,13 +479,13 @@ contract ERC721 {
     /// @notice postcondition _operator == address(0) || approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) external view returns (bool);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
 
 }

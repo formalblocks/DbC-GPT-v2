@@ -95,7 +95,7 @@ contract ERC1155 {
     /// @notice postcondition forall (uint i) !(0 <= i && i < _owners.length) || batchBalances[i] == _balances[_ids[i]][_owners[i]]
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function setApprovalForAll(address _operator, bool _approved) public;
 
     /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
@@ -170,7 +170,7 @@ contract ERC1155 {
     /// @notice postcondition forall (uint i) !(0 <= i && i < _owners.length) || batchBalances[i] == _balances[_ids[i]][_owners[i]]
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function setApprovalForAll(address _operator, bool _approved) public;
 
     /// @notice postcondition approved == _operatorApprovals[_owner][_operator]

@@ -14,7 +14,7 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _to != address(0)
@@ -57,7 +57,7 @@ contract ERC20 {
     /// @notice postcondition __verifier_old_uint(_balances[msg.sender]) >= _value
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _allowed[msg.sender][_spender] == _value
@@ -128,7 +128,7 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _to != address(0)
@@ -138,7 +138,7 @@ contract ERC20 {
     /// @notice postcondition _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) - _value || _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender])
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _balances[_owner] == balance
@@ -170,7 +170,7 @@ contract ERC20 {
     /// @notice postcondition _to != address(0)
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _allowed[msg.sender][_spender] == _value
@@ -200,7 +200,7 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _to != address(0)
@@ -210,7 +210,7 @@ contract ERC20 {
     /// @notice postcondition __verifier_old_uint(_allowed[_from][msg.sender]) >= _value
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _balances[_owner] == balance
@@ -237,7 +237,7 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) - _value
@@ -247,7 +247,7 @@ contract ERC20 {
     /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - (_from != _to ? _value : 0)
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _balances[_owner] == balance
@@ -273,13 +273,13 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _balances[_owner] == balance
@@ -306,7 +306,7 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition __verifier_old_uint(_balances[_from]) >= _value
@@ -342,13 +342,13 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function approve(address _spender, uint256 _value) public returns (bool success);
 
     /// @notice postcondition _balances[_owner] == balance

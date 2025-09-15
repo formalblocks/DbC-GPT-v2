@@ -49,10 +49,10 @@ contract ERC20 {
     /// @notice postcondition supply == _totalSupply
     function totalSupply() public view returns (uint256 supply);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition __verifier_old_bool(success) || _allowed[msg.sender][_spender] == _value
@@ -159,7 +159,7 @@ contract ERC20 {
     /// @notice postcondition _balances[msg.sender] <= __verifier_old_uint(_balances[msg.sender]) || _value > 0
     function transfer(address _to, uint256 _value) public returns (bool success);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
 
     /// @notice postcondition __verifier_old_bool(success) || _allowed[msg.sender][_spender] == _value

@@ -16,7 +16,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -29,7 +29,7 @@ contract ERC1155 {
     /// @notice postcondition ( _from == _to ) || ( _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value )
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -52,7 +52,7 @@ contract ERC1155 {
     /// @notice postcondition _owner != address(0)
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -65,7 +65,7 @@ contract ERC1155 {
     /// @notice postcondition ( _from == _to ) || ( _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value )
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -87,7 +87,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -101,7 +101,7 @@ contract ERC1155 {
     /// @notice postcondition _to != address(0)
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -123,13 +123,13 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
     function setApprovalForAll(address _operator, bool _approved) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function isApprovedForAll(address _owner, address _operator) public view returns (bool approved);
 
     /// @notice postcondition _to != address(0)
@@ -137,7 +137,7 @@ contract ERC1155 {
     /// @notice postcondition !(0 < _value && __verifier_old_uint(_balances[_id][_to]) + _value < __verifier_old_uint(_balances[_id][_to])) || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -160,7 +160,7 @@ contract ERC1155 {
     /// @notice postcondition _owner != address(0)
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -174,7 +174,7 @@ contract ERC1155 {
     /// @notice postcondition ( _from == _to ) || ( _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value )
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -196,7 +196,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -211,7 +211,7 @@ contract ERC1155 {
     /// @notice postcondition !( __verifier_old_uint(_balances[_id][_from]) < _value ) || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -233,7 +233,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -247,7 +247,7 @@ contract ERC1155 {
     /// @notice postcondition ( _to != address(0) && __verifier_old_uint(_balances[_id][_from]) >= _value ) || ( _balances[_id][_from] == __verifier_old_uint(_balances[_id][_from]) )
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -269,7 +269,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -284,7 +284,7 @@ contract ERC1155 {
     /// @notice postcondition !( __verifier_old_uint(_balances[_id][_from]) < _value ) || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -306,7 +306,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -319,7 +319,7 @@ contract ERC1155 {
     /// @notice postcondition ( _from == _to ) || ( _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value )
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
@@ -341,7 +341,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -354,7 +354,7 @@ contract ERC1155 {
     /// @notice postcondition ( _from == _to ) || ( _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value )
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
 
 }
