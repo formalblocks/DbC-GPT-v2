@@ -1,19 +1,33 @@
 contract Refinement {
 
-    struct StateOld {
+    struct StateAbs {
         mapping (uint256 => mapping(address => uint256)) _balances;
         mapping (address => mapping(address => bool)) _operatorApprovals;
     }
 
-    struct StateNew {
+    struct StateCon {
         mapping (uint256 => mapping(address => uint256)) _balances;
         mapping (address => mapping(address => bool)) _operatorApprovals;
     }
 
-    StateOld abs;
-    StateOld abs_old;
-    StateNew con;
-    StateNew con_old;
+    StateAbs abs;
+    StateAbs abs_old;
+    StateCon con;
+    StateCon con_old;
+
+    /// @notice precondition forall (uint256 _id, address _owner) abs._balances[_id][_owner] == con._balances[_id][_owner] // Abs func
+    /// @notice precondition forall (address _owner, address _operator) abs._operatorApprovals[_owner][_operator] == con._operatorApprovals[_owner][_operator] // Abs func
+    /// @notice postcondition con._balances == abs._balances
+    /// @notice postcondition con._operatorApprovals == abs._operatorApprovals
+    function inv() public {}
+
+    /// @notice precondition true
+    /// @notice postcondition true
+    function cons_pre() public {}
+
+    /// @notice precondition true
+    /// @notice postcondition true
+    function cons_post() public {}
 
     /// @notice precondition true
     /// @notice postcondition true
