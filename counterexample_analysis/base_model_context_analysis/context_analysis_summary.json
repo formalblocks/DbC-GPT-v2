@@ -1,0 +1,44 @@
+{
+  "total_runs_analyzed": 240,
+  "total_successful_runs": 141,
+  "overall_success_rate": 58.75,
+  "context_categories": [
+    "same_type_context",
+    "multi_context_including_same",
+    "cross_type_context",
+    "no_context",
+    "multi_context_different"
+  ],
+  "copying_analysis_summary": {
+    "erc20": {
+      "no_context_first_time_rate": 0.0,
+      "same_type_first_time_rate": 100.0,
+      "improvement_percentage_points": 100.0,
+      "relative_improvement": Infinity,
+      "no_context_success_rate": 40.0,
+      "same_type_success_rate": 100.0,
+      "no_context_avg_iterations": 1.25,
+      "same_type_avg_iterations": 0.0
+    },
+    "erc721": {
+      "no_context_first_time_rate": 0.0,
+      "same_type_first_time_rate": 100.0,
+      "improvement_percentage_points": 100.0,
+      "relative_improvement": Infinity,
+      "no_context_success_rate": 0.0,
+      "same_type_success_rate": 100.0,
+      "no_context_avg_iterations": 0,
+      "same_type_avg_iterations": 0.0
+    },
+    "erc1155": {
+      "no_context_first_time_rate": 0.0,
+      "same_type_first_time_rate": 0.0,
+      "improvement_percentage_points": 0.0,
+      "relative_improvement": Infinity,
+      "no_context_success_rate": 0.0,
+      "same_type_success_rate": 80.0,
+      "no_context_avg_iterations": 0,
+      "same_type_avg_iterations": 2.0
+    }
+  }
+}

@@ -1,0 +1,48 @@
+run,status,output
+6,251,"ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::totalSupply_pre: OK
+Refinement::totalSupply_post: OK
+Refinement::allowance_pre: OK
+Refinement::allowance_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::approve_pre: OK
+Refinement::approve_post: ERROR
+ - ERC20_merge.sol:76:5: Postcondition 'success == true' might not hold at end of function.
+Refinement::transfer_pre: OK
+Refinement::transfer_post: ERROR
+ - ERC20_merge.sol:88:2: Postcondition '_to == msg.sender || con._balances[msg.sender] == con_old._balances[msg.sender] - _value && _to != msg.sender && _value > 0 || con._balances[msg.sender] == con_old._balances[msg.sender] && _value == 0' might not hold at end of function.
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC20_merge.sol:104:5: Postcondition '_from == _to || con._allowed[_from][msg.sender] == con_old._allowed[_from][msg.sender] - _value && _from != _to && _value > 0 || con._allowed[_from][msg.sender] == con_old._allowed[_from][msg.sender] && _value == 0 || _from == msg.sender' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+8,251,"ERC20_merge.sol:3:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::totalSupply_pre: OK
+Refinement::totalSupply_post: OK
+Refinement::allowance_pre: OK
+Refinement::allowance_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::approve_pre: OK
+Refinement::approve_post: ERROR
+ - ERC20_merge.sol:76:5: Postcondition 'success == true' might not hold at end of function.
+Refinement::transfer_pre: OK
+Refinement::transfer_post: ERROR
+ - ERC20_merge.sol:89:2: Postcondition 'con._balances[msg.sender] == con_old._balances[msg.sender] - _value || _value == 0 || con._balances[msg.sender] == con_old._balances[msg.sender]' might not hold at end of function.
+ - ERC20_merge.sol:89:2: Postcondition 'msg.sender == _to || con._balances[_to] == con_old._balances[_to] + _value || _value == 0' might not hold at end of function.
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC20_merge.sol:107:5: Postcondition 'con._balances[_from] == con_old._balances[_from] - _value || _value == 0 || con._balances[_from] == con_old._balances[_from]' might not hold at end of function.
+ - ERC20_merge.sol:107:5: Postcondition '_from == _to || con._balances[_to] == con_old._balances[_to] + _value || _value == 0' might not hold at end of function.
+ - ERC20_merge.sol:107:5: Postcondition 'con._allowed[_from][msg.sender] == con_old._allowed[_from][msg.sender] - _value || _from == msg.sender' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"

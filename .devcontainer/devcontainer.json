@@ -1,4 +1,30 @@
 {
 	"name": "Dev Environment",
-    "build": { "dockerfile": "../Dockerfile"}
+    "build": { "dockerfile": "../Dockerfile"},
+    "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash"
+    },
+    "forwardPorts": [],
+    "postCreateCommand": "pip install -r requirements.txt",
+    "remoteUser": "root",
+    "runArgs": [
+        "--memory=14g",
+        "--memory-swap=16g",
+        "--cpus=6",
+        "--shm-size=2g",
+        "--restart=unless-stopped",
+        "--oom-kill-disable"
+    ],
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/bin/python3",
+                "python.terminal.activateEnvironment": false
+            },
+            "extensions": [
+                "ms-python.python",
+                "ms-python.pylint"
+            ]
+        }
+    }
 }

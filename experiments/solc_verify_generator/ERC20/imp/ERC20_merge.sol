@@ -22,18 +22,18 @@ import "./math/SafeMath.sol";
 contract ERC20 is IERC20 {
     using SafeMath for uint256;
 
-    mapping (address => uint256) private _balances;
+    mapping(address => uint256) private _balances;
 
-    mapping (address => mapping (address => uint256)) private _allowed;
+    mapping(address => mapping(address => uint256)) private _allowed;
 
     uint256 private _totalSupply;
 
     /**
      * @dev Total number of tokens in existence.
      */
-    ///@notice postcondition supply == _totalSupply
+    /// @notice postcondition supply == _totalSupply
 
-    function totalSupply()  public view returns (uint256 supply) {
+    function totalSupply() public view returns (uint256 supply) {
         return _totalSupply;
     }
 
@@ -42,9 +42,9 @@ contract ERC20 is IERC20 {
      * @param _owner The address to query the balance of.
      * @return A uint256 representing the amount owned by the passed address.
      */
-    ///@notice postcondition balance == _balances[_owner]
+    /// @notice postcondition _balances[_owner] == balance
 
-    function balanceOf(address _owner)  public view returns (uint256 balance) {
+    function balanceOf(address _owner) public view returns (uint256 balance) {
         return _balances[_owner];
     }
 
@@ -54,9 +54,12 @@ contract ERC20 is IERC20 {
      * @param _spender address The address which will spend the funds.
      * @return A uint256 specifying the amount of tokens still available for the _spender.
      */
-    ///@notice postcondition remaining == _allowed[_owner][_spender]
+    /// @notice postcondition _allowed[_owner][_spender] == remaining
 
-    function allowance(address _owner, address _spender)  public view returns (uint256 remaining) {
+    function allowance(
+        address _owner,
+        address _spender
+    ) public view returns (uint256 remaining) {
         return _allowed[_owner][_spender];
     }
 
@@ -65,10 +68,13 @@ contract ERC20 is IERC20 {
      * @param _to The address _to transfer _to.
      * @param _value The amount _to be transferred.
      */
-    ///@notice postcondition _value == 0 || (success && _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value && _balances[_to] == __verifier_old_uint(_balances[_to]) + _value)
-/// @notice postcondition _value > 0 && !success || (_balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) && _balances[_to] == __verifier_old_uint(_balances[_to]))
+    /// @notice  postcondition ( ( _balances[msg.sender] ==  __verifier_old_uint (_balances[msg.sender] ) - _value  && msg.sender  != _to ) ||   ( _balances[msg.sender] ==  __verifier_old_uint ( _balances[msg.sender]) && msg.sender  == _to ) &&  success )   || !success
+    /// @notice  postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  && msg.sender  != _to ) ||   ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) && msg.sender  == _to )  )   || !success
 
-    function transfer(address _to, uint256 _value)  public returns (bool success) {
+    function transfer(
+        address _to,
+        uint256 _value
+    ) public returns (bool success) {
         _transfer(msg.sender, _to, _value);
         return true;
     }
@@ -82,9 +88,12 @@ contract ERC20 is IERC20 {
      * @param spender The address which will spend the funds.
      * @param _value The amount of tokens to be spent.
      */
-    ///@notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice  postcondition (_allowed[msg.sender ][ _spender] ==  _value  &&  success) || ( _allowed[msg.sender ][ _spender] ==  __verifier_old_uint ( _allowed[msg.sender ][ _spender] ) && !success )
 
-    function approve(address _spender, uint256 _value)  public returns (bool success) {
+    function approve(
+        address _spender,
+        uint256 _value
+    ) public returns (bool success) {
         _approve(msg.sender, _spender, _value);
         return true;
     }
@@ -97,10 +106,16 @@ contract ERC20 is IERC20 {
      * @param to address The address which you want to transfer to
      * @param value uint256 the amount of tokens to be transferred
      */
-    ///@notice postcondition _value == 0 || (success && _balances[_from] == __verifier_old_uint(_balances[_from]) - _value && _balances[_to] == __verifier_old_uint(_balances[_to]) + _value && _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]) - _value)
-/// @notice postcondition _value > 0 && !success || (_balances[_from] == __verifier_old_uint(_balances[_from]) && _balances[_to] == __verifier_old_uint(_balances[_to]) && _allowed[_from][msg.sender] == __verifier_old_uint(_allowed[_from][msg.sender]))
+    /// @notice  postcondition ( ( _balances[_from] ==  __verifier_old_uint (_balances[_from] ) - _value  &&  _from  != _to ) || ( _balances[_from] ==  __verifier_old_uint ( _balances[_from] ) &&  _from == _to ) && success ) || !success
+    /// @notice  postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  &&  _from  != _to ) || ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) &&  _from  == _to ) && success ) || !success
+    /// @notice  postcondition ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender] ) - _value && success) || ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender]) && !success) ||  _from  == msg.sender
+    /// @notice  postcondition  _allowed[_from ][msg.sender]  <= __verifier_old_uint (_allowed[_from ][msg.sender] ) ||  _from  == msg.sender
 
-    function transferFrom(address _from, address _to, uint256 _value)  public returns (bool success) {
+    function transferFrom(
+        address _from,
+        address _to,
+        uint256 _value
+    ) public returns (bool success) {
         _transfer(_from, _to, _value);
         _approve(_from, msg.sender, _allowed[_from][msg.sender].sub(_value));
         return true;
@@ -116,8 +131,15 @@ contract ERC20 is IERC20 {
      * @param spender The address which will spend the funds.
      * @param addedValue The amount of tokens to increase the allowance by.
      */
-    function increaseAllowance(address spender, uint256 addedValue) public returns (bool) {
-        _approve(msg.sender, spender, _allowed[msg.sender][spender].add(addedValue));
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    ) public returns (bool) {
+        _approve(
+            msg.sender,
+            spender,
+            _allowed[msg.sender][spender].add(addedValue)
+        );
         return true;
     }
 
@@ -131,8 +153,15 @@ contract ERC20 is IERC20 {
      * @param spender The address which will spend the funds.
      * @param subtractedValue The amount of tokens to decrease the allowance by.
      */
-    function decreaseAllowance(address spender, uint256 subtractedValue) public returns (bool) {
-        _approve(msg.sender, spender, _allowed[msg.sender][spender].sub(subtractedValue));
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    ) public returns (bool) {
+        _approve(
+            msg.sender,
+            spender,
+            _allowed[msg.sender][spender].sub(subtractedValue)
+        );
         return true;
     }
 

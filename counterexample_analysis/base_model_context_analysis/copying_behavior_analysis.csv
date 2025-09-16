@@ -1,0 +1,4 @@
+,no_context_first_time_rate,same_type_first_time_rate,improvement_percentage_points,relative_improvement,no_context_success_rate,same_type_success_rate,no_context_avg_iterations,same_type_avg_iterations
+erc20,0.0,100.0,100.0,inf,40.0,100.0,1.25,0.0
+erc721,0.0,100.0,100.0,inf,0.0,100.0,0.0,0.0
+erc1155,0.0,0.0,0.0,inf,0.0,80.0,0.0,2.0

@@ -40,38 +40,6 @@ if not openai.api_key:
 # Configure logging
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-# OpenAI Assistant IDs for different model configurations
-# ASSISTANT_IDS = {
-#     "4o-mini": "asst_uMJ30gjHtG1VIBnqJFKpR6gm",
-#     "erc-1155-001-3-16": "asst_uMYPmlxmT9ppnPKZQ8ZTyfYb",
-#     "erc-1155-005-3-16": "asst_nsa6edZTsNNWj4SBFSPeFYPq",
-#     "erc-1155-010-3-16": "asst_BsZDuAHsmBfrlimXinHt96Cb",
-#     "erc-1155-001-5-16": "asst_Mkq2y7mUxjusd47rPSGXrrCM",
-#     "erc-1155-005-5-16": "asst_8ZL8R3zwXyurmmjkFX14kcuS",
-#     "erc-1155-010-5-16": "asst_wOnRMvawOAI1sO83lfRWWBLu",
-#     "erc-1155-001-7-16": "asst_sZLa64l2Xrb1zNhogDl7RXap",
-#     "erc-1155-005-7-16": "asst_m8y0QMRJVtvDRYcPZLVIcHW6",
-#     "erc-1155-010-7-16": "asst_MRg3E5ds4NRfFKPTPqLsx9rS",
-#     "erc-20-001-3-16": "asst_wn9R7oQTUr60VpfvvaZ5asBa",
-#     "erc-20-005-3-16": "asst_3pHhhAMFwXi9JCVPOvftRQJU",
-#     "erc-20-010-3-16": "asst_OZk81q3HVr1mrGXCfOiVKaku",
-#     "erc-20-001-5-16": "asst_M6Q7TjZTC5wLDXdA88kCre7o",
-#     "erc-20-005-5-16": "asst_XFsmrlLmDMcbQ8uPeG4EVGA0",
-#     "erc-20-010-5-16": "asst_d1TPZLOP9HSmJq0va4vD2rcW",
-#     "erc-20-001-7-16": "asst_M8jjeryyXFYdnGSiQuyOB4ij",
-#     "erc-20-005-7-16": "asst_w98aowF6diNCOJxaM9li84Hi",
-#     "erc-20-010-7-16": "asst_FEGX60kN1RpiFGQP3CaQI6vO",
-#     "erc-721-001-3-16": "asst_nPqcpEo7lJnH4nmX9sNSBmfX",
-#     "erc-721-005-3-16": "asst_wipOM1IWYzuK1jyqwqRJmDic",
-#     "erc-721-010-3-16": "asst_MnKQphy1oPqu7QUWah63JFJk",
-#     "erc-721-001-5-16": "asst_kjoZHBonf5tXKpuiJ6Z4T3Gv",
-#     "erc-721-005-5-16": "asst_u2r0eDkkqERqTmOY5soRPU7n",
-#     "erc-721-010-5-16": "asst_YNv1CBWWYuzTg4D7rRK7JVL6",
-#     "erc-721-001-7-16": "asst_odutVf248qCN3C9zlFKLNd9a",
-#     "erc-721-005-7-16": "asst_HdOeD4DYTJAHfluUAeu6cwNJ",
-#     "erc-721-010-7-16": "asst_JNnQFWooGybyzS3juCJT5GQg",
-# }
-
 ASSISTANT_IDS = {
     "4.1":"asst_zX20A8d9KI7rIK8lLoRTgHK2",
     "4o-mini": "asst_uMJ30gjHtG1VIBnqJFKpR6gm",
@@ -89,7 +57,6 @@ INTERFACE_PATHS = {
     "erc20": "../assets/file_search/erc20_interface.md",
     "erc721": "../assets/file_search/erc721_interface.md",
     "erc1155": "../assets/file_search/erc1155_interface.md",
-    "erc123": "../assets/file_search/erc123_interface.md",
 }
 
 # File paths for EIP documentation
@@ -97,7 +64,6 @@ EIP_PATHS = {
     "erc20": "../assets/file_search/erc-20.md",
     "erc721": "../assets/file_search/erc-721.md",
     "erc1155": "../assets/file_search/erc-1155.md",
-    "erc123": "../assets/file_search/erc-123.md",
 }
 
 # File paths for reference specifications
@@ -105,7 +71,6 @@ REFERENCE_SPEC_PATHS = {
     "erc20": "../assets/file_search/erc20_ref_spec.md",
     "erc721": "../assets/file_search/erc721_ref_spec.md",
     "erc1155": "../assets/file_search/erc1155_ref_spec.md",
-    "erc123": "../assets/file_search/erc123_ref_spec.md",
     "": ""
 }
 
@@ -118,6 +83,7 @@ Task:
     ```/// @notice postcondition condition1\\n
     /// @notice postcondition condition2\\n
     function foo(uint256 bar, address par) public;```
+    - Return ONLY what is inside the <postconditions>...</postconditions> block.
 
 Requirements:
     - Ensure conditions correctly represent the expected state changes and return values.
@@ -128,6 +94,13 @@ Requirements:
     - A quantified postcondition MUST start with `forall`. For instance, a quantified postcondition look like `/// @notice postcondition forall (uint x) condition`. Without the `forall` at the beginning, the postcondition is invalid.
     - YOU MUST SPECIFY THE RANGE when postconditions quantify over arrays. For example, for array `arr` a postcondition quantification would look like `/// @notice postcondition forall (uint i) !(0 <= i && i < arr.length) || condition`. Without the range, the postcondition is likely to be invalid.
     - The implication operator "==>" is not valid in solc-verify notation, so it must appear NOWHERE in a postcondition. For instance, a postcondition of the form `/// @notice postcondition condition1 ==> condition2` is invalid. Similarly, a postcondition of the form `/// @notice postcondition (forall uint x) condition1 ==> condition2` is also invalid. You can use instead the notation `!(condition) || condition2` to simulate the implication operator. For instance, `/// @notice postcondition (forall uint x) condition1 ==> condition2` can be written as `/// @notice postcondition !(condition1) || condition2`.
+
+
+OUTPUT FORMAT:
+<postconditions>
+/// @notice postcondition ...
+/// @notice postcondition ...
+</postconditions>
 
 Your task is to annotate the function in the contract below:
 """
@@ -401,7 +374,6 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/templates/imp_spec_merge.template',
         "erc721": './solc_verify_generator/ERC721/templates/imp_spec_merge.template',
         "erc1155": './solc_verify_generator/ERC1155/templates/imp_spec_merge.template',
-        "erc123": './solc_verify_generator/ERC123/templates/imp_spec_merge.template',
     }
     
     # Merge paths for different ERC standards
@@ -409,7 +381,6 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/imp/ERC20_merge.sol',
         "erc721": './solc_verify_generator/ERC721/imp/ERC721_merge.sol',
         "erc1155": './solc_verify_generator/ERC1155/imp/ERC1155_merge.sol',
-        "erc123": './solc_verify_generator/ERC123/imp/ERC123_merge.sol',
     }
 
     @classmethod
@@ -702,21 +673,48 @@ def assemble_partial_contract(pragma_str: str, contract_name: str, components: d
 
 def extract_annotations_for_function(llm_response: str, target_func_sig: str):
     """
-    Extracts annotations from an LLM response.
-    
+    Extracts annotations from an LLM response inside <postconditions> tags.
+
     Args:
         llm_response: Response from the language model
-        target_func_sig: Function signature to extract annotations for
-        
+        target_func_sig: Function signature (used for logging/debugging)
+
     Returns:
-        Extracted annotations or None if not found
+        Extracted annotations string or None if not found
     """
     if not llm_response or not llm_response.strip():
         print(f"LLM response for {target_func_sig} is empty or whitespace.")
         return None
 
-    processed_llm_response = llm_response.strip()
-    postcondition_lines = [line.strip().rstrip(";") for line in processed_llm_response.split('\n') if "@notice postcondition" in line.strip()]
+    # Normalize whitespace
+    response = llm_response.strip()
+
+    # Locate the <postconditions> block
+    start_tag = "<postconditions>"
+    end_tag = "</postconditions>"
+
+    start_idx = response.find(start_tag)
+    end_idx = response.find(end_tag)
+
+    if start_idx == -1 or end_idx == -1 or end_idx <= start_idx:
+        print(f"Could not find <postconditions> block in LLM response for {target_func_sig}")
+        return None
+
+    # Extract content between the tags
+    content = response[start_idx + len(start_tag):end_idx].strip()
+
+    # Ensure each line is a postcondition, strip any trailing semicolons just in case
+    postcondition_lines = [
+        line.strip().rstrip(";")
+        for line in content.splitlines()
+        if "@notice postcondition" in line
+    ]
+
+    if not postcondition_lines:
+        print(f"No valid postconditions found inside <postconditions> for {target_func_sig}")
+        return None
+
+    # Return joined string of clean postconditions
     final_annotations_str = "\n".join(postcondition_lines)
     return final_annotations_str
 
@@ -745,18 +743,7 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
     logging.info(f"Processing function: {func_name} ({func_sig})")
 
     func_interactions = 0
-    verified_ann_str = "\n".join([f'{fs}\n{fa}' for fs, fa in verified_annotations.items()])
-    state_vars_str = "\n".join(components.get('state_vars', []))
-    events_str = "\n".join(components.get('events', []))
-
-    # Extract EIP snippet specific to the current function
-    specific_eip_snippet = "No specific EIP segment found for this function."
-    if eip_doc and func_name:
-        pattern = rf"(/\*\*(?:[^*]|\*(?!/))*?\*/\s*function\s+{re.escape(func_name)}\s*\(.*\).*?;)"
-        match = re.search(pattern, eip_doc, re.DOTALL)
-        if match:
-            specific_eip_snippet = match.group(1).strip()
-
+    
     indented_state_vars = "\n".join([f"    {var}" for var in components.get('state_vars', [])])
 
     # Check for function-specific documentation
@@ -783,7 +770,7 @@ contract {contract_name} {{
 
 EIP markdown below:
 <eip>
-{specific_eip_snippet}
+{eip_doc}
 </eip>
 """).lstrip()
     else:
@@ -801,7 +788,7 @@ contract {contract_name} {{
 
 EIP Documentation Snippet (if relevant to `{func_name}`):
 <eip>
-{specific_eip_snippet}
+{eip_doc}
 </eip>
 """).lstrip()
 
@@ -839,7 +826,7 @@ EIP Documentation Snippet (if relevant to `{func_name}`):
         error_output = verification_result.output
 
         if verification_passed:
-            logging.info(f"Successfully verified annotations for function {func_name}.")
+            logging.info(f"##### SUCCESSFULLY VERIFIED ANNOTATIONS FOR FUNCTION {func_name}. #####")
             return proposed_annotations, func_interactions
         else:
             logging.warning(f"Verification failed for function {func_name} (Attempt {attempt + 1}). Error: {error_output[:500]}...")
@@ -852,6 +839,15 @@ EIP Documentation Snippet (if relevant to `{func_name}`):
             ```
 
             Can you fix the specification accordingly?
+            
+            OUTPUT FORMAT:
+            <postconditions>
+            /// @notice postcondition ...
+            /// @notice postcondition ...
+            </postconditions>
+            
+            **Examples:**
+            {examples_text}
             """
 
     logging.error(f"Failed to verify annotations for function {func_name} after {max_iterations_per_function} attempts.")
@@ -902,7 +898,7 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
 
     pragma_str = parsed_components.get('pragma', "pragma solidity ^0.8.0;")
     contract_name = requested_type.upper()
-    eip_doc = Utils.extract_content_from_markdown(EIP_PATHS.get(requested_type, ""))
+    eip_doc = Utils.read_file_content(EIP_PATHS.get(requested_type, ""))
     base_instructions = INSTRUCTIONS
 
     # Generate example texts from context types

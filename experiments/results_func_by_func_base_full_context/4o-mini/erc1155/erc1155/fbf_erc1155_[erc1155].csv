@@ -352,7 +352,7 @@ contract ERC1155 {
     string private _uri;
 
     // Functions
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
     /// @notice postcondition batchBalances.length == _owners.length

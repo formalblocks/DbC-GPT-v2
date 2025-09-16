@@ -1,0 +1,301 @@
+run,status,output
+1,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:134:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:134:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:134:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:148:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:148:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:148:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+2,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:136:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:136:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:136:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:150:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:150:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:150:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+3,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:121:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:121:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:134:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:134:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:134:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:148:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:148:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:148:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+4,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:135:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:135:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:135:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+5,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:135:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:135:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:135:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+6,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: ERROR
+ - ERC721_merge.sol:56:5: Postcondition ' _owner !=  address(0)' might not hold at end of function.
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:82:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:139:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:139:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:139:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+7,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:80:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:91:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:136:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:136:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:136:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:150:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:150:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:150:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+8,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:80:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:136:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:136:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:136:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+9,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:121:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:121:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:134:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:134:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:134:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:148:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:148:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:148:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+10,251,"ERC721_merge.sol:2:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::ownerOf_pre: OK
+Refinement::ownerOf_post: OK
+Refinement::approve_pre: OK
+Refinement::getApproved_pre: OK
+Refinement::getApproved_post: ERROR
+ - ERC721_merge.sol:79:5: Postcondition 'abs._tokenOwner[_tokenId] != address(0)' might not hold at end of function.
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC721_merge.sol:90:5: Postcondition 'abs._operatorApprovals[msg.sender][_operator] == _approved' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::transferFrom_pre: OK
+Refinement::transferFrom_post: ERROR
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+ - ERC721_merge.sol:116:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:129:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC721_merge.sol:143:5: Postcondition ' abs._tokenOwner[_tokenId] == _to' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_from] ==  abs_old._ownedTokensCount[_from] - 1  &&  _from  != _to ) || ( _from == _to )  ) ' might not hold at end of function.
+ - ERC721_merge.sol:143:5: Postcondition '( ( abs._ownedTokensCount[_to] ==  abs_old._ownedTokensCount[_to] + 1  &&  _from  != _to ) || ( _from  == _to ) )' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"

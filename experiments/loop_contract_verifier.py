@@ -38,38 +38,6 @@ if not openai.api_key:
 # Configure logging
 logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 
-# OpenAI Assistant IDs for different model configurations
-# ASSISTANT_IDS = {
-#     "4o-mini": "asst_uMJ30gjHtG1VIBnqJFKpR6gm",
-#     "erc-1155-001-3-16": "asst_uMYPmlxmT9ppnPKZQ8ZTyfYb",
-#     "erc-1155-005-3-16": "asst_nsa6edZTsNNWj4SBFSPeFYPq",
-#     "erc-1155-010-3-16": "asst_BsZDuAHsmBfrlimXinHt96Cb",
-#     "erc-1155-001-5-16": "asst_Mkq2y7mUxjusd47rPSGXrrCM",
-#     "erc-1155-005-5-16": "asst_8ZL8R3zwXyurmmjkFX14kcuS",
-#     "erc-1155-010-5-16": "asst_wOnRMvawOAI1sO83lfRWWBLu",
-#     "erc-1155-001-7-16": "asst_sZLa64l2Xrb1zNhogDl7RXap",
-#     "erc-1155-005-7-16": "asst_m8y0QMRJVtvDRYcPZLVIcHW6",
-#     "erc-1155-010-7-16": "asst_MRg3E5ds4NRfFKPTPqLsx9rS",
-#     "erc-20-001-3-16": "asst_wn9R7oQTUr60VpfvvaZ5asBa",
-#     "erc-20-005-3-16": "asst_3pHhhAMFwXi9JCVPOvftRQJU",
-#     "erc-20-010-3-16": "asst_OZk81q3HVr1mrGXCfOiVKaku",
-#     "erc-20-001-5-16": "asst_M6Q7TjZTC5wLDXdA88kCre7o",
-#     "erc-20-005-5-16": "asst_XFsmrlLmDMcbQ8uPeG4EVGA0",
-#     "erc-20-010-5-16": "asst_d1TPZLOP9HSmJq0va4vD2rcW",
-#     "erc-20-001-7-16": "asst_M8jjeryyXFYdnGSiQuyOB4ij",
-#     "erc-20-005-7-16": "asst_w98aowF6diNCOJxaM9li84Hi",
-#     "erc-20-010-7-16": "asst_FEGX60kN1RpiFGQP3CaQI6vO",
-#     "erc-721-001-3-16": "asst_nPqcpEo7lJnH4nmX9sNSBmfX",
-#     "erc-721-005-3-16": "asst_wipOM1IWYzuK1jyqwqRJmDic",
-#     "erc-721-010-3-16": "asst_MnKQphy1oPqu7QUWah63JFJk",
-#     "erc-721-001-5-16": "asst_kjoZHBonf5tXKpuiJ6Z4T3Gv",
-#     "erc-721-005-5-16": "asst_u2r0eDkkqERqTmOY5soRPU7n",
-#     "erc-721-010-5-16": "asst_YNv1CBWWYuzTg4D7rRK7JVL6",
-#     "erc-721-001-7-16": "asst_odutVf248qCN3C9zlFKLNd9a",
-#     "erc-721-005-7-16": "asst_HdOeD4DYTJAHfluUAeu6cwNJ",
-#     "erc-721-010-7-16": "asst_JNnQFWooGybyzS3juCJT5GQg",
-# }
-
 ASSISTANT_IDS = {
     "4o-mini": "asst_uMJ30gjHtG1VIBnqJFKpR6gm",
     "erc-1155-001-5-16": "asst_Mkq2y7mUxjusd47rPSGXrrCM",
@@ -79,6 +47,7 @@ ASSISTANT_IDS = {
     "erc-20-1155-001-5-16": "asst_xiVobEjKhGFhIFIPw3EySfsf",
     "erc-721-1155-001-5-16": "asst_YsmuTcAJW179xCxAufROe2k1",
     "erc-20-721-1155-001-5-16": "asst_0JMCtwBpCeOHZ1lWmy4nErjB",
+    "4.1": "asst_NXdmcjK3fVGXeHVDzklNoMKv",
 }
 
 # File paths for contract interfaces and documentation
@@ -86,18 +55,21 @@ INTERFACE_PATHS = {
     "erc20": "../assets/file_search/erc20_interface.md",
     "erc721": "../assets/file_search/erc721_interface.md",
     "erc1155": "../assets/file_search/erc1155_interface.md",
+    "ercx": "../assets/file_search/ercx_interface.md",
 }
 
 EIP_PATHS = {
     "erc20": "../assets/file_search/erc-20.md",
     "erc721": "../assets/file_search/erc-721.md",
     "erc1155": "../assets/file_search/erc-1155.md",
+    "ercx": "../assets/file_search/erc-x.md",
 }
 
 REFERENCE_SPEC_PATHS = {
     "erc20": "../assets/file_search/erc20_ref_spec.md",
     "erc721": "../assets/file_search/erc721_ref_spec.md",
     "erc1155": "../assets/file_search/erc1155_ref_spec.md",
+    "ercx": "../assets/file_search/ercx_ref_spec.md",
     "": ""
 }
 
@@ -334,12 +306,14 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/templates/imp_spec_merge.template',
         "erc721": './solc_verify_generator/ERC721/templates/imp_spec_merge.template',
         "erc1155": './solc_verify_generator/ERC1155/templates/imp_spec_merge.template',
+        "ercx": './solc_verify_generator/ERCX/templates/imp_spec_merge.template',
     }
     
     MERGE_PATHS = {
         "erc20": './solc_verify_generator/ERC20/imp/ERC20_merge.sol',
         "erc721": './solc_verify_generator/ERC721/imp/ERC721_merge.sol',
         "erc1155": './solc_verify_generator/ERC1155/imp/ERC1155_merge.sol',
+        "ercx": './solc_verify_generator/ERCX/imp/ERCX_merge.sol',
     }
 
     @classmethod
@@ -392,7 +366,6 @@ class SolcVerifyWrapper:
         try:
             spec_file_in_workdir  = os.path.join(workdir, "spec.sol")
             merge_file_basename = os.path.basename(original_merge_file_path)
-            merge_file_in_workdir = os.path.join(workdir, merge_file_basename)
             
             Utils.save_string_to_file(spec_file_in_workdir, solidity_spec_str)
 
@@ -421,14 +394,11 @@ class SolcVerifyWrapper:
                 if not os.path.exists(absolute_template_path):
                     logging.error(f"Template file not found: {absolute_template_path}")
                     return VerificationResult(-1, f"Template file not found: {absolute_template_path}")
-
-                # generate_merge will operate in workdir. 
-                # spec_file_in_workdir is relative to new CWD (workdir) so just "spec.sol"
-                # merge_file_in_workdir is also relative, e.g. "ERC1155_merge.sol"
                 generate_merge(
-                  "spec.sol", 
+                  "spec.sol",
                   absolute_template_path, 
-                  merge_file_basename 
+                  merge_file_basename,
+                  "base_llm" 
                 )
             except RuntimeError as e:
                  # generate_merge raises RuntimeError if solc fails on spec
@@ -552,9 +522,7 @@ def generate_prompt(requested_type, context_types):
     prompt = f"""
     {INSTRUCTIONS}
     
-    ```solidity
     {target_interface}
-    ```
     """
     
     if examples_text:
@@ -776,10 +744,10 @@ def main():
     """Main entry point for the verification process"""
     parser = argparse.ArgumentParser(description='Run contract verification with different contexts')
     parser.add_argument('--requested', type=str, required=True, 
-                        choices=['erc20', 'erc721', 'erc1155'],
+                        choices=['erc20', 'erc721', 'erc1155', 'ercx'],
                         help='The contract type to verify')
     parser.add_argument('--context', type=str, required=True,
-                        help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155")')
+                        help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155,ercx")')
     parser.add_argument('--assistant', type=str, default='4o-mini',
                         choices=list(ASSISTANT_IDS.keys()),
                         help='The assistant to use')
@@ -800,4 +768,4 @@ def main():
     )
 
 if __name__ == "__main__":
-    main() 
+    main()

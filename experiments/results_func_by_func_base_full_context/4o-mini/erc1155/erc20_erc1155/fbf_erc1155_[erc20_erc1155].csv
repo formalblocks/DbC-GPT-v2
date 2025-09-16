@@ -315,7 +315,7 @@ contract ERC1155 {
     /// @notice postcondition _operatorApprovals[_owner][_operator] == __verifier_old_bool(_operatorApprovals[_owner][_operator]) || approved == _operatorApprovals[_owner][_operator]
     function isApprovedForAll(address _owner, address _operator) public view returns (bool approved);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
 
     /// @notice postcondition _to != address(0)
@@ -354,7 +354,7 @@ contract ERC1155 {
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
     function setApprovalForAll(address _operator, bool _approved) public;
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function isApprovedForAll(address _owner, address _operator) public view returns (bool approved);
 
     /// @notice postcondition _to != address(0)

@@ -89,7 +89,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -199,7 +199,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -235,7 +235,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
@@ -344,7 +344,7 @@ contract ERC1155 {
     /// @notice postcondition balance == _balances[_id][_owner]
     function balanceOf(address _owner, uint256 _id) public view returns (uint256 balance);
 
-    /// @notice postcondition true
+    /// @notice postcondition false
     function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
 
     /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved

@@ -1,0 +1,226 @@
+run,time_taken,iterations,verified,annotated_contract,status
+1,91.78482246398926,3,True,"pragma solidity >=0.5.0;
+
+contract IERC721 {
+
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+
+    mapping (uint256 => address) private _tokenOwner;
+
+    mapping (uint256 => address) private _tokenApprovals;
+
+    mapping (address => uint256) private _ownedTokensCount;
+
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
+
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition approved == _tokenApprovals[_tokenId]
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition _operatorApprovals[_owner][_operator] == __verifier_old_bool(_operatorApprovals[_owner][_operator]) || _owner != _owner
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+}
+",[]
+2,404.8209002017975,10,False,,"[""Interaction: 4\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '_ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 5\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '_ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 6\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '(_to != address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1) || (_to == address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]))' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: ERROR\n - ERC721_merge.sol:112:5: Postcondition '_ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1' might not hold at end of function.\n - ERC721_merge.sol:112:5: Postcondition '_ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1' might not hold at end of function.\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 7\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '(_to != address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1) || (_to == address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]))' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 8\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '(_to != address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1) || (_to == address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]))' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 9\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '(_to != address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1) || (_to == address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]))' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 10\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '(_to != address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1) || (_to == address(0) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]))' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+3,251.53153681755066,10,False,,[]
+4,516.4366312026978,10,False,,"[""Interaction: 2\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '_ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+5,104.54696869850159,4,True,"pragma solidity >=0.5.0;
+
+contract IERC721 {
+
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+
+    mapping (uint256 => address) private _tokenOwner;
+
+    mapping (uint256 => address) private _tokenApprovals;
+
+    mapping (address => uint256) private _ownedTokensCount;
+
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
+
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _owner
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == approved
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition _operatorApprovals[_owner][_operator] == __verifier_old_bool(_operatorApprovals[_owner][_operator]) || _operatorApprovals[_owner][_operator] == true
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool approved);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+}
+",[]
+6,398.84609270095825,10,False,,"[""Interaction: 2\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nError while running verifier, details:\n----- Verifier output -----\n\n---------------------------\nERC165::supportsInterface: OK\n[event] ERC721::Approval: ERROR\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:94:5: Postcondition '_ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+7,45.23979449272156,1,True,"pragma solidity >=0.5.0;
+
+contract IERC721 {
+
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+
+    mapping (uint256 => address) private _tokenOwner;
+
+    mapping (uint256 => address) private _tokenApprovals;
+
+    mapping (address => uint256) private _ownedTokensCount;
+
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
+
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _owner == _tokenOwner[_tokenId]
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition approved == _tokenApprovals[_tokenId]
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool approved);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+}
+",[]
+8,354.58565306663513,10,False,,[]
+9,251.2115204334259,8,True,"pragma solidity >=0.5.0;
+
+contract IERC721 {
+
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+
+    mapping (uint256 => address) private _tokenOwner;
+
+    mapping (uint256 => address) private _tokenApprovals;
+
+    mapping (address => uint256) private _ownedTokensCount;
+
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
+
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    /// @notice postcondition _owner == __verifier_old_address(_owner) || balance == __verifier_old_uint(_ownedTokensCount[_owner]) 
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _owner
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved || _tokenApprovals[_tokenId] == __verifier_old_address(_tokenApprovals[_tokenId])
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition approved == _tokenApprovals[_tokenId]
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition _operatorApprovals[_owner][_operator] == __verifier_old_bool(_operatorApprovals[_owner][_operator])
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
+
+    /// @notice postcondition ( _tokenOwner[_tokenId] == _to && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1 && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1 ) || ( _tokenOwner[_tokenId] == __verifier_old_address(_tokenOwner[_tokenId]) && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) )
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition ( _tokenOwner[_tokenId] == _to && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1 && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1 ) || ( _tokenOwner[_tokenId] == __verifier_old_address(_tokenOwner[_tokenId]) && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) )
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition ( _tokenOwner[_tokenId] == _to && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1 && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1 ) || ( _tokenOwner[_tokenId] == __verifier_old_address(_tokenOwner[_tokenId]) && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) )
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+}
+","[""Interaction: 7\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: ERROR\n - ERC721_merge.sol:92:5: Postcondition '_tokenOwner[_tokenId] == _to && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1 && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1' might not hold at end of function.\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: OK\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 8\nAddress.sol:14:25: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nAddress.sol:15:9: Warning: Unused local variable.\nAddress.sol:14:5: Warning: Function state mutability can be restricted to pure\nERC165::supportsInterface: OK\nERC721::[constructor]: OK\nERC721::balanceOf: OK\nERC721::ownerOf: OK\nERC721::approve: OK\nERC721::getApproved: OK\nERC721::setApprovalForAll: OK\nERC721::isApprovedForAll: OK\nERC721::transferFrom: OK\nERC721::safeTransferFrom: OK\nERC721::safeTransferFrom: ERROR\n - ERC721_merge.sol:106:5: Postcondition '_tokenOwner[_tokenId] == _to && _ownedTokensCount[_from] == __verifier_old_uint(_ownedTokensCount[_from]) - 1 && _ownedTokensCount[_to] == __verifier_old_uint(_ownedTokensCount[_to]) + 1' might not hold at end of function.\nIERC165::[implicit_constructor]: OK\nIERC721Receiver::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+10,81.04542946815491,3,True,"pragma solidity >=0.5.0;
+
+contract IERC721 {
+
+    bytes4 private constant _ERC721_RECEIVED = 0x150b7a02;
+
+    mapping (uint256 => address) private _tokenOwner;
+
+    mapping (uint256 => address) private _tokenApprovals;
+
+    mapping (address => uint256) private _ownedTokensCount;
+
+    mapping (address => mapping (address => bool)) private _operatorApprovals;
+
+    bytes4 private constant _INTERFACE_ID_ERC721 = 0x80ac58cd;
+
+    /// @notice postcondition balance == _ownedTokensCount[_owner]
+    function balanceOf(address _owner) external view returns (uint256 balance);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _owner
+    function ownerOf(uint256 _tokenId) external view returns (address _owner);
+
+    /// @notice postcondition _tokenApprovals[_tokenId] == _approved
+    function approve(address _approved, uint256 _tokenId) external;
+
+    /// @notice postcondition approved == _tokenApprovals[_tokenId]
+    function getApproved(uint256 _tokenId) external view returns (address approved);
+
+    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
+    function setApprovalForAll(address _operator, bool _approved) external;
+
+    /// @notice postcondition approved == _operatorApprovals[_owner][_operator]
+    function isApprovedForAll(address _owner, address _operator) external view returns (bool approved);
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function transferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
+
+    /// @notice postcondition _tokenOwner[_tokenId] == _to
+    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
+}
+",[]

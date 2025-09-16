@@ -1,0 +1,347 @@
+run,time_taken,iterations,verified,annotated_contract,function_status,status,threads
+1,203.21711897850037,10,True,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _to == msg.sender || _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0
+    /// @notice postcondition __verifier_old_uint(_balances[msg.sender]) >= _value || _value == 0
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || _from == _to
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _from == _to || _value == 0
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition __verifier_old_uint(_allowed[msg.sender][_spender]) != _allowed[msg.sender][_spender] || success
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_JOoLrZMtoBMnk2iIFtc5gDMg', 'thread_dPXIbF90YAFKUKdZaoloQFXH', 'thread_NIu9o4EVEqsxTsZxvHJBbShr', 'thread_wvI7PE0fYl0e7Ayx0JR21bvN', 'thread_D1DpO0ye973x5o2l4US62f0s', 'thread_WLGkFT3u6FcF8EMtHEusgAWZ']"
+2,124.6430401802063,9,True,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) || _value == 0 || __verifier_old_uint(_balances[msg.sender]) >= _value
+    /// @notice postcondition _to != msg.sender || _balances[_to] == __verifier_old_uint(_balances[_to]) || _value == 0
+    /// @notice postcondition _to == msg.sender || _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || _from == _to
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _from == _to
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition __verifier_old_uint(_allowed[msg.sender][_spender]) != _allowed[msg.sender][_spender] || success
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_sQavXZkazVFFmochWb1xqZDs', 'thread_AmcQieqOmw8e09qwPuMU9eY2', 'thread_9ArJw5bLgPXlERzx7py6YsOY', 'thread_i40XeKqchPwdpDfGO754FhjC', 'thread_SWcctCSQAGn1bAubnByaWz9x', 'thread_7rRnJqbC3VDccdhasZm4mIq9']"
+3,157.1353189945221,11,True,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) || _value == 0 || _balances[msg.sender] >= __verifier_old_uint(_balances[msg.sender]) - _value
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _to == msg.sender || _value == 0
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || _value == 0 || _from == _to
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0 || _from == _to
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition success == true
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_JvYvHrHxrAClLzKNJsYk6B0n', 'thread_bb8wrzM2nGjEZ4ZBygyie9uh', 'thread_KFwnyofEq6Mq3WzwKkshWHii', 'thread_saAqSQJUa0fUdVxRQvye1nGS', 'thread_6RytJRbloz6GEtaDc1JwPxpK', 'thread_JdJkpP0EFVq5rMCkKfTokKWO']"
+4,140.72604393959045,10,False,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _to == msg.sender || _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value
+    /// @notice postcondition _to == msg.sender || _balances[_to] == __verifier_old_uint(_balances[_to]) + _value
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition false
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition __verifier_old_bool(success) || _allowed[msg.sender][_spender] == __verifier_old_uint(_allowed[msg.sender][_spender])
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_Rr2Eunvceoor3qLYZXMxf52i', 'thread_q8tohWzSFYHFElphJNTBfZak', 'thread_LTXSzGqFGqxHed1SHsW4d4gS', 'thread_vrlBrtYCyZpTNnpBAwmyxt1l', 'thread_zBOFDXNFr8lNQIAJVJfUWsBq', 'thread_Y8cuIUnVMEouULWeKIDEonad']"
+5,175.714129447937,13,False,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition false
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || !(0 < _value && _from != _to)
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _from == _to
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition success == true
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_hPHyqDyTinJCLjYbfroj9T0R', 'thread_pHb7G2yvNnHTmP5fLj27FVZA', 'thread_j2UG7KP3NdmKo0sI1WtQjmhM', 'thread_xN2BHJg5mTj338P1ITsEbcXx', 'thread_KeWOWEjhkFHIGXdJGt5i7e0V', 'thread_oGOrHT7fklpYQYbfZiVJ1HwV']"
+6,255.99480962753296,10,True,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value || _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) || _value == 0
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _balances[_to] == __verifier_old_uint(_balances[_to]) || !(0 < _value) || _to != msg.sender
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || _value == 0 || _from == _to
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0 || _from == _to
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition __verifier_old_uint(_allowed[msg.sender][_spender]) != _allowed[msg.sender][_spender] || success
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_mFAVCTBnmedpFlFPlbZxgJu1', 'thread_n7V6IPCzVpI6e8rv54svaow7', 'thread_6WMsMX36LX8Rq1MPlfgjy51u', 'thread_6nA1RAHtWY3AAdXiUEpEmTqK', 'thread_VpjFFmr4KEGcwIKd05WrD7Ex', 'thread_ImKqM14djzNgJHY6d5p7oplG']"
+7,178.08437871932983,12,True,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value || _value == 0 || _value <= __verifier_old_uint(_balances[msg.sender])
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _to == msg.sender || _value == 0
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || _from == _to
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _from == _to
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition success == true
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_qYKYVqUSge9GbcNmntQlXGch', 'thread_vsJTJ9AN6WmA6o1GtfOuj6dx', 'thread_0bZGT4i6Zq80e9OxnH8Bakxv', 'thread_NZ7q4o6U0JdyX1RxDPhZCgsw', 'thread_b3HEdKegmjp8HrgGhfhCdW9q', 'thread_WElHf4xzq09GWTNBn9NQc41q']"
+8,166.75110840797424,13,True,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value || _value == 0 || _value <= __verifier_old_uint(_balances[msg.sender])
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _to == msg.sender
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _balances[_from] == __verifier_old_uint(_balances[_from]) - _value || _value == 0 || _from == _to
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _value == 0 || _from == _to
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition __verifier_old_uint(_allowed[msg.sender][_spender]) != _allowed[msg.sender][_spender] || success
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Verified', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_KXarAvQQ0y7f9FxYFe8jF4xM', 'thread_bWyEvEIHLlywy9f3BtkYO6Oq', 'thread_25Xo3T9fXujHksCtBUvRlQZD', 'thread_EjARGiMKEidghTzy4selQTpF', 'thread_yR7RnWaYpH2piKsYCaXJdRBb', 'thread_gaFteN6nb0lm1eWBhVkGOqyK']"
+9,423.47412037849426,29,False,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value || _value == 0 || _value <= __verifier_old_uint(_balances[msg.sender])
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || _to == msg.sender
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition false
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition false
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Failed', 'approve': 'Failed', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_XITCkI7mRhYDjUeT6BEaKMKi', 'thread_k9E3SbUBx1RDPrXL1UNehAC8', 'thread_fLpoQCC17QGTTHnMUKRiaYcc', 'thread_jVTGLbHckeCT8858sZcIQ8OV', 'thread_sOS3zAORKSg3hRzqlWsNny87', 'thread_UjACjn6JmazfSrepfBvYzY5a']"
+10,263.4756314754486,18,False,"pragma solidity >=0.5.0;
+
+contract ERC20 {
+
+    mapping (address => uint) _balances;
+    mapping (address => mapping (address => uint)) _allowed;
+    uint public _totalSupply;
+
+    event Transfer(address indexed _from, address indexed _to, uint _value);
+    event Approval(address indexed _owner, address indexed _spender, uint _value);
+
+    // Functions
+    /// @notice postcondition supply == _totalSupply
+    function totalSupply() public view returns (uint256 supply);
+
+    /// @notice postcondition _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender]) - _value || _value == 0 || _balances[msg.sender] == __verifier_old_uint(_balances[msg.sender])
+    /// @notice postcondition _balances[_to] == __verifier_old_uint(_balances[_to]) + _value || msg.sender == _to
+    function transfer(address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition false
+    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition _allowed[msg.sender][_spender] == _value
+    /// @notice postcondition __verifier_old_uint(_allowed[msg.sender][_spender]) != _allowed[msg.sender][_spender] || success
+    function approve(address _spender, uint256 _value) public returns (bool success);
+
+    /// @notice postcondition balance == _balances[_owner]
+    function balanceOf(address _owner) public view returns (uint256 balance);
+
+    /// @notice postcondition remaining == _allowed[_owner][_spender]
+    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
+
+}
+","{'totalSupply': 'Verified', 'transfer': 'Verified', 'transferFrom': 'Failed', 'approve': 'Verified', 'balanceOf': 'Verified', 'allowance': 'Verified'}",[],"['thread_l7PA3M3WwqSBE8YBxu2lBewf', 'thread_C0lj522h3cKmyDF9wyEDKBOL', 'thread_O7xxSZmh9SvpKXH8U76cqVSN', 'thread_QRh9wx8CUPs2m0BmdcgfZz1F', 'thread_flTbkW0GGZa8E3GW9GkwwVLN', 'thread_4rigtblMWEyvYjHwNtRHSIlx']"
