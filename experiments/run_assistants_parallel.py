@@ -24,7 +24,7 @@ ALL_ASSISTANTS = {
     "erc-20-721-1155-001-5-16"
 }
 
-ALL_CONTEXT_TYPES = ["erc20", "erc721", "erc1155"]
+ALL_CONTEXT_TYPES = ["erc20", "erc721", "erc1155", "erc7683"]
 
 def get_optimal_worker_count():
     """More conservative worker count for containers"""
@@ -120,8 +120,8 @@ def main():
     parser.add_argument('--mode', type=str, required=True,
                         choices=['entire_contract', 'func_by_func'],
                         help='Verification mode: entire_contract or func_by_func')
-    parser.add_argument('--requested', type=str, required=True, 
-                         choices=['erc20', 'erc721', 'erc1155', 'ercx'],
+    parser.add_argument('--requested', type=str, required=True,
+                         choices=['erc20', 'erc721', 'erc1155', 'erc7683', 'ercx'],
                          help='The contract type to verify')
     parser.add_argument('--runs', type=int, default=10,
                         help='Number of verification runs per assistant')

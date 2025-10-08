@@ -17,8 +17,8 @@ contract Refinement {
 
     /// @notice precondition forall (uint256 _id, address _owner) abs._balances[_id][_owner] == con._balances[_id][_owner] // Abs func
     /// @notice precondition forall (address _owner, address _operator) abs._operatorApprovals[_owner][_operator] == con._operatorApprovals[_owner][_operator] // Abs func
-    /// @notice postcondition con._balances == abs._balances
-    /// @notice postcondition con._operatorApprovals == abs._operatorApprovals
+    /// @notice postcondition forall (uint256 _id, address _owner) con._balances[_id][_owner] == abs._balances[_id][_owner]
+    /// @notice postcondition forall (address _owner, address _operator) con._operatorApprovals[_owner][_operator] == abs._operatorApprovals[_owner][_operator]
     function inv() public {}
 
     /// @notice precondition true

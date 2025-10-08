@@ -1,0 +1,147 @@
+```solidity
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // State variables that postconditions MUST reference
+    // These track nonce usage and order execution to prevent replay attacks and double execution
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+
+    // Constants for validation
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method MUST emit the Open event
+     * @dev MUST validate originSettler, originChainId, orderDataType
+     * @dev MUST enforce nonce uniqueness (replay protection)
+     * @dev MUST enforce orderId uniqueness
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    $ADD POSTCONDITION HERE
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method MUST emit the Open event
+     * @dev MUST validate orderDataType
+     * @dev MUST enforce orderId uniqueness
+     * @param order The OnchainCrossChainOrder definition
+     */
+    $ADD POSTCONDITION HERE
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev MUST be a view function
+     * @dev MUST preserve user, originChainId, openDeadline, fillDeadline from input order
+     * @dev MUST compute consistent orderId
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    $ADD POSTCONDITION HERE
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev MUST be a view function
+     * @dev User MUST be msg.sender
+     * @dev originChainId MUST be current chain
+     * @dev MUST preserve fillDeadline from input order
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    $ADD POSTCONDITION HERE
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // State variable to track filled orders
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @dev MUST validate orderId hasn't been filled previously
+     * @dev MUST execute token transfers according to originData specification
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    $ADD POSTCONDITION HERE
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+```
