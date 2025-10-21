@@ -1,0 +1,781 @@
+run,time_taken,iterations,verified,annotated_contract,function_status,status,threads
+1,582.5772862434387,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_ujYRLPRFmsVjP7UgNCKxxw3O', 'thread_GDx0UPWQo3dqkDAQHehvK68Y', 'thread_rS50GnMf3POMS3pZpGTWXvBp', 'thread_GSCLcsj0t0RddJVOoRKyKsPe', 'thread_aNrt4uSmpVUxTmAZRjSxf24h']"
+2,515.4167673587799,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_Xa3XFnZZGIzKMSsSoIztr2e1', 'thread_c9wIGkIIYxQ7YjJaqfGRUThI', 'thread_Q2ZUa2umE3YFudQxxYnvsqWi', 'thread_bw2JeSGdl0bnpuuYYx2AwXhI', 'thread_hWyVnpFVLx6VZtoZv96L5qZH']"
+3,529.6943125724792,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_JkC38YlYimWs9VSxyF70hxJM', 'thread_BoFECFvplTHHlHvcYmShCjuX', 'thread_22siLUUlGrD6WXuA0uIyHtwj', 'thread_qQo9fGtYkOICWSofJYyxodW7', 'thread_NFFLdaVBcmXjOGN3vZnNKFcq']"
+4,541.8432922363281,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_NYAIDqdpIMJiTEaovy0otcQt', 'thread_gXN4NGFcM58azkhlG7JYLB6Z', 'thread_5l1MEUc3nP7Pm78sG2v2f0BN', 'thread_LJfKTUF5WXXzOkzNw1Cb1aTQ', 'thread_jo1ABkgoU10OSirPeOTZV5oG']"
+5,525.5392742156982,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_aTznhdpVkLdwSKOdNIGCtjfN', 'thread_tj4m4g4Pv0uD1p4BUGOY4vve', 'thread_TYGCqU7lsN6amYdI97AviVmx', 'thread_87jQUkEDwIU5Dz31siLJaRsa', 'thread_Wa9qRSwtn2VKWYmkrWQ1Pdta']"
+6,499.3654282093048,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_aGHvqMgj0YGiPGKLGIFbHfQf', 'thread_U9awkIqyjpstEkqi9M1B956p', 'thread_UhrlClEAw1rHVxPYpVWImZPC', 'thread_k1E2waRmWsXxLN6CG6tYJxDm', 'thread_SIR3hLSHRDWF2uZ2mYFAlY9O']"
+7,511.15640234947205,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_pj1beXVzxQFeGBiKEqrseahv', 'thread_RHdjsWCq1MJvM0jis0bdiWvo', 'thread_xEChDok2fnmHoilEexMEsoHw', 'thread_ybPF3AJIGfdY7ylKTo4t7PBO', 'thread_X8WZYIHWYhe618Pp4dXut5px']"
+8,503.5458800792694,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_gY0KnWOClfHIKNFbLuBSgCsT', 'thread_m0FvSiSj7mm1z4P6nkWyGVau', 'thread_eo5tnIojETabssRtrcuN5Pl3', 'thread_ofITup2v9zgu05sgzhomKfia', 'thread_wDTjgxdthYqN9Av6CyxEtZ3u']"
+9,495.1948461532593,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_wWwYGJGTcbuMYxSB9oHeFmpc', 'thread_Z39NCayy5qwZpih7JP92D7o1', 'thread_1JHtrrkPn7F5jRXIw1QEo5Og', 'thread_QuNvb3v1J3zRSQnOFyTOXlWr', 'thread_D2nqKUddp2pSmVmfTEjdlmle']"
+10,552.2573969364166,50,False,"pragma solidity ^0.5.0;
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract ERC7683 {
+
+    // Events
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    // State Variables
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    mapping(bytes32 => bool) public openedOrders;
+    mapping(bytes32 => bool) public filledOrders;
+
+    // Functions
+    /// @notice postcondition true
+    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData) external;
+
+    /// @notice postcondition true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition true
+    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition true
+    function fill(bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData) external;
+
+}
+","{'openFor': 'Failed', 'open': 'Failed', 'resolveFor': 'Failed', 'resolve': 'Failed', 'fill': 'Failed'}",[],"['thread_cvHo5r2fC57QVbjkba4WUTfq', 'thread_aeJgDRx0qMH3T4KJRyhO9Tlc', 'thread_3jg3s9DJ3wdCCxLRMNmthdi4', 'thread_2dOQfEqQP4dPHo0nIMjS2vLJ', 'thread_JM3HbCZuEwaqhRoP7iamMkGX']"

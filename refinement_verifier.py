@@ -17,11 +17,12 @@ logging.basicConfig(stream=sys.stdout, level=logging.INFO)
 VERIFICATION_OPTIONS = ['llm_base', 'base_llm']
 
 # Define ERC standards to process
-ERC_STANDARDS = ['erc20', 'erc721']
+# ERC_STANDARDS = ['erc20', 'erc721', 'erc1155']
+ERC_STANDARDS = ['erc1155']
 
 RESULT_TYPES = [
-    'results_entire_contract_base_full_context',
-    'results_entire_contract_fine_tuning',
+    # 'results_entire_contract_base_full_context',
+    # 'results_entire_contract_fine_tuning',
     'results_func_by_func_base_full_context',
     'results_func_by_func_fine_tuning',
 ]
@@ -269,23 +270,85 @@ class Utils:
         # Find all postcondition and precondition specifications
         postcondition_pattern = r'///\s*@notice\s+postcondition\s+(.+)'
         precondition_pattern = r'///\s*@notice\s+precondition\s+(.+)'
-        
+
         postconditions = re.findall(postcondition_pattern, solidity_code, re.IGNORECASE)
         preconditions = re.findall(precondition_pattern, solidity_code, re.IGNORECASE)
-        
+
         all_conditions = postconditions + preconditions
-        
+
         # If no conditions found, consider it trivial
         if not all_conditions:
             return True
-            
+
         # Check if all conditions are trivial (true, True, or variations)
         for condition in all_conditions:
             condition_clean = condition.strip().lower()
             if condition_clean not in ['true', '1', 'true;']:
                 return False
-        
+
         return True
+
+    @staticmethod
+    def has_mixed_trivial_specifications(solidity_code: str) -> bool:
+        """
+        Check if the Solidity code contains a mix of trivial and meaningful specifications
+        Returns True if some specs are trivial and others are meaningful, False otherwise
+        """
+        # Find all postcondition and precondition specifications
+        postcondition_pattern = r'///\s*@notice\s+postcondition\s+(.+)'
+        precondition_pattern = r'///\s*@notice\s+precondition\s+(.+)'
+
+        postconditions = re.findall(postcondition_pattern, solidity_code, re.IGNORECASE)
+        preconditions = re.findall(precondition_pattern, solidity_code, re.IGNORECASE)
+
+        all_conditions = postconditions + preconditions
+
+        # If no conditions found, not mixed
+        if not all_conditions:
+            return False
+
+        trivial_count = 0
+        meaningful_count = 0
+
+        # Count trivial vs meaningful conditions
+        for condition in all_conditions:
+            condition_clean = condition.strip().lower()
+            if condition_clean in ['true', '1', 'true;']:
+                trivial_count += 1
+            else:
+                meaningful_count += 1
+
+        # Mixed if we have both trivial and meaningful specifications
+        return trivial_count > 0 and meaningful_count > 0
+
+    @staticmethod
+    def get_trivial_specification_ratio(solidity_code: str) -> float:
+        """
+        Calculate the ratio of trivial specifications to total specifications
+        Returns a float between 0.0 and 1.0
+        """
+        # Find all postcondition and precondition specifications
+        postcondition_pattern = r'///\s*@notice\s+postcondition\s+(.+)'
+        precondition_pattern = r'///\s*@notice\s+precondition\s+(.+)'
+
+        postconditions = re.findall(postcondition_pattern, solidity_code, re.IGNORECASE)
+        preconditions = re.findall(precondition_pattern, solidity_code, re.IGNORECASE)
+
+        all_conditions = postconditions + preconditions
+
+        # If no conditions found, return 1.0 (all trivial)
+        if not all_conditions:
+            return 1.0
+
+        trivial_count = 0
+
+        # Count trivial conditions
+        for condition in all_conditions:
+            condition_clean = condition.strip().lower()
+            if condition_clean in ['true', '1', 'true;']:
+                trivial_count += 1
+
+        return trivial_count / len(all_conditions)
 
 def run_refinement_verification_process(result_type: str, model_name: str, token_context: str, option: str, main_erc_standard_dir: str, output_dir_for_csv: str):
     file_prefix = ""
@@ -326,6 +389,10 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
             })
             continue
 
+        # Check for mixed trivial/meaningful specifications
+        has_mixed_trivial = Utils.has_mixed_trivial_specifications(solidity_code)
+        trivial_ratio = Utils.get_trivial_specification_ratio(solidity_code)
+
         try:
             verification_result = SolcVerifyWrapper.verify(solidity_code, option, main_erc_standard_dir)
         except Exception as e:
@@ -337,11 +404,35 @@ def run_refinement_verification_process(result_type: str, model_name: str, token
             })
             continue
 
-        verification_results.append({
-            'run': run_number,
-            'status': verification_result.status,
-            'output': verification_result.output
-        })
+        # Interpret results based on trivial specification content
+        if verification_result.status == 0 and has_mixed_trivial:
+            # Success with mixed trivial specs likely means LLM specs are weaker
+            if trivial_ratio >= 0.5:  # More than half are trivial
+                verification_results.append({
+                    'run': run_number,
+                    'status': 'LLM_WEAKER',
+                    'output': f'LLM specifications are weaker (trivial ratio: {trivial_ratio:.2f}). Base specs are stronger. Original: {verification_result.output}'
+                })
+            else:
+                verification_results.append({
+                    'run': run_number,
+                    'status': 'MIXED_TRIVIAL',
+                    'output': f'Mixed trivial/meaningful specifications (trivial ratio: {trivial_ratio:.2f}). Original: {verification_result.output}'
+                })
+        elif verification_result.status == 0 and trivial_ratio > 0:
+            # Success with some trivial specs
+            verification_results.append({
+                'run': run_number,
+                'status': 'PARTIALLY_TRIVIAL',
+                'output': f'Success with {trivial_ratio:.2f} trivial specifications. Original: {verification_result.output}'
+            })
+        else:
+            # Standard result
+            verification_results.append({
+                'run': run_number,
+                'status': verification_result.status,
+                'output': verification_result.output
+            })
 
     # Save all results to a CSV file
     output_csv_filename = f"{main_erc_standard_dir}_{token_context}_{option}.csv"

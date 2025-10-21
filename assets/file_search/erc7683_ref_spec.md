@@ -53,11 +53,9 @@ library ERC7683Types {
 }
 
 contract IOriginSettler {
-    // State variables for tracking nonces and orders
     mapping(address => mapping(uint256 => bool)) public usedNonces;
     mapping(bytes32 => bool) public openedOrders;
 
-    // Constants
     uint256 public constant SUPPORTED_CHAIN_ID = 1;
     bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
 
@@ -65,11 +63,11 @@ contract IOriginSettler {
 
     /**
      * @notice Opens a gasless cross-chain order on behalf of a user
-     * @dev MUST validate: originSettler, originChainId, orderDataType, nonce uniqueness
-     * @dev MUST emit Open event
-     * @dev MUST mark nonce as used for replay protection
-     * @dev MUST mark orderId as opened for uniqueness
-     * @dev OrderId is computed as bytes32(order.nonce)
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
      */
     /// @notice precondition order.originSettler == address(this)
     /// @notice precondition order.originChainId == SUPPORTED_CHAIN_ID
@@ -86,11 +84,9 @@ contract IOriginSettler {
 
     /**
      * @notice Opens a cross-chain order initiated by the caller
-     * @dev MUST validate: orderDataType
-     * @dev MUST emit Open event
-     * @dev MUST mark orderId as opened for uniqueness
-     * @dev User is msg.sender (no nonce needed for on-chain orders)
-     * @dev OrderId is computed as bytes32(uint256(order.fillDeadline))
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @param order The OnchainCrossChainOrder definition
      */
     /// @notice precondition order.orderDataType == ORDER_DATA_TYPE_HASH
     /// @notice precondition !openedOrders[bytes32(uint256(order.fillDeadline))]
@@ -99,9 +95,10 @@ contract IOriginSettler {
 
     /**
      * @notice Resolves a gasless order into its canonical representation
-     * @dev MUST be a view function (no state changes)
-     * @dev MUST preserve: user, originChainId, openDeadline, fillDeadline
-     * @dev MUST correctly compute orderId
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
      */
     /// @notice postcondition resolvedOrder.user == order.user
     /// @notice postcondition resolvedOrder.originChainId == order.originChainId
@@ -115,9 +112,9 @@ contract IOriginSettler {
 
     /**
      * @notice Resolves an on-chain order into its canonical representation
-     * @dev MUST be a view function (no state changes)
-     * @dev User MUST be msg.sender
-     * @dev originChainId MUST be current chain
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
      */
     /// @notice postcondition resolvedOrder.user == msg.sender
     /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
@@ -129,13 +126,13 @@ contract IOriginSettler {
 }
 
 contract IDestinationSettler {
-    // State variable to track filled orders
     mapping(bytes32 => bool) public filledOrders;
 
     /**
      * @notice Fills a single leg of a particular order on the destination chain
-     * @dev MUST validate orderId hasn't been filled
-     * @dev MUST transfer tokens according to originData
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
      */
     /// @notice precondition !filledOrders[orderId]
     /// @notice postcondition filledOrders[orderId]

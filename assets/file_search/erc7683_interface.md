@@ -7,6 +7,38 @@ pragma experimental ABIEncoderV2;
  * @title ERC7683 Interface Template for Postcondition Generation
  * @notice Template file with placeholders for LLM-generated postconditions
  * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator "==>" - use "!(condition) || condition2" instead
+ * - DO NOT use "in" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
  */
 
 library ERC7683Types {
@@ -53,12 +85,11 @@ library ERC7683Types {
 }
 
 contract IOriginSettler {
-    // State variables that postconditions MUST reference
-    // These track nonce usage and order execution to prevent replay attacks and double execution
+    // Mapping from user address and nonce to usage status
     mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
     mapping(bytes32 => bool) public openedOrders;
 
-    // Constants for validation
     uint256 public constant SUPPORTED_CHAIN_ID = 1;
     bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
 
@@ -67,10 +98,10 @@ contract IOriginSettler {
     /**
      * @notice Opens a gasless cross-chain order on behalf of a user
      * @dev To be called by the filler
-     * @dev This method MUST emit the Open event
-     * @dev MUST validate originSettler, originChainId, orderDataType
-     * @dev MUST enforce nonce uniqueness (replay protection)
-     * @dev MUST enforce orderId uniqueness
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @test Use simple mapping access patterns, not complex computations
      * @param order The GaslessCrossChainOrder definition
      * @param signature The user's signature over the order
      * @param originFillerData Any filler-defined data required by the settler
@@ -85,9 +116,10 @@ contract IOriginSettler {
     /**
      * @notice Opens a cross-chain order
      * @dev To be called by the user
-     * @dev This method MUST emit the Open event
-     * @dev MUST validate orderDataType
-     * @dev MUST enforce orderId uniqueness
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
      * @param order The OnchainCrossChainOrder definition
      */
     $ADD POSTCONDITION HERE
@@ -96,9 +128,9 @@ contract IOriginSettler {
     /**
      * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
      * @dev Intended to improve standardized integration of various order types and settlement contracts
-     * @dev MUST be a view function
-     * @dev MUST preserve user, originChainId, openDeadline, fillDeadline from input order
-     * @dev MUST compute consistent orderId
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
      * @param order The GaslessCrossChainOrder definition
      * @param originFillerData Any filler-defined data required by the settler
      * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
@@ -112,10 +144,9 @@ contract IOriginSettler {
     /**
      * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
      * @dev Intended to improve standardized integration of various order types and settlement contracts
-     * @dev MUST be a view function
-     * @dev User MUST be msg.sender
-     * @dev originChainId MUST be current chain
-     * @dev MUST preserve fillDeadline from input order
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
      * @param order The OnchainCrossChainOrder definition
      * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
      */
@@ -126,13 +157,14 @@ contract IOriginSettler {
 }
 
 contract IDestinationSettler {
-    // State variable to track filled orders
+    // Mapping from order ID to filled status
     mapping(bytes32 => bool) public filledOrders;
 
     /**
      * @notice Fills a single leg of a particular order on the destination chain
-     * @dev MUST validate orderId hasn't been filled previously
-     * @dev MUST execute token transfers according to originData specification
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
      * @param orderId Unique order identifier for this order
      * @param originData Data emitted on the origin to parameterize the fill
      * @param fillerData Data provided by the filler to inform the fill or express their preferences

@@ -1,0 +1,11 @@
+run,time_taken,iterations,verified,annotated_contract,status
+1,514.0156760215759,10,False,,[]
+2,493.19293999671936,10,False,,[]
+3,445.6911573410034,10,False,,[]
+4,435.3371961116791,10,False,,[]
+5,422.67004013061523,10,False,,[]
+6,531.4269533157349,10,False,,"[""Interaction: 8\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:31:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:82:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:126:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:127:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:28:5: Postcondition 'openedOrders[order.orderDataType] == true' might not hold at end of function.\nERC7683OriginSettler::open: ERROR\n - ERC7683_merge.sol:57:5: Postcondition 'openedOrders[order.orderDataType] == true' might not hold at end of function.\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: OK\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+7,480.09662079811096,10,False,,[]
+8,530.7833874225616,10,False,,[]
+9,657.0462732315063,10,False,,[]
+10,315.379732131958,10,False,,[]

@@ -14,10 +14,8 @@ contract ERC7683OriginSettler is IOriginSettler {
     uint256 public constant SUPPORTED_CHAIN_ID = 1;
     bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
 
-    // Nonce bookkeeping per user for gasless orders.
     mapping(address => mapping(uint256 => bool)) public usedNonces;
 
-    // Order identifier tracking to guarantee single execution per order.
     mapping(bytes32 => bool) public openedOrders;
 
     event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
@@ -127,7 +125,6 @@ contract ERC7683OriginSettler is IOriginSettler {
  *         Tracks filled orders to prevent double-filling.
  */
 contract ERC7683DestinationSettler is IDestinationSettler {
-    // Mapping to track which orders have been filled
     mapping(bytes32 => bool) public filledOrders;
 
     $fill
