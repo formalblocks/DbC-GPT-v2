@@ -1,5 +1,5 @@
 run,time_taken,iterations,verified,annotated_contract,status
-1,32.4010751247406,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+1,80.20166063308716,1,True,"// SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
@@ -8,7 +8,7 @@ pragma experimental ABIEncoderV2;
  * @notice Template file with placeholders for LLM-generated postconditions
  * @dev Includes state variables that postconditions must reference
  * 
- * IMPORTANT NOTES FOR POSTCONDITION GENERATION:
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
  * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
  * - Only use __verifier_old_uint() and __verifier_old_bool() functions
  * - For view functions, focus on return value relationships to input parameters
@@ -26,7 +26,8 @@ pragma experimental ABIEncoderV2;
  * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
  * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
  * - DO NOT use array.length in postconditions without proper range specification
- * - Keep postconditions simple and focused on state variable changes
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
  * 
  * SYNTAX PATTERNS TO AVOID:
  * - WRONG: abi.encode(order.nonce, order.user) 
@@ -36,14 +37,144 @@ pragma experimental ABIEncoderV2;
  * - WRONG: (order.nonce, user) in usedNonces
  * - WRONG: forall (uint x) condition (missing range)
  * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
  * 
- * CORRECT PATTERNS TO USE:
- * - CORRECT: usedNonces[order.user][order.nonce]
- * - CORRECT: openedOrders[bytes32(order.nonce)]
- * - CORRECT: resolvedOrder.user == order.user
- * - CORRECT: !(condition) || condition2
- * - CORRECT: forall (uint i) !(0 <= i && i < arr.length) || condition
- * - CORRECT: __verifier_old_bool(usedNonces[order.user][order.nonce])
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /// @notice postcondition !(usedNonces[order.user][order.nonce]) && __verifier_old_bool(usedNonces[order.user][order.nonce]) || usedNonces[order.user][order.nonce]
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
+2,399.88286685943604,10,False,,"[""Interaction: 7\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:126:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:127:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:27:5: Postcondition 'forall (uint x) (0 <= x && x < order.nonce) || usedNonces[order.user][x] == __verifier_old_bool(usedNonces[order.user][x])' might not hold at end of function.\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:143:5: Postcondition 'forall (uint x) !(0 <= x && x < 2) || (filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId]) )' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 8\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:126:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:127:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:143:5: Postcondition 'forall (uint x) !(0 <= x && x < 1) || (filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId]) )' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 9\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:126:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:127:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:143:5: Postcondition 'forall (uint x) !(0 <= x && x < 1) || (filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId]) )' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 10\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:126:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:127:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:143:5: Postcondition 'forall (uint x) !(0 <= x && x < 1) || (filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId]) )' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+3,343.3443229198456,10,False,,[]
+4,406.57241201400757,10,False,,[]
+5,38.829718351364136,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
  */
 
 library ERC7683Types {
@@ -104,9 +235,8 @@ contract IOriginSettler {
      * @notice Opens a gasless cross-chain order on behalf of a user
      * @dev To be called by the filler
      * @dev This method must emit the Open event
-     * @dev Consider: nonce usage tracking, order uniqueness, state changes
-     * @dev Focus on usedNonces and openedOrders state changes
-     * @dev Use simple mapping access patterns, not complex computations
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
      * @param order The GaslessCrossChainOrder definition
      * @param signature The user's signature over the order
      * @param originFillerData Any filler-defined data required by the settler
@@ -123,9 +253,9 @@ contract IOriginSettler {
      * @notice Opens a cross-chain order
      * @dev To be called by the user
      * @dev This method must emit the Open event
-     * @dev Consider: order uniqueness, state changes (no nonce needed for onchain orders)
-     * @dev Focus on openedOrders state changes only
-     * @dev Use simple bytes32 conversion, not complex hashing
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
      * @param order The OnchainCrossChainOrder definition
      */
     /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
@@ -134,16 +264,15 @@ contract IOriginSettler {
     /**
      * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
      * @dev Intended to improve standardized integration of various order types and settlement contracts
-     * @dev Consider: return value relationships to input parameters, orderId computation
-     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
      * @param order The GaslessCrossChainOrder definition
      * @param originFillerData Any filler-defined data required by the settler
      * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
      */
-    /// @notice postcondition resolvedOrder.user == order.user
-    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
-    /// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition order.user == resolvedOrder.user
+    /// @notice postcondition order.originChainId == resolvedOrder.originChainId
     function resolveFor(
         ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData
@@ -154,11 +283,12 @@ contract IOriginSettler {
      * @dev Intended to improve standardized integration of various order types and settlement contracts
      * @dev Consider: return value relationships to input parameters, orderId computation
      * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
      * @param order The OnchainCrossChainOrder definition
      * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
      */
-    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
     /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
     function resolve(
         ERC7683Types.OnchainCrossChainOrder calldata order
     ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
@@ -170,9 +300,9 @@ contract IDestinationSettler {
 
     /**
      * @notice Fills a single leg of a particular order on the destination chain
-     * @dev Consider: order filling status, state changes, orderId tracking
-     * @dev Focus on filledOrders state changes only
-     * @dev Use simple mapping access, not complex operations
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
      * @param orderId Unique order identifier for this order
      * @param originData Data emitted on the origin to parameterize the fill
      * @param fillerData Data provided by the filler to inform the fill or express their preferences
@@ -185,7 +315,8 @@ contract IDestinationSettler {
     ) external;
 }
 ",[]
-2,62.32042717933655,1,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+6,442.08683490753174,10,False,,[]
+7,39.162930488586426,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
 pragma solidity ^0.5.0;
 pragma experimental ABIEncoderV2;
 
@@ -194,7 +325,7 @@ pragma experimental ABIEncoderV2;
  * @notice Template file with placeholders for LLM-generated postconditions
  * @dev Includes state variables that postconditions must reference
  * 
- * IMPORTANT NOTES FOR POSTCONDITION GENERATION:
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
  * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
  * - Only use __verifier_old_uint() and __verifier_old_bool() functions
  * - For view functions, focus on return value relationships to input parameters
@@ -212,7 +343,8 @@ pragma experimental ABIEncoderV2;
  * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
  * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
  * - DO NOT use array.length in postconditions without proper range specification
- * - Keep postconditions simple and focused on state variable changes
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
  * 
  * SYNTAX PATTERNS TO AVOID:
  * - WRONG: abi.encode(order.nonce, order.user) 
@@ -222,6 +354,143 @@ pragma experimental ABIEncoderV2;
  * - WRONG: (order.nonce, user) in usedNonces
  * - WRONG: forall (uint x) condition (missing range)
  * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
+8,409.65131521224976,10,False,,"[""Interaction: 6\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:143:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:140:5: Postcondition 'forall (uint i) !(0 <= i && i < originData.length) || originData[i] == 0' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+9,487.57305788993835,10,False,,"[""Interaction: 2\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:143:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:141:5: Postcondition 'forall (uint256 x) !(0 <= x && x < originData.length) || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 3\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:143:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:141:5: Postcondition 'originData.length == 0 || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 4\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:143:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:141:5: Postcondition '!(originData.length == 0) || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 5\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:143:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:141:5: Postcondition '!(originData.length > 0) || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId]) || originData.length == __verifier_old_uint(originData.length)' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 6\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:143:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:141:5: Postcondition 'originData.length == 0 || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 7\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:142:5: Postcondition '!(originData.length > 0) || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId]) ' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 8\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:142:5: Postcondition '(originData.length == 0) || (filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])) ' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 9\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:142:5: Postcondition 'originData.length == 0 || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 10\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:144:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:124:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:125:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:126:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: OK\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:142:5: Postcondition '!(originData.length == 0) || filledOrders[orderId] == __verifier_old_bool(filledOrders[orderId])' might not hold at end of function.\n - ERC7683_merge.sol:142:5: Postcondition '__verifier_old_bool(filledOrders[orderId]) || originData.length == 0' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+10,235.74469375610352,3,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
  */
 
 library ERC7683Types {
@@ -282,15 +551,16 @@ contract IOriginSettler {
      * @notice Opens a gasless cross-chain order on behalf of a user
      * @dev To be called by the filler
      * @dev This method must emit the Open event
-     * @dev Consider: nonce usage tracking, order uniqueness, state changes
-     * @dev Focus on usedNonces and openedOrders state changes
-     * @dev Use simple mapping access patterns, not complex computations
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @test Use simple mapping access patterns, not complex computations
      * @param order The GaslessCrossChainOrder definition
      * @param signature The user's signature over the order
      * @param originFillerData Any filler-defined data required by the settler
      */
-    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true 
-    /// @notice postcondition forall (uint256 x) !(__verifier_old_bool(usedNonces[order.user][order.nonce]) && !usedNonces[order.user][order.nonce]) || !__verifier_old_bool(usedNonces[order.user][x])
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    /// @notice postcondition forall (uint x) !(0 <= x && x < order.nonce) || usedNonces[order.user][x] == __verifier_old_bool(usedNonces[order.user][x])
     function openFor(
         ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata signature,
@@ -301,300 +571,21 @@ contract IOriginSettler {
      * @notice Opens a cross-chain order
      * @dev To be called by the user
      * @dev This method must emit the Open event
-     * @dev Consider: order uniqueness, state changes (no nonce needed for onchain orders)
-     * @dev Focus on openedOrders state changes only
-     * @dev Use simple bytes32 conversion, not complex hashing
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
      * @param order The OnchainCrossChainOrder definition
      */
     /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    /// @notice postcondition !( __verifier_old_bool(openedOrders[bytes32(uint256(order.fillDeadline))]) && openedOrders[bytes32(uint256(order.fillDeadline))] )
     function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
 
     /**
      * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
      * @dev Intended to improve standardized integration of various order types and settlement contracts
-     * @dev Consider: return value relationships to input parameters, orderId computation
-     * @dev Focus on direct field mappings from order to resolvedOrder
-     * @param order The GaslessCrossChainOrder definition
-     * @param originFillerData Any filler-defined data required by the settler
-     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
-     */
-    /// @notice postcondition resolvedOrder.user == order.user
-    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
-    function resolveFor(
-        ERC7683Types.GaslessCrossChainOrder calldata order,
-        bytes calldata originFillerData
-    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-
-    /**
-     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
-     * @dev Intended to improve standardized integration of various order types and settlement contracts
-     * @dev Consider: return value relationships to input parameters, orderId computation
-     * @dev Focus on direct field mappings from order to resolvedOrder
-     * @param order The OnchainCrossChainOrder definition
-     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
-     */
-    /// @notice postcondition resolvedOrder.user == msg.sender
-    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
-    function resolve(
-        ERC7683Types.OnchainCrossChainOrder calldata order
-    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-}
-
-contract IDestinationSettler {
-    // Mapping from order ID to filled status
-    mapping(bytes32 => bool) public filledOrders;
-
-    /**
-     * @notice Fills a single leg of a particular order on the destination chain
-     * @dev Consider: order filling status, state changes, orderId tracking
-     * @dev Focus on filledOrders state changes only
-     * @dev Use simple mapping access, not complex operations
-     * @param orderId Unique order identifier for this order
-     * @param originData Data emitted on the origin to parameterize the fill
-     * @param fillerData Data provided by the filler to inform the fill or express their preferences
-     */
-    /// @notice postcondition filledOrders[orderId] == true
-    function fill(
-        bytes32 orderId,
-        bytes calldata originData,
-        bytes calldata fillerData
-    ) external;
-}
-",[]
-3,25.545130968093872,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.5.0;
-pragma experimental ABIEncoderV2;
-
-library ERC7683Types {
-    struct GaslessCrossChainOrder {
-        address originSettler;
-        address user;
-        uint256 nonce;
-        uint256 originChainId;
-        uint32 openDeadline;
-        uint32 fillDeadline;
-        bytes32 orderDataType;
-        bytes orderData;
-    }
-
-    struct OnchainCrossChainOrder {
-        uint32 fillDeadline;
-        bytes32 orderDataType;
-        bytes orderData;
-    }
-
-    struct ResolvedCrossChainOrder {
-        address user;
-        uint256 originChainId;
-        uint32 openDeadline;
-        uint32 fillDeadline;
-        bytes32 orderId;
-        Output[] maxSpent;
-        Output[] minReceived;
-        FillInstruction[] fillInstructions;
-    }
-
-    struct Output {
-        bytes32 token;
-        uint256 amount;
-        bytes32 recipient;
-        uint256 chainId;
-    }
-
-    struct FillInstruction {
-        uint64 destinationChainId;
-        bytes32 destinationSettler;
-        bytes originData;
-    }
-}
-
-contract IOriginSettler {
-    mapping(address => mapping(uint256 => bool)) public usedNonces;
-    mapping(bytes32 => bool) public openedOrders;
-
-    uint256 public constant SUPPORTED_CHAIN_ID = 1;
-    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
-
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-
-    /// @notice postcondition usedNonces[order.user][order.nonce] == true
-    /// @notice postcondition forall (uint x) !(0 <= x && x < order.openDeadline) || openedOrders[bytes32(order.nonce)]
-    function openFor(
-        ERC7683Types.GaslessCrossChainOrder calldata order,
-        bytes calldata signature,
-        bytes calldata originFillerData
-    ) external;
-
-    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-
-    /// @notice postcondition resolvedOrder.user == order.user
-    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
-    /// @notice postcondition resolvedOrder.orderId == bytes32(order.nonce)
-    function resolveFor(
-        ERC7683Types.GaslessCrossChainOrder calldata order,
-        bytes calldata originFillerData
-    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-
-    /// @notice postcondition resolvedOrder.user == msg.sender
-    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
-    function resolve(
-        ERC7683Types.OnchainCrossChainOrder calldata order
-    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-}
-
-contract IDestinationSettler {
-    mapping(bytes32 => bool) public filledOrders;
-
-    /// @notice postcondition filledOrders[orderId] == true
-    function fill(
-        bytes32 orderId,
-        bytes calldata originData,
-        bytes calldata fillerData
-    ) external;
-}
-",[]
-4,382.44616508483887,10,False,,[]
-5,301.3162360191345,10,False,,[]
-6,29.908504486083984,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
-pragma solidity ^0.5.0;
-pragma experimental ABIEncoderV2;
-
-/**
- * @title ERC7683 Interface Template for Postcondition Generation
- * @notice Template file with placeholders for LLM-generated postconditions
- * @dev Includes state variables that postconditions must reference
- * 
- * IMPORTANT NOTES FOR POSTCONDITION GENERATION:
- * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
- * - Only use __verifier_old_uint() and __verifier_old_bool() functions
- * - For view functions, focus on return value relationships to input parameters
- * - For state-changing functions, focus on state variable changes
- * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
- * - This is a simplified implementation focusing on nonce tracking and order uniqueness
- * 
- * COMMON MISTAKES TO AVOID:
- * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
- * - DO NOT use block.timestamp, block.number, or any block context variables
- * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
- * - DO NOT use ""in"" operator or other unsupported Solidity constructs
- * - DO NOT reference undeclared variables or use incorrect parameter names
- * - DO NOT use complex function calls - only simple variable references and comparisons
- * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
- * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
- * - DO NOT use array.length in postconditions without proper range specification
- * - Keep postconditions simple and focused on state variable changes
- * 
- * SYNTAX PATTERNS TO AVOID:
- * - WRONG: abi.encode(order.nonce, order.user) 
- * - WRONG: keccak256(abi.encodePacked(...))
- * - WRONG: block.timestamp >= order.openDeadline
- * - WRONG: condition1 ==> condition2
- * - WRONG: (order.nonce, user) in usedNonces
- * - WRONG: forall (uint x) condition (missing range)
- * - WRONG: usedNonces[order.user].length
- * 
- * CORRECT PATTERNS TO USE:
- * - CORRECT: usedNonces[order.user][order.nonce]
- * - CORRECT: openedOrders[bytes32(order.nonce)]
- * - CORRECT: resolvedOrder.user == order.user
- * - CORRECT: !(condition) || condition2
- * - CORRECT: forall (uint i) !(0 <= i && i < arr.length) || condition
- * - CORRECT: __verifier_old_bool(usedNonces[order.user][order.nonce])
- */
-
-library ERC7683Types {
-    struct GaslessCrossChainOrder {
-        address originSettler;
-        address user;
-        uint256 nonce;
-        uint256 originChainId;
-        uint32 openDeadline;
-        uint32 fillDeadline;
-        bytes32 orderDataType;
-        bytes orderData;
-    }
-
-    struct OnchainCrossChainOrder {
-        uint32 fillDeadline;
-        bytes32 orderDataType;
-        bytes orderData;
-    }
-
-    struct ResolvedCrossChainOrder {
-        address user;
-        uint256 originChainId;
-        uint32 openDeadline;
-        uint32 fillDeadline;
-        bytes32 orderId;
-        Output[] maxSpent;
-        Output[] minReceived;
-        FillInstruction[] fillInstructions;
-    }
-
-    struct Output {
-        bytes32 token;
-        uint256 amount;
-        bytes32 recipient;
-        uint256 chainId;
-    }
-
-    struct FillInstruction {
-        uint64 destinationChainId;
-        bytes32 destinationSettler;
-        bytes originData;
-    }
-}
-
-contract IOriginSettler {
-    // Mapping from user address and nonce to usage status
-    mapping(address => mapping(uint256 => bool)) public usedNonces;
-    // Mapping from order ID to opened status
-    mapping(bytes32 => bool) public openedOrders;
-
-    uint256 public constant SUPPORTED_CHAIN_ID = 1;
-    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
-
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-
-    /**
-     * @notice Opens a gasless cross-chain order on behalf of a user
-     * @dev To be called by the filler
-     * @dev This method must emit the Open event
-     * @dev Consider: nonce usage tracking, order uniqueness, state changes
-     * @dev Focus on usedNonces and openedOrders state changes
-     * @dev Use simple mapping access patterns, not complex computations
-     * @param order The GaslessCrossChainOrder definition
-     * @param signature The user's signature over the order
-     * @param originFillerData Any filler-defined data required by the settler
-     */
-    /// @notice postcondition usedNonces[order.user][order.nonce] == true
-    /// @notice postcondition !(__verifier_old_bool(usedNonces[order.user][order.nonce]) && msg.sender != order.originSettler)
-    /// @notice postcondition openedOrders[bytes32(order.nonce)]
-    function openFor(
-        ERC7683Types.GaslessCrossChainOrder calldata order,
-        bytes calldata signature,
-        bytes calldata originFillerData
-    ) external;
-
-    /**
-     * @notice Opens a cross-chain order
-     * @dev To be called by the user
-     * @dev This method must emit the Open event
-     * @dev Consider: order uniqueness, state changes (no nonce needed for onchain orders)
-     * @dev Focus on openedOrders state changes only
-     * @dev Use simple bytes32 conversion, not complex hashing
-     * @param order The OnchainCrossChainOrder definition
-     */
-    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-
-    /**
-     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
-     * @dev Intended to improve standardized integration of various order types and settlement contracts
-     * @dev Consider: return value relationships to input parameters, orderId computation
-     * @dev Focus on direct field mappings from order to resolvedOrder
-     * @dev Use simple equality comparisons, not complex expressions
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
      * @param order The GaslessCrossChainOrder definition
      * @param originFillerData Any filler-defined data required by the settler
      * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
@@ -612,6 +603,7 @@ contract IOriginSettler {
      * @dev Intended to improve standardized integration of various order types and settlement contracts
      * @dev Consider: return value relationships to input parameters, orderId computation
      * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
      * @param order The OnchainCrossChainOrder definition
      * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
      */
@@ -629,21 +621,19 @@ contract IDestinationSettler {
 
     /**
      * @notice Fills a single leg of a particular order on the destination chain
-     * @dev Consider: order filling status, state changes, orderId tracking
-     * @dev Focus on filledOrders state changes only
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
      * @param orderId Unique order identifier for this order
      * @param originData Data emitted on the origin to parameterize the fill
      * @param fillerData Data provided by the filler to inform the fill or express their preferences
      */
     /// @notice postcondition filledOrders[orderId] == true
+    /// @notice postcondition !( __verifier_old_bool(filledOrders[orderId]) && filledOrders[orderId] )
     function fill(
         bytes32 orderId,
         bytes calldata originData,
         bytes calldata fillerData
     ) external;
 }
-",[]
-7,357.2697560787201,10,False,,[]
-8,336.3333537578583,10,False,,[]
-9,290.1598060131073,10,False,,[]
-10,203.83641982078552,10,False,,[]
+","[""Interaction: 2\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:31:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:82:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:147:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:148:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:128:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:129:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:130:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:28:5: Postcondition 'forall (uint256 x) !(0 <= x && x < order.nonce) || !usedNonces[order.user][x]' might not hold at end of function.\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: OK\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n"", ""Interaction: 3\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:147:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:127:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:129:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:27:5: Postcondition 'forall (uint x) !(0 <= x && x < order.nonce) || !(usedNonces[order.user][x]) // Ensure earlier nonces are unused (stated before, now considered not destroyed)' might not hold at end of function.\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: OK\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"

@@ -1,0 +1,1460 @@
+run,time_taken,iterations,verified,annotated_contract,status
+1,47.22597360610962,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition forall (address u, uint n) usedNonces[order.user][order.nonce] || __verifier_old_bool(usedNonces[u][n])
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)])
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] || __verifier_old_bool(openedOrders[bytes32(uint256(order.fillDeadline))])
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] || __verifier_old_bool(filledOrders[orderId])
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
+2,466.8875980377197,10,False,,[]
+3,87.15533590316772,1,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition forall (uint x) !(0 <= x && x < order.nonce) || usedNonces[order.user][x] == __verifier_old_bool(usedNonces[order.user][x])
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    /// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition resolvedOrder.orderId == bytes32(order.nonce)
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition resolvedOrder.orderId == bytes32(uint256(order.fillDeadline))
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
+4,67.17186975479126,1,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition forall (address user, uint256 nonce) !(__verifier_old_bool(usedNonces[user][nonce]) && order.user == user && order.nonce == nonce) || usedNonces[user][nonce]
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata, // Unused parameter removed from spec
+        bytes calldata // Unused parameter removed from spec
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition !(openedOrders[bytes32(uint256(order.fillDeadline))] && __verifier_old_bool(openedOrders[bytes32(uint256(order.fillDeadline))])) 
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline && resolvedOrder.user == order.user && resolvedOrder.originChainId == order.originChainId && resolvedOrder.orderId == bytes32(order.nonce)
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata // Unused parameter removed from spec
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline && resolvedOrder.user == msg.sender && resolvedOrder.originChainId == SUPPORTED_CHAIN_ID && resolvedOrder.orderId == bytes32(uint256(order.fillDeadline))
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition forall (bytes32 orderId) !(__verifier_old_bool(filledOrders[orderId]) && orderId == orderId) || filledOrders[orderId]
+    function fill(
+        bytes32 orderId,
+        bytes calldata, // Unused parameter removed from spec
+        bytes calldata  // Unused parameter removed from spec
+    ) external;
+}
+",[]
+5,30.225892782211304,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition __verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)]
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition __verifier_old_bool(openedOrders[bytes32(uint256(order.fillDeadline))]) || openedOrders[bytes32(uint256(order.fillDeadline))]
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
+6,387.6223261356354,10,False,,"[""Interaction: 2\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:80:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:145:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:126:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:127:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:26:5: Postcondition 'forall (address a) usedNonces[a][order.nonce] == __verifier_old_bool(usedNonces[a][order.nonce]) || a != order.user' might not hold at end of function.\nERC7683OriginSettler::open: ERROR\n - ERC7683_merge.sol:56:5: Postcondition 'forall (bytes32 id) !(id == bytes32(uint256(order.fillDeadline))) || openedOrders[id] == __verifier_old_bool(openedOrders[id])' might not hold at end of function.\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:143:5: Postcondition 'forall (bytes32 ord) filledOrders[ord] == __verifier_old_bool(filledOrders[ord]) || orderId != ord' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+7,26.222598791122437,0,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @test Use simple mapping access patterns, not complex computations
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition forall (uint x) !(0 <= x && x < order.nonce) || usedNonces[order.user][x] == __verifier_old_bool(usedNonces[order.user][x])
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
+8,133.17185640335083,2,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition forall (uint x) !(x != order.nonce) || usedNonces[order.user][x] == __verifier_old_bool(usedNonces[order.user][x])
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    /// @notice postcondition resolvedOrder.orderId == bytes32(order.nonce)
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    /// @notice postcondition resolvedOrder.fillDeadline == order.fillDeadline
+    /// @notice postcondition resolvedOrder.orderId == bytes32(uint256(order.fillDeadline))
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+","[""Interaction: 2\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:147:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:128:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:129:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:130:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:27:5: Postcondition 'forall (uint x) !(x != order.nonce) || __verifier_old_bool(usedNonces[order.user][x])' might not hold at end of function.\nERC7683OriginSettler::open: OK\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: OK\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+9,117.46118474006653,2,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition forall (uint x) !(x == order.nonce) || __verifier_old_bool(usedNonces[order.user][x]) || usedNonces[order.user][x]
+    /// @notice postcondition openedOrders[bytes32(order.nonce)] == true
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    /// @notice postcondition forall (bytes32 id) !(id == bytes32(uint256(order.fillDeadline))) || __verifier_old_bool(openedOrders[id]) || openedOrders[id]
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    /// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] == true
+    /// @notice postcondition forall (bytes32 id) !(id == orderId) || __verifier_old_bool(filledOrders[id]) || filledOrders[id]
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+","[""Interaction: 2\ncontracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.\nERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:30:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:81:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:146:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:147:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.\nERC7683_merge.sol:127:34: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:128:37: solc-verify warning: Array elements could not be set to default value for this type\nERC7683_merge.sol:129:42: solc-verify warning: Array elements could not be set to default value for this type\nERC7683OriginSettler::openFor: ERROR\n - ERC7683_merge.sol:27:5: Postcondition 'forall (uint x) !(x == order.nonce) && __verifier_old_bool(usedNonces[order.user][x]) || usedNonces[order.user][x]' might not hold at end of function.\nERC7683OriginSettler::open: ERROR\n - ERC7683_merge.sol:57:5: Postcondition 'forall (bytes32 id) !(id == bytes32(uint256(order.fillDeadline))) && __verifier_old_bool(openedOrders[id]) || openedOrders[id]' might not hold at end of function.\nERC7683OriginSettler::resolveFor: OK\nERC7683OriginSettler::resolve: OK\nERC7683OriginSettler::[implicit_constructor]: OK\nERC7683DestinationSettler::fill: ERROR\n - ERC7683_merge.sol:144:5: Postcondition 'forall (bytes32 id) !(id == orderId) && __verifier_old_bool(filledOrders[id]) || filledOrders[id]' might not hold at end of function.\nERC7683DestinationSettler::[implicit_constructor]: OK\nIOriginSettler::[implicit_constructor]: OK\nIDestinationSettler::[implicit_constructor]: OK\nErrors were found by the verifier.\n\n""]"
+10,83.54229617118835,1,True,"// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ * @notice Template file with placeholders for LLM-generated postconditions
+ * @dev Includes state variables that postconditions must reference
+ * 
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * 
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in postconditions
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator ""==>"" - use ""!(condition) || condition2"" instead
+ * - DO NOT use ""in"" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in postconditions without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ * SYNTAX PATTERNS TO AVOID:
+ * - WRONG: abi.encode(order.nonce, order.user) 
+ * - WRONG: keccak256(abi.encodePacked(...))
+ * - WRONG: block.timestamp >= order.openDeadline
+ * - WRONG: condition1 ==> condition2
+ * - WRONG: (order.nonce, user) in usedNonces
+ * - WRONG: forall (uint x) condition (missing range)
+ * - WRONG: usedNonces[order.user].length
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ * 
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    /// @notice postcondition usedNonces[order.user][order.nonce] == true
+    /// @notice postcondition !(msg.sender == order.originSettler) || openedOrders[bytes32(order.nonce)]
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @test Use simple bytes32 conversion, not complex hashing
+     * @param order The OnchainCrossChainOrder definition
+     */
+    /// @notice postcondition openedOrders[bytes32(uint256(order.fillDeadline))] == true
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @test Use simple equality comparisons, not complex expressions
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == order.user
+    /// @notice postcondition resolvedOrder.originChainId == order.originChainId
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    /// @notice postcondition resolvedOrder.user == msg.sender
+    /// @notice postcondition resolvedOrder.originChainId == SUPPORTED_CHAIN_ID
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @test Use simple mapping access, not complex operations
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    /// @notice postcondition filledOrders[orderId] == true
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+",[]
