@@ -57,7 +57,7 @@ INTERFACE_PATHS = {
     "erc20": "../assets/file_search/erc20_interface.md",
     "erc721": "../assets/file_search/erc721_interface.md",
     "erc1155": "../assets/file_search/erc1155_interface.md",
-    "erc7683": "../assets/file_search/erc7683_interface.md",
+    "erc7683": "../assets/file_search/erc7683_interface_empty.md",
 }
 
 # File paths for EIP documentation
@@ -115,23 +115,30 @@ verification_status = []
 def parse_solidity_interface(solidity_code: str):
     """
     Parses Solidity interface code to extract components.
-    Returns a dictionary containing 'pragma', 'state_vars', 'events', 'functions', 'library'.
+    Returns a dictionary containing 'pragma', 'pragma_experimental', 'state_vars', 'events', 'functions', 'library'.
     Functions value is a list of {'signature': str, 'body': str}.
     """
     components = {
         'pragma': "pragma solidity ^0.8.0;", # Default pragma if not found
+        'pragma_experimental': "",  # For ABIEncoderV2 or other experimental features
         'state_vars': [],
         'events': [],
         'functions': [],
         'library': ""
     }
 
-    # Extract pragma
+    # Extract pragma solidity
     pragma_match = re.search(r"^\s*pragma solidity[^;]+;", solidity_code, re.MULTILINE)
     if pragma_match:
         components['pragma'] = pragma_match.group(0).strip()
     else:
         logging.warning("No pragma directive found in solidity_code. Using default.")
+    
+    # Extract pragma experimental (e.g., ABIEncoderV2) which is needed for ERC7683 struct parameters
+    pragma_experimental_match = re.search(r"^\s*pragma experimental[^;]+;", solidity_code, re.MULTILINE)
+    if pragma_experimental_match:
+        components['pragma_experimental'] = pragma_experimental_match.group(0).strip()
+        logging.info(f"Found experimental pragma: {components['pragma_experimental']}")
 
     # Extract library definitions (for ERC7683Types)
     # Use a more robust approach to extract the complete library block
@@ -729,7 +736,17 @@ def assemble_partial_contract(pragma_str: str, contract_name: str, components: d
     Returns:
         Complete contract string with annotations
     """
-    code = f"{pragma_str}\n\n"
+    code = f"{pragma_str}\n"
+    
+    # Add experimental pragma if present (needed for ERC7683 struct parameters)
+    pragma_experimental = components.get('pragma_experimental', "")
+    if not pragma_experimental and contract_name.upper() == "ERC7683":
+        # ERC7683 interfaces rely on ABIEncoderV2 for struct parameters; ensure it is always present
+        pragma_experimental = "pragma experimental ABIEncoderV2;"
+    if pragma_experimental:
+        code += f"{pragma_experimental}\n"
+    
+    code += "\n"
     
     # Add library definitions if present (for ERC7683)
     if components.get('library'):
@@ -849,6 +866,8 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
         logging.info(f"Found function-specific file for {func_name} at {func_md_path}")
     except:
         logging.info(f"No function-specific file found for {func_name} at {func_md_path}")
+    
+    target_interface = load_target_interface(requested_type)
 
     # Format prompt based on available documentation
     if func_md_content:
@@ -866,6 +885,9 @@ EIP markdown below:
 <eip>
 {eip_doc}
 </eip>
+
+FULL CONTRACT INTERFACE:
+{target_interface}
 """).lstrip()
     else:
         current_prompt = textwrap.dedent(f"""{base_instructions}
@@ -879,6 +901,9 @@ contract {contract_name} {{
 {func_sig}
 }}
 ```
+
+FULL CONTRACT INTERFACE:
+{target_interface}
 
 EIP Documentation Snippet (if relevant to `{func_name}`):
 <eip>

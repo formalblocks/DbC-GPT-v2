@@ -1,9 +1,9 @@
-Thread ID: thread_3bEt1TQE1wQgfr8KCgycJUzF
+Thread ID: thread_VvyeV2Rn16Cecyec0JijCOqq
 Request Type: erc7683
 Context: erc20_erc721_erc1155_resolve
 Run: 9
 
-=== USER [2025-10-10 05:37:20] ===
+=== USER [2025-10-29 17:44:27] ===
 Task:
     - You are given a smart contract interface and need to add formal postconditions to a function using solc-verify syntax (`/// @notice postcondition condition`). Postconditions must not end with a semicolon (";").
     - You MUST use the EIP documentation below to understand the required behavior.
@@ -423,6 +423,173 @@ Copyright and related rights waived via CC0.
 
 </eip>
 
+FULL CONTRACT INTERFACE:
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ *
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ *
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in formal specifications
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator "==>" - use "!(condition) || condition2" instead
+ * - DO NOT use "in" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in formal specifications without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ *
+ *
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @test Use simple mapping access patterns, not complex computations
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    $ADD POSTCONDITION HERE
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @param order The OnchainCrossChainOrder definition
+     */
+    $ADD POSTCONDITION HERE
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    $ADD POSTCONDITION HERE
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    $ADD POSTCONDITION HERE
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    $ADD POSTCONDITION HERE
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+
+
 **Examples:**
 
 Here are examples of similar ERC formal specifications:
@@ -593,40 +760,75 @@ contract ERC1155 {
 ```
 
 
-=== ASSISTANT [2025-10-10 05:37:22] ===
+=== ASSISTANT [2025-10-29 17:44:30] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == order.user) || openedOrders[bytes32(order.nonce)]
+/// @notice postcondition forall (address user) !(user == order.user) || !openedOrders[bytes32(order.nonce)] || !(usedNonces[order.user][order.nonce] == __verifier_old_bool(usedNonces[order.user][order.nonce]))
 </postconditions>
 
-=== USER [2025-10-10 05:37:28] ===
+=== USER [2025-10-29 17:44:39] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata signature,
+        ^----------------------^
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originData,
+        ^-----------------------^
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata fillerData
+        ^-----------------------^
+
+======= Converting to Boogie IVL =======
+
+======= ERC7683_merge.sol =======
+Annotation:1:33: solc-verify error: Member "user" not found or not visible after argument-dependent lookup in struct ERC7683Types.OnchainCrossChainOrder calldata.
+forall (address user) !(user == order.user) || openedOrders[bytes32(order.nonce)]
+                                ^--------^
+ERC7683_merge.sol:96:5: solc-verify error: Error while parsing annotation.
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+Annotation:1:33: solc-verify error: Member "user" not found or not visible after argument-dependent lookup in struct ERC7683Types.OnchainCrossChainOrder calldata.
+forall (address user) !(user == order.user) || !openedOrders[bytes32(order.no ...
+                                ^--------^
+ERC7683_merge.sol:96:5: solc-verify error: Error while parsing annotation.
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.maxSpent = new ERC7683Types.Output[](0);
+                                 ^--------------------------^
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.minReceived = new ERC7683Types.Output[](0);
+                                    ^--------------------------^
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.fillInstructions = new ERC7683Types.FillInstruction[](0);
+                                         ^-----------------------------------^
+
+======= contracts/erc7683/ERC7683.sol =======
+ERC7683_merge.sol:96:5: solc-verify error: Error(s) while translating annotation for node
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+ERC7683_merge.sol:96:5: solc-verify error: Error(s) while translating annotation for node
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+
 
             ```
 
@@ -809,40 +1011,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:37:31] ===
+=== ASSISTANT [2025-10-29 17:44:42] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && !(resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || !(msg.sender == user)
 </postconditions>
 
-=== USER [2025-10-10 05:37:39] ===
+=== USER [2025-10-29 17:45:02] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: OK
+ERC7683OriginSettler::resolve: ERROR
+ - ERC7683_merge.sol:96:5: Postcondition 'forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && !(resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))' might not hold at end of function.
+ - ERC7683_merge.sol:96:5: Postcondition 'forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || !(msg.sender == user)' might not hold at end of function.
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1025,40 +1227,39 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:37:42] ===
+=== ASSISTANT [2025-10-29 17:45:07] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)
 </postconditions>
 
-=== USER [2025-10-10 05:37:48] ===
+=== USER [2025-10-29 17:45:28] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: OK
+ERC7683OriginSettler::resolve: ERROR
+ - ERC7683_merge.sol:96:5: Postcondition 'forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)' might not hold at end of function.
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1241,40 +1442,39 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:37:50] ===
+=== ASSISTANT [2025-10-29 17:45:31] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)
 </postconditions>
 
-=== USER [2025-10-10 05:37:54] ===
+=== USER [2025-10-29 17:45:49] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: OK
+ERC7683OriginSettler::resolve: ERROR
+ - ERC7683_merge.sol:96:5: Postcondition 'forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)' might not hold at end of function.
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1457,40 +1657,39 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:38:00] ===
+=== ASSISTANT [2025-10-29 17:45:54] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)
 </postconditions>
 
-=== USER [2025-10-10 05:38:05] ===
+=== USER [2025-10-29 17:46:14] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: OK
+ERC7683OriginSettler::resolve: ERROR
+ - ERC7683_merge.sol:96:5: Postcondition 'forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)' might not hold at end of function.
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1673,40 +1872,39 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:38:07] ===
+=== ASSISTANT [2025-10-29 17:46:18] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)
 </postconditions>
 
-=== USER [2025-10-10 05:38:13] ===
+=== USER [2025-10-29 17:46:38] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: OK
+ERC7683OriginSettler::resolve: ERROR
+ - ERC7683_merge.sol:96:5: Postcondition 'forall (address user) !(user == msg.sender) || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(msg.sender == user)' might not hold at end of function.
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1889,40 +2087,63 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:38:17] ===
+=== ASSISTANT [2025-10-29 17:46:41] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition !(openedOrders[bytes32(uint256(order.fillDeadline))]) || (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || (msg.sender != user)
 </postconditions>
 
-=== USER [2025-10-10 05:38:21] ===
+=== USER [2025-10-29 17:46:51] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata signature,
+        ^----------------------^
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originData,
+        ^-----------------------^
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata fillerData
+        ^-----------------------^
+
+======= Converting to Boogie IVL =======
+
+======= ERC7683_merge.sol =======
+Annotation:1:128: solc-verify error: Undeclared identifier. Did you mean "super"?
+!(openedOrders[bytes32(uint256(order.fillDeadline))]) || (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || (msg.sender != user)
+                                                                                                                               ^--^
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.maxSpent = new ERC7683Types.Output[](0);
+                                 ^--------------------------^
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.minReceived = new ERC7683Types.Output[](0);
+                                    ^--------------------------^
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.fillInstructions = new ERC7683Types.FillInstruction[](0);
+                                         ^-----------------------------------^
+
+======= contracts/erc7683/ERC7683.sol =======
+ERC7683_merge.sol:96:5: solc-verify error: Error(s) while translating annotation for node
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+
 
             ```
 
@@ -2105,40 +2326,63 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:38:30] ===
+=== ASSISTANT [2025-10-29 17:46:54] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition !(openedOrders[bytes32(uint256(order.fillDeadline))]) || (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || (msg.sender != user)
 </postconditions>
 
-=== USER [2025-10-10 05:38:36] ===
+=== USER [2025-10-29 17:47:04] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata signature,
+        ^----------------------^
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originData,
+        ^-----------------------^
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata fillerData
+        ^-----------------------^
+
+======= Converting to Boogie IVL =======
+
+======= ERC7683_merge.sol =======
+Annotation:1:128: solc-verify error: Undeclared identifier. Did you mean "super"?
+!(openedOrders[bytes32(uint256(order.fillDeadline))]) || (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || (msg.sender != user)
+                                                                                                                               ^--^
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.maxSpent = new ERC7683Types.Output[](0);
+                                 ^--------------------------^
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.minReceived = new ERC7683Types.Output[](0);
+                                    ^--------------------------^
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.fillInstructions = new ERC7683Types.FillInstruction[](0);
+                                         ^-----------------------------------^
+
+======= contracts/erc7683/ERC7683.sol =======
+ERC7683_merge.sol:96:5: solc-verify error: Error(s) while translating annotation for node
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+
 
             ```
 
@@ -2321,40 +2565,63 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:38:39] ===
+=== ASSISTANT [2025-10-29 17:47:07] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition !(openedOrders[bytes32(uint256(order.fillDeadline))]) || (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || (msg.sender != user)
 </postconditions>
 
-=== USER [2025-10-10 05:38:44] ===
+=== USER [2025-10-29 17:47:19] ===
 
             Verification failed for function `function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:66:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:67:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:71:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:71:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            Error while running compiler, details:
+Warning: This is a pre-release compiler version, please do not use it in production.
+contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+pragma experimental ABIEncoderV2;
+^-------------------------------^
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata signature,
+        ^----------------------^
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:78:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originFillerData
+        ^-----------------------------^
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata originData,
+        ^-----------------------^
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+        bytes calldata fillerData
+        ^-----------------------^
+
+======= Converting to Boogie IVL =======
+
+======= ERC7683_merge.sol =======
+Annotation:1:128: solc-verify error: Undeclared identifier. Did you mean "super"?
+!(openedOrders[bytes32(uint256(order.fillDeadline))]) || (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID) || (msg.sender != user)
+                                                                                                                               ^--^
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.maxSpent = new ERC7683Types.Output[](0);
+                                 ^--------------------------^
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.minReceived = new ERC7683Types.Output[](0);
+                                    ^--------------------------^
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+        resolvedOrder.fillInstructions = new ERC7683Types.FillInstruction[](0);
+                                         ^-----------------------------------^
+
+======= contracts/erc7683/ERC7683.sol =======
+ERC7683_merge.sol:96:5: solc-verify error: Error(s) while translating annotation for node
+    function resolve(
+    ^ (Relevant source part starts here and spans across multiple lines).
+
 
             ```
 
@@ -2537,10 +2804,10 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 05:38:50] ===
+=== ASSISTANT [2025-10-29 17:49:36] ===
 <postconditions>
-/// @notice postcondition order.fillDeadline == resolvedOrder.fillDeadline
-/// @notice postcondition forall (uint i) !(0 <= i && i < resolvedOrder.fillInstructions.length) || order.fillDeadline == resolvedOrder.fillInstructions[i].destinationChainId
+/// @notice postcondition forall (address user) !(user == msg.sender) || !openedOrders[bytes32(uint256(order.fillDeadline))] || (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID))
+/// @notice postcondition (openedOrders[bytes32(uint256(order.fillDeadline))] && (resolvedOrder.originChainId == SUPPORTED_CHAIN_ID)) || !(user == msg.sender)
 </postconditions>
 
 === END OF THREAD ===

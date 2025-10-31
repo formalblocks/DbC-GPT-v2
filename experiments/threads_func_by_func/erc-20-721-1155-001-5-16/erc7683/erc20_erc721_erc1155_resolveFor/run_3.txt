@@ -1,9 +1,9 @@
-Thread ID: thread_y25UAtKtJf2CliGGEWW9XNp4
+Thread ID: thread_Wk6nIt8QsLfDpsNGLxUwfI2E
 Request Type: erc7683
 Context: erc20_erc721_erc1155_resolveFor
 Run: 3
 
-=== USER [2025-10-10 04:44:30] ===
+=== USER [2025-10-29 16:49:46] ===
 Task:
     - You are given a smart contract interface and need to add formal postconditions to a function using solc-verify syntax (`/// @notice postcondition condition`). Postconditions must not end with a semicolon (";").
     - You MUST use the EIP documentation below to understand the required behavior.
@@ -424,6 +424,173 @@ Copyright and related rights waived via CC0.
 
 </eip>
 
+FULL CONTRACT INTERFACE:
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+/**
+ * @title ERC7683 Interface Template for Postcondition Generation
+ *
+ * IMPORTANT NOTES FOR FORMAL SPECIFICATION GENERATION:
+ * - Use exact variable names as declared (e.g., 'order.user', 'usedNonces', 'openedOrders')
+ * - Only use __verifier_old_uint() and __verifier_old_bool() functions
+ * - For view functions, focus on return value relationships to input parameters
+ * - For state-changing functions, focus on state variable changes
+ * - OrderId computation: gasless orders use bytes32(order.nonce), onchain orders use bytes32(uint256(order.fillDeadline))
+ * - This is a simplified implementation focusing on nonce tracking and order uniqueness
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ *
+ * COMMON MISTAKES TO AVOID:
+ * - DO NOT use abi.encode(), abi.encodePacked(), or keccak256() in formal specifications
+ * - DO NOT use block.timestamp, block.number, or any block context variables
+ * - DO NOT use the implication operator "==>" - use "!(condition) || condition2" instead
+ * - DO NOT use "in" operator or other unsupported Solidity constructs
+ * - DO NOT reference undeclared variables or use incorrect parameter names
+ * - DO NOT use complex function calls - only simple variable references and comparisons
+ * - For forall statements, ALWAYS specify the range: !(0 <= i && i < arr.length) || condition
+ * - DO NOT use tuple syntax like (order.nonce, user) - use proper mapping access
+ * - DO NOT use array.length in formal specifications without proper range specification
+ * - Keep formal specifications simple and focused on state variable changes only
+ * - DO NOT create TAUTOLOGIES in the formal specifications
+ *
+ *
+ */
+
+library ERC7683Types {
+    struct GaslessCrossChainOrder {
+        address originSettler;
+        address user;
+        uint256 nonce;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct OnchainCrossChainOrder {
+        uint32 fillDeadline;
+        bytes32 orderDataType;
+        bytes orderData;
+    }
+
+    struct ResolvedCrossChainOrder {
+        address user;
+        uint256 originChainId;
+        uint32 openDeadline;
+        uint32 fillDeadline;
+        bytes32 orderId;
+        Output[] maxSpent;
+        Output[] minReceived;
+        FillInstruction[] fillInstructions;
+    }
+
+    struct Output {
+        bytes32 token;
+        uint256 amount;
+        bytes32 recipient;
+        uint256 chainId;
+    }
+
+    struct FillInstruction {
+        uint64 destinationChainId;
+        bytes32 destinationSettler;
+        bytes originData;
+    }
+}
+
+contract IOriginSettler {
+    // Mapping from user address and nonce to usage status
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+    // Mapping from order ID to opened status
+    mapping(bytes32 => bool) public openedOrders;
+
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    /**
+     * @notice Opens a gasless cross-chain order on behalf of a user
+     * @dev To be called by the filler
+     * @dev This method must emit the Open event
+     * @test Consider: nonce usage tracking, order uniqueness, state changes
+     * @test Focus on usedNonces and openedOrders state changes
+     * @test Use simple mapping access patterns, not complex computations
+     * @param order The GaslessCrossChainOrder definition
+     * @param signature The user's signature over the order
+     * @param originFillerData Any filler-defined data required by the settler
+     */
+    $ADD POSTCONDITION HERE
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external;
+
+    /**
+     * @notice Opens a cross-chain order
+     * @dev To be called by the user
+     * @dev This method must emit the Open event
+     * @test Consider: order uniqueness, state changes (no nonce needed for onchain orders)
+     * @test Focus on openedOrders state changes only
+     * @param order The OnchainCrossChainOrder definition
+     */
+    $ADD POSTCONDITION HERE
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
+
+    /**
+     * @notice Resolves a specific GaslessCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @test Consider: return value relationships to input parameters, orderId computation
+     * @test Focus on direct field mappings from order to resolvedOrder
+     * @param order The GaslessCrossChainOrder definition
+     * @param originFillerData Any filler-defined data required by the settler
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    $ADD POSTCONDITION HERE
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+
+    /**
+     * @notice Resolves a specific OnchainCrossChainOrder into a generic ResolvedCrossChainOrder
+     * @dev Intended to improve standardized integration of various order types and settlement contracts
+     * @dev Consider: return value relationships to input parameters, orderId computation
+     * @dev Focus on direct field mappings from order to resolvedOrder
+     * @dev Use msg.sender for user field, SUPPORTED_CHAIN_ID for originChainId
+     * @param order The OnchainCrossChainOrder definition
+     * @return ResolvedCrossChainOrder hydrated order data including the inputs and outputs of the order
+     */
+    $ADD POSTCONDITION HERE
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
+}
+
+contract IDestinationSettler {
+    // Mapping from order ID to filled status
+    mapping(bytes32 => bool) public filledOrders;
+
+    /**
+     * @notice Fills a single leg of a particular order on the destination chain
+     * @test Consider: order filling status, state changes, orderId tracking
+     * @test Focus on filledOrders state changes only
+     * @param orderId Unique order identifier for this order
+     * @param originData Data emitted on the origin to parameterize the fill
+     * @param fillerData Data provided by the filler to inform the fill or express their preferences
+     */
+    $ADD POSTCONDITION HERE
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external;
+}
+
+
 **Examples:**
 
 Here are examples of similar ERC formal specifications:
@@ -594,42 +761,40 @@ contract ERC1155 {
 ```
 
 
-=== ASSISTANT [2025-10-10 04:44:34] ===
+=== ASSISTANT [2025-10-29 16:49:49] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition __verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)] == true
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || usedNonces[order.user][order.nonce] == __verifier_old_bool(usedNonces[order.user][order.nonce])
 </postconditions>
 
-=== USER [2025-10-10 04:44:39] ===
+=== USER [2025-10-29 16:50:04] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition '__verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)] == true' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -812,42 +977,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:44:42] ===
+=== ASSISTANT [2025-10-29 16:50:07] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
+/// @notice postcondition openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
 </postconditions>
 
-=== USER [2025-10-10 04:44:47] ===
+=== USER [2025-10-29 16:50:21] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition 'openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)])' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1030,42 +1193,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:44:49] ===
+=== ASSISTANT [2025-10-29 16:50:24] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
+/// @notice postcondition openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
 </postconditions>
 
-=== USER [2025-10-10 04:44:54] ===
+=== USER [2025-10-29 16:50:39] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition 'openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)])' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1248,42 +1409,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:44:59] ===
+=== ASSISTANT [2025-10-29 16:50:43] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
 </postconditions>
 
-=== USER [2025-10-10 04:45:04] ===
+=== USER [2025-10-29 16:50:59] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition 'openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)])' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1466,42 +1625,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:45:10] ===
+=== ASSISTANT [2025-10-29 16:51:01] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition __verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)] 
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
 </postconditions>
 
-=== USER [2025-10-10 04:45:15] ===
+=== USER [2025-10-29 16:51:19] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition '__verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)]' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1684,42 +1841,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:45:19] ===
+=== ASSISTANT [2025-10-29 16:51:29] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || (openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)]) )
 </postconditions>
 
-=== USER [2025-10-10 04:45:25] ===
+=== USER [2025-10-29 16:51:45] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition 'openedOrders[bytes32(order.nonce)] || __verifier_old_bool(openedOrders[bytes32(order.nonce)])' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -1902,42 +2057,40 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:45:29] ===
+=== ASSISTANT [2025-10-29 16:51:50] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition __verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)] == true
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)])
 </postconditions>
 
-=== USER [2025-10-10 04:45:33] ===
+=== USER [2025-10-29 16:52:08] ===
 
             Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
         bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
 
             The verifier found the following errors:
             ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
+            contracts/erc7683/ERC7683.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:3:1: Warning: Experimental features are turned on. Do not use experimental features on live deployments.
+ERC7683_merge.sol:28:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:29:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:79:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:141:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:142:9: Warning: Unused function parameter. Remove or comment out the variable name to silence this warning.
+ERC7683_merge.sol:123:34: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:124:37: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683_merge.sol:125:42: solc-verify warning: Array elements could not be set to default value for this type
+ERC7683OriginSettler::openFor: OK
+ERC7683OriginSettler::open: OK
+ERC7683OriginSettler::resolveFor: ERROR
+ - ERC7683_merge.sol:77:5: Postcondition '__verifier_old_bool(openedOrders[bytes32(order.nonce)]) || openedOrders[bytes32(order.nonce)] == true' might not hold at end of function.
+ERC7683OriginSettler::resolve: OK
+ERC7683OriginSettler::[implicit_constructor]: OK
+ERC7683DestinationSettler::fill: OK
+ERC7683DestinationSettler::[implicit_constructor]: OK
+IOriginSettler::[implicit_constructor]: OK
+IDestinationSettler::[implicit_constructor]: OK
+Errors were found by the verifier.
 
             ```
 
@@ -2120,447 +2273,10 @@ contract ERC1155 {
 
             
 
-=== ASSISTANT [2025-10-10 04:45:39] ===
+=== ASSISTANT [2025-10-29 16:52:11] ===
 <postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
-</postconditions>
-
-=== USER [2025-10-10 04:45:44] ===
-
-            Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
-
-            The verifier found the following errors:
-            ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
-
-            ```
-
-            Can you fix the specification accordingly?
-            
-            OUTPUT FORMAT:
-            <postconditions>
-            /// @notice postcondition ...
-            /// @notice postcondition ...
-            </postconditions>
-            
-            **Examples:**
-            
-Here are examples of similar ERC formal specifications:
-Example ERC ERC20 specification:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity >=0.5.7;
-
-contract ERC20 {
-
-    mapping (address => uint) _balances;
-    mapping (address => mapping (address => uint)) _allowed;
-    uint public _totalSupply;
-
-    event Transfer(address indexed _from, address indexed _to, uint _value);
-    event Approval(address indexed _owner, address indexed _spender, uint _value);
-
-    /// @notice postcondition supply == _totalSupply
-    function totalSupply() public view returns (uint256 supply);
-
-    /// @notice  postcondition ( ( _balances[msg.sender] ==  __verifier_old_uint (_balances[msg.sender] ) - _value  && msg.sender  != _to ) ||   ( _balances[msg.sender] ==  __verifier_old_uint ( _balances[msg.sender]) && msg.sender  == _to ) &&  success )   || !success
-    /// @notice  postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  && msg.sender  != _to ) ||   ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) && msg.sender  == _to )  )   || !success
-    function transfer(address _to, uint256 _value) public returns (bool success);
-
-    /// @notice  postcondition ( ( _balances[_from] ==  __verifier_old_uint (_balances[_from] ) - _value  &&  _from  != _to ) || ( _balances[_from] ==  __verifier_old_uint ( _balances[_from] ) &&  _from == _to ) && success ) || !success 
-    /// @notice  postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  &&  _from  != _to ) || ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) &&  _from  == _to ) && success ) || !success 
-    /// @notice  postcondition ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender] ) - _value && success) || ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender]) && !success) ||  _from  == msg.sender
-    /// @notice  postcondition  _allowed[_from ][msg.sender]  <= __verifier_old_uint (_allowed[_from ][msg.sender] ) ||  _from  == msg.sender
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
-
-    /// @notice  postcondition (_allowed[msg.sender ][ _spender] ==  _value  &&  success) || ( _allowed[msg.sender ][ _spender] ==  __verifier_old_uint ( _allowed[msg.sender ][ _spender] ) && !success )    
-    function approve(address _spender, uint256 _value) public returns (bool success);
-
-    /// @notice postcondition _balances[_owner] == balance
-    function balanceOf(address _owner) public view returns (uint256 balance);
-
-    /// @notice postcondition _allowed[_owner][_spender] == remaining
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
-}
-
-```
-
-Example ERC ERC721 specification:
-
-```solidity
-pragma solidity >=0.5.0 <0.9.0;
-
-/**
- * @title ERC721 Non-Fungible Token Standard basic interface
- * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721 {
-    
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    function balanceOf(address _owner) public view returns (uint256 balance);
-    
-    /// @notice postcondition _tokenOwner[_tokenId] == _owner
-    /// @notice postcondition  _owner !=  address(0)
-    function ownerOf(uint256 _tokenId) public view returns (address owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved 
-    function approve(address _approved, uint256 _tokenId) external;
-    
-    /// @notice postcondition _tokenOwner[_tokenId] != address(0)
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
-    function setApprovalForAll(address _operator, bool _approved) external;
-    
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-    
-    /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-}
-
-```
-
-Example ERC ERC1155 specification:
-
-```solidity
-
-pragma solidity >= 0.5.0;
-
-contract ERC1155 {
-    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
-    event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);
-    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
-    event URI(string value, uint256 indexed id);
-
-    // Mapping from token ID to account balances
-    mapping (uint256 => mapping(address => uint256)) private _balances;
-
-    // Mapping from account to operator approvals
-    mapping (address => mapping(address => bool)) private _operatorApprovals;
-
-    // Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
-    string private _uri;
-
-    /**
-     * @dev See {IERC1155-balanceOf}.
-     *
-     * Requirements:
-     *
-     * - `account` cannot be the zero address.
-     */
-
-    /// @notice postcondition _balances[_id][_owner] == balance
-    function balanceOf(address _owner, uint256 _id) public view   returns (uint256 balance);
-
-    /**
-     * @dev See {IERC1155-balanceOfBatch}.
-     *
-     * Requirements:
-     *
-     * - `accounts` and `ids` must have the same length.
-     */
-    /// @notice postcondition batchBalances.length == _owners.length
-    /// @notice postcondition batchBalances.length == _ids.length
-    /// @notice postcondition forall (uint x) !( 0 <= x &&  x < batchBalances.length ) || batchBalances[x] == _balances[_ids[x]][_owners[x]]
-    function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
-
-    /**
-     * @dev See {IERC1155-setApprovalForAll}.
-     */
-
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
-    function setApprovalForAll(address _operator, bool _approved) public;
-
-    ///@notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) public view returns (bool approved);
-
-
-    /// @notice postcondition _to != address(0)
-    /// @notice postcondition _operatorApprovals[_from][msg.sender] || _from == msg.sender
-    /// @notice postcondition __verifier_old_uint(_balances[_id][_from]) >= _value    
-    /// @notice postcondition _from == _to || _balances[_id][_from] == __verifier_old_uint(_balances[_id][_from]) - _value
-    /// @notice postcondition _from != _to || _balances[_id][_from] == __verifier_old_uint(_balances[_id][_from])
-    /// @notice postcondition _from == _to || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value
-    /// @notice postcondition _from != _to || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to])
-    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
-
-    /// @notice postcondition _operatorApprovals[_from][msg.sender] || _from == msg.sender
-    /// @notice postcondition _to != address(0)
-    /// @notice postcondition _ids.length == _values.length
-    /// @notice postcondition forall (uint x) !(0 <= x && x < _ids.length) || (__verifier_old_uint(_balances[_ids[x]][_from]) >= _values[x])
-    /// @notice postcondition forall (uint x) !(0 <= x && x < _ids.length) || (_from == _to) || (_balances[_ids[x]][_to] == __verifier_old_uint(_balances[_ids[x]][_to]) + _values[x])
-    /// @notice postcondition forall (uint x) _from != _to || _balances[_ids[x]][_to] == __verifier_old_uint(_balances[_ids[x]][_to])
-    /// @notice postcondition forall (uint x) !(0 <= x && x < _ids.length) || (_from == _to) || ( _balances[_ids[x]][_from] == __verifier_old_uint(_balances[_ids[x]][_from]) - _values[x])
-    /// @notice postcondition forall (uint x) _from != _to || _balances[_ids[x]][_from] == __verifier_old_uint(_balances[_ids[x]][_from])
-    function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
-}
-
-```
-
-            
-
-=== ASSISTANT [2025-10-10 04:45:47] ===
-<postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
-</postconditions>
-
-=== USER [2025-10-10 04:45:52] ===
-
-            Verification failed for function `function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);`
-
-            The verifier found the following errors:
-            ```
-            Warning: This is a pre-release compiler version, please do not use it in production.
-spec.sol:49:41: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
-                                        ^------------------------------------------------^
-spec.sol:58:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function openFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                     ^------------------------------------------------^
-spec.sol:63:19: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external;
-                  ^------------------------------------------------^
-spec.sol:68:25: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolveFor(ERC7683Types.GaslessCrossChainOrder calldata order,
-                        ^------------------------------------------------^
-spec.sol:69:65: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-        bytes calldata originFillerData) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                                                ^-------------------------------------------------------^
-spec.sol:72:22: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
-    function resolve(ERC7683Types.OnchainCrossChainOrder calldata order) external view returns (ERC7683Typ ...
-                     ^------------------------------------------------^
-spec.sol:72:97: Error: This type is only supported in the new experimental ABI encoder. Use "pragma experimental ABIEncoderV2;" to enable the feature.
- ... data order) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder);
-                                        ^-------------------------------------------------------^
-
-            ```
-
-            Can you fix the specification accordingly?
-            
-            OUTPUT FORMAT:
-            <postconditions>
-            /// @notice postcondition ...
-            /// @notice postcondition ...
-            </postconditions>
-            
-            **Examples:**
-            
-Here are examples of similar ERC formal specifications:
-Example ERC ERC20 specification:
-
-```solidity
-// SPDX-License-Identifier: MIT
-pragma solidity >=0.5.7;
-
-contract ERC20 {
-
-    mapping (address => uint) _balances;
-    mapping (address => mapping (address => uint)) _allowed;
-    uint public _totalSupply;
-
-    event Transfer(address indexed _from, address indexed _to, uint _value);
-    event Approval(address indexed _owner, address indexed _spender, uint _value);
-
-    /// @notice postcondition supply == _totalSupply
-    function totalSupply() public view returns (uint256 supply);
-
-    /// @notice  postcondition ( ( _balances[msg.sender] ==  __verifier_old_uint (_balances[msg.sender] ) - _value  && msg.sender  != _to ) ||   ( _balances[msg.sender] ==  __verifier_old_uint ( _balances[msg.sender]) && msg.sender  == _to ) &&  success )   || !success
-    /// @notice  postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  && msg.sender  != _to ) ||   ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) && msg.sender  == _to )  )   || !success
-    function transfer(address _to, uint256 _value) public returns (bool success);
-
-    /// @notice  postcondition ( ( _balances[_from] ==  __verifier_old_uint (_balances[_from] ) - _value  &&  _from  != _to ) || ( _balances[_from] ==  __verifier_old_uint ( _balances[_from] ) &&  _from == _to ) && success ) || !success 
-    /// @notice  postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  &&  _from  != _to ) || ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) &&  _from  == _to ) && success ) || !success 
-    /// @notice  postcondition ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender] ) - _value && success) || ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender]) && !success) ||  _from  == msg.sender
-    /// @notice  postcondition  _allowed[_from ][msg.sender]  <= __verifier_old_uint (_allowed[_from ][msg.sender] ) ||  _from  == msg.sender
-    function transferFrom(address _from, address _to, uint256 _value) public returns (bool success);
-
-    /// @notice  postcondition (_allowed[msg.sender ][ _spender] ==  _value  &&  success) || ( _allowed[msg.sender ][ _spender] ==  __verifier_old_uint ( _allowed[msg.sender ][ _spender] ) && !success )    
-    function approve(address _spender, uint256 _value) public returns (bool success);
-
-    /// @notice postcondition _balances[_owner] == balance
-    function balanceOf(address _owner) public view returns (uint256 balance);
-
-    /// @notice postcondition _allowed[_owner][_spender] == remaining
-    function allowance(address _owner, address _spender) public view returns (uint256 remaining);
-}
-
-```
-
-Example ERC ERC721 specification:
-
-```solidity
-pragma solidity >=0.5.0 <0.9.0;
-
-/**
- * @title ERC721 Non-Fungible Token Standard basic interface
- * @dev see https://github.com/ethereum/EIPs/blob/master/EIPS/eip-721.md
- */
-contract ERC721 {
-    
-    /// @notice postcondition _ownedTokensCount[_owner] == balance
-    function balanceOf(address _owner) public view returns (uint256 balance);
-    
-    /// @notice postcondition _tokenOwner[_tokenId] == _owner
-    /// @notice postcondition  _owner !=  address(0)
-    function ownerOf(uint256 _tokenId) public view returns (address owner);
-
-    /// @notice postcondition _tokenApprovals[_tokenId] == _approved 
-    function approve(address _approved, uint256 _tokenId) external;
-    
-    /// @notice postcondition _tokenOwner[_tokenId] != address(0)
-    /// @notice postcondition _tokenApprovals[_tokenId] == approved
-    function getApproved(uint256 _tokenId) external view returns (address approved);
-
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
-    function setApprovalForAll(address _operator, bool _approved) external;
-    
-    /// @notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) external view returns (bool);
-
-    /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
-    function transferFrom(address _from, address _to, uint256 _tokenId) external;
-    
-    /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId) external;
-
-    /// @notice  postcondition ( ( _ownedTokensCount[_from] ==  __verifier_old_uint (_ownedTokensCount[_from] ) - 1  &&  _from  != _to ) || ( _from == _to )  ) 
-    /// @notice  postcondition ( ( _ownedTokensCount[_to] ==  __verifier_old_uint ( _ownedTokensCount[_to] ) + 1  &&  _from  != _to ) || ( _from  == _to ) )
-    /// @notice  postcondition  _tokenOwner[_tokenId] == _to
-    function safeTransferFrom(address _from, address _to, uint256 _tokenId, bytes calldata _data) external;
-}
-
-```
-
-Example ERC ERC1155 specification:
-
-```solidity
-
-pragma solidity >= 0.5.0;
-
-contract ERC1155 {
-    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
-    event TransferBatch(address indexed operator, address indexed from, address indexed to, uint256[] ids, uint256[] values);
-    event ApprovalForAll(address indexed account, address indexed operator, bool approved);
-    event URI(string value, uint256 indexed id);
-
-    // Mapping from token ID to account balances
-    mapping (uint256 => mapping(address => uint256)) private _balances;
-
-    // Mapping from account to operator approvals
-    mapping (address => mapping(address => bool)) private _operatorApprovals;
-
-    // Used as the URI for all token types by relying on ID substitution, e.g. https://token-cdn-domain/{id}.json
-    string private _uri;
-
-    /**
-     * @dev See {IERC1155-balanceOf}.
-     *
-     * Requirements:
-     *
-     * - `account` cannot be the zero address.
-     */
-
-    /// @notice postcondition _balances[_id][_owner] == balance
-    function balanceOf(address _owner, uint256 _id) public view   returns (uint256 balance);
-
-    /**
-     * @dev See {IERC1155-balanceOfBatch}.
-     *
-     * Requirements:
-     *
-     * - `accounts` and `ids` must have the same length.
-     */
-    /// @notice postcondition batchBalances.length == _owners.length
-    /// @notice postcondition batchBalances.length == _ids.length
-    /// @notice postcondition forall (uint x) !( 0 <= x &&  x < batchBalances.length ) || batchBalances[x] == _balances[_ids[x]][_owners[x]]
-    function balanceOfBatch(address[] memory _owners, uint256[] memory _ids) public view returns (uint256[] memory batchBalances);
-
-    /**
-     * @dev See {IERC1155-setApprovalForAll}.
-     */
-
-    /// @notice postcondition _operatorApprovals[msg.sender][_operator] == _approved
-    function setApprovalForAll(address _operator, bool _approved) public;
-
-    ///@notice postcondition _operatorApprovals[_owner][_operator] == approved
-    function isApprovedForAll(address _owner, address _operator) public view returns (bool approved);
-
-
-    /// @notice postcondition _to != address(0)
-    /// @notice postcondition _operatorApprovals[_from][msg.sender] || _from == msg.sender
-    /// @notice postcondition __verifier_old_uint(_balances[_id][_from]) >= _value    
-    /// @notice postcondition _from == _to || _balances[_id][_from] == __verifier_old_uint(_balances[_id][_from]) - _value
-    /// @notice postcondition _from != _to || _balances[_id][_from] == __verifier_old_uint(_balances[_id][_from])
-    /// @notice postcondition _from == _to || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to]) + _value
-    /// @notice postcondition _from != _to || _balances[_id][_to] == __verifier_old_uint(_balances[_id][_to])
-    function safeTransferFrom(address _from, address _to, uint256 _id, uint256 _value, bytes memory _data) public;
-
-    /// @notice postcondition _operatorApprovals[_from][msg.sender] || _from == msg.sender
-    /// @notice postcondition _to != address(0)
-    /// @notice postcondition _ids.length == _values.length
-    /// @notice postcondition forall (uint x) !(0 <= x && x < _ids.length) || (__verifier_old_uint(_balances[_ids[x]][_from]) >= _values[x])
-    /// @notice postcondition forall (uint x) !(0 <= x && x < _ids.length) || (_from == _to) || (_balances[_ids[x]][_to] == __verifier_old_uint(_balances[_ids[x]][_to]) + _values[x])
-    /// @notice postcondition forall (uint x) _from != _to || _balances[_ids[x]][_to] == __verifier_old_uint(_balances[_ids[x]][_to])
-    /// @notice postcondition forall (uint x) !(0 <= x && x < _ids.length) || (_from == _to) || ( _balances[_ids[x]][_from] == __verifier_old_uint(_balances[_ids[x]][_from]) - _values[x])
-    /// @notice postcondition forall (uint x) _from != _to || _balances[_ids[x]][_from] == __verifier_old_uint(_balances[_ids[x]][_from])
-    function safeBatchTransferFrom(address _from, address _to, uint256[] memory _ids, uint256[] memory _values) public;
-}
-
-```
-
-            
-
-=== ASSISTANT [2025-10-10 04:46:01] ===
-<postconditions>
-/// @notice postcondition resolvedOrder.openDeadline == order.openDeadline
-/// @notice postcondition resolvedOrder.originChainId == order.originChainId
-/// @notice postcondition resolvedOrder.user == order.user
+/// @notice postcondition !(openedOrders[bytes32(order.nonce)]) || __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
+/// @notice postcondition forall (uint x) !(0 <= x && x < order.originChainId) || openedOrders[bytes32(order.nonce)] == __verifier_old_bool(openedOrders[bytes32(order.nonce)]) 
 </postconditions>
 
 === END OF THREAD ===

@@ -47,6 +47,9 @@ class AssistantComparer:
         "erc1155": [
             "balanceOf", "balanceOfBatch", "setApprovalForAll", 
             "isApprovedForAll", "safeTransferFrom", "safeBatchTransferFrom"
+        ],
+        "erc7683": [
+            "open", "openFor", "fill", "resolve", "resolveFor"
         ]
     }
     
@@ -631,6 +634,13 @@ class AssistantComparer:
         try:
             total_runs = df["total_runs"].sum()
             
+            # Check if we have multiple context types for fine-tuning modes
+            multiple_contexts = False
+            if "base_full_context" not in self.mode:
+                # Check if any model has multiple context types
+                context_counts = df.groupby("model")["context_type"].nunique()
+                multiple_contexts = (context_counts > 1).any()
+            
             # For base_full_context modes, group by context_type instead of model
             if "base_full_context" in self.mode:
                 # Group by context type for base model with different contexts
@@ -644,12 +654,26 @@ class AssistantComparer:
                 overall_performance = overall_performance.sort_values("verification_rate", ascending=False)
                 group_column = "context_type"
                 group_label = "Context Type"
+            elif multiple_contexts:
+                # For fine-tuning modes with multiple contexts, show model + context breakdown
+                overall_performance = df.groupby(["model", "context_type"]).agg({
+                    "verification_rate": "mean",
+                    "verified_count": "sum",
+                    "total_runs": "sum",
+                    "avg_time": "mean",
+                    "avg_iterations": "mean"
+                }).reset_index()
+                overall_performance = overall_performance.sort_values("verification_rate", ascending=False)
+                group_column = "model"  # Still use model for grouping, but context_type is in the table
+                group_label = "Model + Context"
             else:
-                # Original behavior for fine-tuning modes
+                # Original behavior for fine-tuning modes with single context per model
                 overall_performance = df.groupby("model").agg({
                     "verification_rate": "mean",
                     "verified_count": "sum",
-                    "total_runs": "sum"
+                    "total_runs": "sum",
+                    "avg_time": "mean",
+                    "avg_iterations": "mean"
                 }).reset_index()
                 overall_performance = overall_performance.sort_values("verification_rate", ascending=False)
                 group_column = "model"
@@ -659,6 +683,15 @@ class AssistantComparer:
             if "base_full_context" in self.mode:
                 # Group by context type for base model
                 efficiency_df = df.groupby("context_type").agg({
+                    "avg_success_iterations": "mean",
+                    "avg_fail_iterations": "mean",
+                    "avg_success_time": "mean",
+                    "avg_fail_time": "mean",
+                    "verification_rate": lambda x: 1 - x.mean()  # failure rate
+                }).reset_index()
+            elif multiple_contexts:
+                # Group by model and context for fine-tuning with multiple contexts
+                efficiency_df = df.groupby(["model", "context_type"]).agg({
                     "avg_success_iterations": "mean",
                     "avg_fail_iterations": "mean",
                     "avg_success_time": "mean",
@@ -698,8 +731,10 @@ class AssistantComparer:
                 # Adjust columns based on mode
                 if "base_full_context" in self.mode:
                     table_columns = ["context_type", "verification_rate", "verified_count", "total_runs", "avg_time", "avg_iterations"]
+                elif multiple_contexts:
+                    table_columns = ["model", "context_type", "verification_rate", "verified_count", "total_runs", "avg_time", "avg_iterations"]
                 else:
-                    table_columns = ["model", "verification_rate", "verified_count", "total_runs"]
+                    table_columns = ["model", "verification_rate", "verified_count", "total_runs", "avg_time", "avg_iterations"]
                 
                 overall_table = self.create_markdown_table(
                     overall_performance,
@@ -721,6 +756,17 @@ class AssistantComparer:
                         f.write(f"- Best performing context: '{best_context}' with {overall_performance.iloc[0]['verification_rate']*100:.2f}% success rate\n")
                         f.write(f"- Average success rate: {avg_rate*100:.2f}%\n")
                         f.write(f"- Lowest performing context: '{worst_context}' with {overall_performance.iloc[-1]['verification_rate']*100:.2f}% success rate\n\n")
+                    elif multiple_contexts:
+                        best_model = overall_performance.iloc[0]["model"]
+                        best_context = overall_performance.iloc[0]["context_type"]
+                        worst_model = overall_performance.iloc[-1]["model"]
+                        worst_context = overall_performance.iloc[-1]["context_type"]
+                        avg_rate = overall_performance["verification_rate"].mean()
+                        
+                        f.write("**Key Observations:**\n\n")
+                        f.write(f"- Best performing configuration: Model '{best_model}' with context '{best_context}' ({overall_performance.iloc[0]['verification_rate']*100:.2f}% success rate)\n")
+                        f.write(f"- Average success rate: {avg_rate*100:.2f}%\n")
+                        f.write(f"- Lowest performing configuration: Model '{worst_model}' with context '{worst_context}' ({overall_performance.iloc[-1]['verification_rate']*100:.2f}% success rate)\n\n")
                     else:
                         best_model = overall_performance.iloc[0]["model"]
                         worst_model = overall_performance.iloc[-1]["model"]
@@ -740,6 +786,8 @@ class AssistantComparer:
                 # Adjust columns based on mode
                 if "base_full_context" in self.mode:
                     efficiency_columns = ["context_type", "avg_fail_iterations", "avg_success_iterations", "avg_fail_time", "avg_success_time", "fail_rate"]
+                elif multiple_contexts:
+                    efficiency_columns = ["model", "context_type", "avg_fail_iterations", "avg_success_iterations", "avg_fail_time", "avg_success_time", "fail_rate"]
                 else:
                     efficiency_columns = ["model", "avg_fail_iterations", "avg_success_iterations", "avg_fail_time", "avg_success_time", "fail_rate"]
                 
@@ -778,6 +826,25 @@ class AssistantComparer:
                             if no_ctx_rate > 0:
                                 improvement = ((best_rate - no_ctx_rate) / no_ctx_rate * 100)
                                 f.write(f"3. Context enhancement improvement: {improvement:.1f}% over no context\n")
+                    elif multiple_contexts:
+                        # Show top configurations (model + context)
+                        top_configs = overall_performance.head(3)
+                        top_configs_list = [f"`{row['model']}` (context: `{row['context_type']}`)" 
+                                          for _, row in top_configs.iterrows()]
+                        no_context_data = overall_performance[overall_performance["context_type"] == "none"]
+                        with_context_data = overall_performance[overall_performance["context_type"] != "none"]
+                        
+                        f.write("**Key Findings:**\n\n")
+                        f.write(f"1. Top performing configurations: {', '.join(top_configs_list)}\n")
+                        
+                        if not no_context_data.empty and not with_context_data.empty:
+                            no_context_rate = no_context_data["verification_rate"].mean() * 100
+                            with_context_rate = with_context_data["verification_rate"].mean() * 100
+                            f.write(f"2. Average without context: {no_context_rate:.2f}%\n")
+                            f.write(f"3. Average with context: {with_context_rate:.2f}%\n")
+                            if no_context_rate > 0:
+                                improvement = ((with_context_rate - no_context_rate) / no_context_rate * 100)
+                                f.write(f"4. Context enhancement improvement: {improvement:.1f}% over no context\n")
                     else:
                         top_models = overall_performance.head(3)["model"].tolist()
                         baseline_data = overall_performance[overall_performance["model"] == "4o-mini"]
