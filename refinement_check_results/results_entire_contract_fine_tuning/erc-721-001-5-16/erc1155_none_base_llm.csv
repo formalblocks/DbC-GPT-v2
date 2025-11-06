@@ -1,0 +1,21 @@
+run,status,output
+5,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:109:5: Postcondition 'forall (uint i) _to != address(0)' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"

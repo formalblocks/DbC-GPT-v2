@@ -2,27 +2,27 @@
 
 contract Refinement {
 
-    struct StateOld {
+    struct StateAbs {
         uint256  _totalSupply;
         mapping (address => uint256) _balances;
         mapping (address => mapping (address => uint256)) _allowed;
     }
 
-    struct StateNew {
+    struct StateCon {
         uint256  _totalSupply;
         mapping (address => uint256) _balances;
         mapping (address => mapping (address => uint256)) _allowed;
     }
     
-    StateOld od;
-    StateOld od_old;
-    StateNew nw;
-    StateNew nw_old;
+    StateAbs abs;
+    StateAbs abs_old;
+    StateCon con;
+    StateCon con_old;
 
-    /// @notice precondition __verifier_sum_uint(od._balances) == od._totalSupply // Abs func 
-    /// @notice precondition __verifier_sum_uint(nw._balances) == nw._totalSupply // Abs func 
-    /// @notice precondition __verifier_sum_uint(od._balances) == __verifier_sum_uint(nw._balances) // Abs func 
-    /// @notice postcondition nw._totalSupply == od._totalSupply
+    /// @notice precondition __verifier_sum_uint(abs._balances) == abs._totalSupply // Abs func 
+    /// @notice precondition __verifier_sum_uint(con._balances) == con._totalSupply // Abs func 
+    /// @notice precondition __verifier_sum_uint(abs._balances) == __verifier_sum_uint(con._balances) // Abs func 
+    /// @notice postcondition con._totalSupply == abs._totalSupply
     function inv() public {}
 
     /// @notice precondition true
@@ -35,61 +35,68 @@ contract Refinement {
 
     /// @notice precondition true
     /// @notice postcondition true
-    function allowance_pre(address owner, address spender, uint256 _remaining_) public view  returns (uint256) {}
+    function totalSupply_pre(uint256 supply) public view returns (uint256) {}
+
+    /// @notice precondition abs._totalSupply == con._totalSupply // Abs func 
+    /// @notice precondition abs._totalSupply == supply
+    /// @notice postcondition supply == con._totalSupply
+    function totalSupply_post(uint256 supply) public view returns (uint256) {}
+
+    /// @notice precondition true
+    /// @notice postcondition true
+    function allowance_pre(address _owner, address _spender, uint256 _remaining_) public view  returns (uint256) {}
     
-    /// @notice precondition forall (address addr1, address addr2) od._allowed[addr1][addr2] == nw._allowed[addr1][addr2] // Abs func 
-    /// @notice precondition od._allowed[owner][spender] == _remaining_
-    /// @notice postcondition _remaining_ == nw._allowed[owner][spender]
-    function allowance_post(address owner, address spender, uint256 _remaining_) public view  returns (uint256) {}
+    /// @notice precondition forall (address addr1, address addr2) abs._allowed[addr1][addr2] == con._allowed[addr1][addr2] // Abs func 
+    /// @notice precondition abs._allowed[_owner][_spender] == remaining
+    /// @notice postcondition true
+    function allowance_post(address _owner, address _spender, uint256 remaining) public view  returns (uint256) {}
 
     /// @notice precondition true
     /// @notice postcondition true
-    function balanceOf_pre(address owner, uint256 balance) public view returns (uint256){}
+    function balanceOf_pre(address _owner, uint256 balance) public view returns (uint256){}
 
-    /// @notice precondition forall (address addr) od._balances[addr] == nw._balances[addr] // Abs func 
-    /// @notice precondition od._balances[owner] == balance
-    /// @notice postcondition balance == nw._balances[owner]
-    function balanceOf_post(address owner, uint256 balance) public view returns (uint256){}
+    /// @notice precondition forall (address addr) abs._balances[addr] == con._balances[addr] // Abs func 
+    /// @notice precondition abs._balances[_owner] == balance
+    /// @notice postcondition con._balances[_owner] == balance
+    function balanceOf_post(address _owner, uint256 balance) public view returns (uint256){}
 
     /// @notice precondition true
     /// @notice postcondition true
-    function approve_pre(address spender, uint256 value, bool success) external returns (bool) {}
+    function approve_pre(address _spender, uint256 _value, bool success) external returns (bool) {}
 
-    /// @notice precondition forall (address addr1, address addr2) od._allowed[addr1][addr2] == nw._allowed[addr1][addr2] // Abs func 
-    /// @notice precondition forall (address addr1, address addr2) od_old._allowed[addr1][addr2] == nw_old._allowed[addr1][addr2] // Abs func 
-    /// @notice precondition (od._allowed[msg.sender][spender] == value && success) || (od._allowed[msg.sender][spender] == od_old._allowed[msg.sender][spender] && !success)
-    /// @notice postcondition nw._allowed[msg.sender][spender] == value
-    function approve_post(address spender, uint256 value, bool success) external returns (bool) {}
+    /// @notice precondition forall (address addr1, address addr2) abs._allowed[addr1][addr2] == con._allowed[addr1][addr2] // Abs func 
+    /// @notice precondition forall (address addr1, address addr2) abs_old._allowed[addr1][addr2] == con_old._allowed[addr1][addr2] // Abs func 
+    /// @notice precondition (abs._allowed[msg.sender][_spender] == _value && success) || (abs._allowed[msg.sender][_spender] == abs_old._allowed[msg.sender][_spender] && !success)
+    /// @notice  postcondition (con._allowed[msg.sender][_spender] ==  _value  &&  success) || ( con._allowed[msg.sender ][_spender] ==  con_old._allowed[msg.sender][_spender] && !success)
+    function approve_post(address _spender, uint256 _value, bool success) external returns (bool) {}
     
     /// @notice precondition true
     /// @notice postcondition true
-    function transfer_pre(address to, uint256 value, bool success) external returns (bool) {}
+    function transfer_pre(address _to, uint256 _value, bool success) external returns (bool) {}
     
-    /// @notice precondition forall (address addr) od._balances[addr] == nw._balances[addr] // Abs func 
-    /// @notice precondition forall (address addr) od_old._balances[addr] == nw_old._balances[addr] // Abs func 
-    /// @notice precondition (( od._balances[msg.sender] == od_old._balances[msg.sender] - value  && msg.sender != to) || (od._balances[msg.sender] == od_old._balances[msg.sender] && msg.sender == to ) && success ) || !success
-    /// @notice precondition (( od._balances[to] == od_old._balances[to] + value && msg.sender != to ) || ( od._balances[to] == od_old._balances[to] && msg.sender == to ) && success ) || !success
-    /// @notice postcondition nw._balances[msg.sender] == nw_old._balances[msg.sender] - value || nw._balances[msg.sender] == nw_old._balances[msg.sender]
-    /// @notice postcondition nw._balances[to] == nw_old._balances[to] + value || nw._balances[to] == nw_old._balances[to]
-    /// @notice postcondition value == 0 || to != address(0)
-    /// @notice postcondition success
-	function transfer_post(address to, uint256 value, bool success) external returns (bool) {}
+    /// @notice precondition forall (address addr) abs._balances[addr] == con._balances[addr] // Abs func 
+    /// @notice precondition forall (address addr) abs_old._balances[addr] == con_old._balances[addr] // Abs func 
+    /// @notice precondition (( abs._balances[msg.sender] == abs_old._balances[msg.sender] - _value  && msg.sender != _to) || (abs._balances[msg.sender] == abs_old._balances[msg.sender] && msg.sender == _to ) && success ) || !success
+    /// @notice precondition (( abs._balances[_to] == abs_old._balances[_to] + _value && msg.sender != _to ) || ( abs._balances[_to] == abs_old._balances[_to] && msg.sender == _to ) && success ) || !success
+    /// @notice postcondition (( con._balances[msg.sender] ==  con_old._balances[msg.sender]) - _value  && msg.sender  != _to ) || ( con._balances[msg.sender] ==  con_old._balances[msg.sender]) && msg.sender  == _to ) &&  success ) || !success
+    /// @notice postcondition ((con._balances[_to] ==  con_old._balances[_to] ) + _value  && msg.sender  != _to ) || ((con._balances[_to] ==  con_old._balances[_to] ) && msg.sender  == _to ) || !success
+	function transfer_post(address _to, uint256 _value, bool success) external returns (bool) {}
 
     /// @notice precondition true
     /// @notice postcondition true
-    function transferFrom_pre(address from, address to, uint256 value, bool success) external returns (bool) {}
+    function transferFrom_pre(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
 
-    /// @notice precondition forall (address addr) od._balances[addr] == nw._balances[addr] // Abs func 
-    /// @notice precondition forall (address addr) od_old._balances[addr] == nw_old._balances[addr] // Abs func 
-    /// @notice precondition forall (address addr1, address addr2) od._allowed[addr1][addr2] == nw._allowed[addr1][addr2] // Abs func 
-    /// @notice precondition forall (address addr1, address addr2) od_old._allowed[addr1][addr2] == nw_old._allowed[addr1][addr2] // Abs func 
-    /// @notice precondition (( od._balances[msg.sender] == od_old._balances[msg.sender] - value  && msg.sender != to) || (od._balances[msg.sender] == od_old._balances[msg.sender] && msg.sender == to ) && success ) || !success
-    /// @notice precondition (( od._balances[to] == od_old._balances[to] + value && msg.sender != to ) || ( od._balances[to] == od_old._balances[to] && msg.sender == to ) && success ) || !success
-    /// @notice precondition (od._allowed[from][msg.sender] == od_old._allowed[from][msg.sender] - value && success) || (od._allowed[from ][msg.sender] == od_old._allowed[from][msg.sender] && !success) || from == msg.sender
-    /// @notice precondition  od._allowed[from][msg.sender] <= od_old._allowed[from][msg.sender] || from  == msg.sender
-    /// @notice postcondition nw._balances[from] == nw_old._balances[from] - value || nw._balances[from] == nw_old._balances[from]
-    /// @notice postcondition nw._balances[to] == nw_old._balances[to] + value || nw._balances[to] == nw_old._balances[to]
-    /// @notice postcondition nw._allowed[from][msg.sender] == nw_old._allowed[from][msg.sender] - value || nw._allowed[from][msg.sender] == nw_old._allowed[from][msg.sender]
-    /// @notice postcondition value == 0 || to != address(0)
-    function transferFrom_post(address from, address to, uint256 value, bool success) external returns (bool) {}
+    /// @notice precondition forall (address addr) abs._balances[addr] == con._balances[addr] // Abs func 
+    /// @notice precondition forall (address addr) abs_old._balances[addr] == con_old._balances[addr] // Abs func 
+    /// @notice precondition forall (address addr1, address addr2) abs._allowed[addr1][addr2] == con._allowed[addr1][addr2] // Abs func 
+    /// @notice precondition forall (address addr1, address addr2) abs_old._allowed[addr1][addr2] == con_old._allowed[addr1][addr2] // Abs func 
+    /// @notice precondition (( abs._balances[_from] == abs_old._balances[_from] - _value  && _from != _to) || (abs._balances[_from] == abs_old._balances[_from] && _from == _to ) && success ) || !success
+    /// @notice precondition (( abs._balances[_to] == abs_old._balances[_to] + _value && _from != _to ) || ( abs._balances[_to] == abs_old._balances[_to] && _from == _to ) && success ) || !success
+    /// @notice precondition (abs._allowed[_from][msg.sender] == abs_old._allowed[_from][msg.sender] - _value && success) || (abs._allowed[_from][msg.sender] == abs_old._allowed[_from][msg.sender] && !success) || _from == msg.sender
+    /// @notice precondition  abs._allowed[_from][msg.sender] <= abs_old._allowed[_from][msg.sender] || _from  == msg.sender
+    /// @notice postcondition ( ( _balances[_from] ==  __verifier_old_uint (_balances[_from] ) - _value  &&  _from  != _to ) || ( _balances[_from] ==  __verifier_old_uint ( _balances[_from] ) &&  _from == _to ) && success ) || !success 
+    /// @notice postcondition ( ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) + _value  &&  _from  != _to ) || ( _balances[_to] ==  __verifier_old_uint ( _balances[_to] ) &&  _from  == _to ) && success ) || !success 
+    /// @notice postcondition ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender] ) - _value && success) || ( _allowed[_from ][msg.sender] ==  __verifier_old_uint (_allowed[_from ][msg.sender]) && !success) ||  _from  == msg.sender
+    /// @notice postcondition  _allowed[_from ][msg.sender]  <= __verifier_old_uint (_allowed[_from ][msg.sender] ) ||  _from  == msg.sender
+    function transferFrom_post(address _from, address _to, uint256 _value, bool success) external returns (bool) {}
 }

@@ -1,0 +1,139 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+pragma solidity ^0.5.0;
+pragma experimental ABIEncoderV2;
+
+import "./contracts/erc7683/ERC7683.sol";
+
+/**
+ * @title ERC7683OriginSettler (verification harness)
+ * @notice Simplified origin settler used for solc-verify driven specification merges.
+ *         The implementation focuses on nonce/accounting behaviour and avoids
+ *         unsupported language features (abi helpers, inline assembly).
+ */
+contract ERC7683OriginSettler is IOriginSettler {
+    uint256 public constant SUPPORTED_CHAIN_ID = 1;
+    bytes32 public constant ORDER_DATA_TYPE_HASH = bytes32(uint256(1));
+
+    mapping(address => mapping(uint256 => bool)) public usedNonces;
+
+    mapping(bytes32 => bool) public openedOrders;
+
+    event Open(bytes32 indexed orderId, ERC7683Types.ResolvedCrossChainOrder resolvedOrder);
+
+    $openFor
+    function openFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata signature,
+        bytes calldata originFillerData
+    ) external {
+        require(order.originSettler == address(this), "Wrong settlement contract");
+        require(order.originChainId == SUPPORTED_CHAIN_ID, "Wrong chain ID");
+        require(order.orderDataType == ORDER_DATA_TYPE_HASH, "Wrong order data type");
+        require(!usedNonces[order.user][order.nonce], "Nonce already used");
+
+        usedNonces[order.user][order.nonce] = true;
+
+        bytes32 orderId = bytes32(order.nonce);
+        require(!openedOrders[orderId], "Order already opened");
+        openedOrders[orderId] = true;
+
+        ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder = _buildResolvedOrder(
+            order.user,
+            order.originChainId,
+            order.openDeadline,
+            order.fillDeadline,
+            orderId
+        );
+
+        emit Open(orderId, resolvedOrder);
+    }
+
+    $open
+    function open(ERC7683Types.OnchainCrossChainOrder calldata order) external {
+        require(order.orderDataType == ORDER_DATA_TYPE_HASH, "Wrong order data type");
+
+        bytes32 orderId = bytes32(uint256(order.fillDeadline));
+        require(!openedOrders[orderId], "Order already opened");
+        openedOrders[orderId] = true;
+
+        ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder = _buildResolvedOrder(
+            msg.sender,
+            SUPPORTED_CHAIN_ID,
+            uint32(-1),
+            order.fillDeadline,
+            orderId
+        );
+
+        emit Open(orderId, resolvedOrder);
+    }
+
+    $resolveFor
+    function resolveFor(
+        ERC7683Types.GaslessCrossChainOrder calldata order,
+        bytes calldata originFillerData
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder) {
+        require(order.originSettler == address(this), "Wrong settlement contract");
+        require(order.originChainId == SUPPORTED_CHAIN_ID, "Wrong chain ID");
+        require(order.orderDataType == ORDER_DATA_TYPE_HASH, "Wrong order data type");
+
+        resolvedOrder = _buildResolvedOrder(
+            order.user,
+            order.originChainId,
+            order.openDeadline,
+            order.fillDeadline,
+            bytes32(order.nonce)
+        );
+    }
+
+    $resolve
+    function resolve(
+        ERC7683Types.OnchainCrossChainOrder calldata order
+    ) external view returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder) {
+        require(order.orderDataType == ORDER_DATA_TYPE_HASH, "Wrong order data type");
+
+        resolvedOrder = _buildResolvedOrder(
+            msg.sender,
+            SUPPORTED_CHAIN_ID,
+            uint32(-1),
+            order.fillDeadline,
+            bytes32(uint256(order.fillDeadline))
+        );
+    }
+
+    function _buildResolvedOrder(
+        address user,
+        uint256 originChainId,
+        uint32 openDeadline,
+        uint32 fillDeadline,
+        bytes32 orderId
+    ) internal pure returns (ERC7683Types.ResolvedCrossChainOrder memory resolvedOrder) {
+        resolvedOrder.user = user;
+        resolvedOrder.originChainId = originChainId;
+        resolvedOrder.openDeadline = openDeadline;
+        resolvedOrder.fillDeadline = fillDeadline;
+        resolvedOrder.orderId = orderId;
+
+        resolvedOrder.maxSpent = new ERC7683Types.Output[](0);
+        resolvedOrder.minReceived = new ERC7683Types.Output[](0);
+        resolvedOrder.fillInstructions = new ERC7683Types.FillInstruction[](0);
+    }
+}
+
+/**
+ * @title ERC7683DestinationSettler (verification harness)
+ * @notice Simplified destination settler for verifying fill operations.
+ *         Tracks filled orders to prevent double-filling.
+ */
+contract ERC7683DestinationSettler is IDestinationSettler {
+    mapping(bytes32 => bool) public filledOrders;
+
+    $fill
+    function fill(
+        bytes32 orderId,
+        bytes calldata originData,
+        bytes calldata fillerData
+    ) external {
+        require(!filledOrders[orderId], "Order already filled");
+        filledOrders[orderId] = true;
+    }
+}

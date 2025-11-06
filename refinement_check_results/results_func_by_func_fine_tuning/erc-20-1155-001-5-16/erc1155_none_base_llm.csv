@@ -1,0 +1,226 @@
+run,status,output
+1,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:114:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ERC1155_merge.sol:114:5: Postcondition 'forall (uint j) !(0 <= j && j < _ids.length) || (_from != _to) || (con._balances[_ids[j]][_from] == con_old._balances[_ids[j]][_from])' might not hold at end of function.
+ - ERC1155_merge.sol:114:5: Postcondition '_to != _from' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+2,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:113:5: Postcondition 'forall (uint x) !(0 <= x && x < _ids.length) || (con_old._balances[_ids[x]][_from] >= _values[x])' might not hold at end of function.
+ - ERC1155_merge.sol:113:5: Postcondition 'address(0) != _to' might not hold at end of function.
+ - ERC1155_merge.sol:113:5: Postcondition 'forall (uint h) _from != _to || con._balances[_ids[h]][_from] == con_old._balances[_ids[h]][_from]' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+3,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC1155_merge.sol:91:5: Postcondition 'false' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:108:5: Postcondition 'forall (uint k) !(0 <= k && k < _ids.length) || (con._balances[_ids[k]][_to] == con_old._balances[_ids[k]][_to] + _values[k])' might not hold at end of function.
+ - ERC1155_merge.sol:108:5: Postcondition 'forall (uint j) !(0 <= j && j < _ids.length) || (_from != _to) || (con._balances[_ids[j]][_from] == con_old._balances[_ids[j]][_from])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+4,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: ERROR
+ - ERC1155_merge.sol:63:5: Postcondition 'false' might not hold at end of function.
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:113:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ERC1155_merge.sol:113:5: Postcondition 'forall (uint j) !(0 <= j && j < _ids.length) || (_from != _to) || (con._balances[_ids[j]][_from] == con_old._balances[_ids[j]][_from])' might not hold at end of function.
+ - ERC1155_merge.sol:113:5: Postcondition '_to != _from' might not hold at end of function.
+ - ERC1155_merge.sol:113:5: Postcondition '_values.length == _ids.length' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+5,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: ERROR
+ - ERC1155_merge.sol:73:5: Postcondition 'approved == con_old._operatorApprovals[_owner][_operator]' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC1155_merge.sol:96:5: Postcondition 'forall (uint x) !(0 <= x && x < _id) || con._balances[x][_to] == con_old._balances[x][_to]' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:113:5: Postcondition 'forall (uint x) !(0 <= x && x < _ids.length) || (_from == _to) || (con_old._balances[_ids[x]][_from] >= _values[x])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+6,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: ERROR
+ - ERC1155_merge.sol:74:5: Postcondition 'approved == con_old._operatorApprovals[_owner][_operator]' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC1155_merge.sol:92:5: Postcondition 'false' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:110:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ERC1155_merge.sol:110:5: Postcondition 'forall (uint j) !(0 <= j && j < _ids.length) || (_from != _to) || (con._balances[_ids[j]][_from] == con_old._balances[_ids[j]][_from])' might not hold at end of function.
+ - ERC1155_merge.sol:110:5: Postcondition '_to != _from' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+7,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:112:5: Postcondition 'forall (uint k) !(0 <= k && k < _ids.length) || (con._balances[_ids[k]][_to] == con_old._balances[_ids[k]][_to] + _values[k])' might not hold at end of function.
+ - ERC1155_merge.sol:112:5: Postcondition 'forall (uint j) !(0 <= j && j < _ids.length) || (_from != _to) || (con._balances[_ids[j]][_from] == con_old._balances[_ids[j]][_from])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+8,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:112:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ERC1155_merge.sol:112:5: Postcondition 'forall (uint x) !(0 <= x && x < _ids.length) || (_from == _to) || (con_old._balances[_ids[x]][_from] >= _values[x])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+9,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: OK
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: OK
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: OK
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:111:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ERC1155_merge.sol:111:5: Postcondition 'forall (uint x) !(0 <= x && x < _ids.length) || (_from != _to) || (con._balances[_ids[x]][_from] == con_old._balances[_ids[x]][_from])' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"
+10,251,"ERC1155_merge.sol:1:1: Warning: Source file does not specify required compiler version!
+Refinement::inv: OK
+Refinement::cons_pre: OK
+Refinement::cons_post: OK
+Refinement::balanceOf_pre: OK
+Refinement::balanceOf_post: ERROR
+ - ERC1155_merge.sol:40:5: Postcondition 'balance == con_old._balances[_id][_owner] || !(0 <= _id && _id <= 1152921504606846975)' might not hold at end of function.
+Refinement::balanceOfBatch_pre: OK
+Refinement::balanceOfBatch_post: OK
+Refinement::setApprovalForAll_pre: OK
+Refinement::setApprovalForAll_post: OK
+Refinement::isApprovedForAll_pre: OK
+Refinement::isApprovedForAll_post: ERROR
+ - ERC1155_merge.sol:74:5: Postcondition 'approved == con_old._operatorApprovals[_owner][_operator]' might not hold at end of function.
+Refinement::safeTransferFrom_pre: OK
+Refinement::safeTransferFrom_post: ERROR
+ - ERC1155_merge.sol:97:5: Postcondition 'forall (uint x) !(0 <= x && x < _id) || con_old._balances[x][_to] == con._balances[x][_to] || _from == _to' might not hold at end of function.
+ - ERC1155_merge.sol:97:5: Postcondition 'forall (uint x) _from != _to || con._balances[x][_to] == con_old._balances[x][_to]' might not hold at end of function.
+Refinement::safeBatchTransferFrom_pre: OK
+Refinement::safeBatchTransferFrom_post: ERROR
+ - ERC1155_merge.sol:115:5: Postcondition 'forall (uint i) !(0 <= i && i < _ids.length) || (con._balances[_ids[i]][_to] == con_old._balances[_ids[i]][_to] + _values[i])' might not hold at end of function.
+ - ERC1155_merge.sol:115:5: Postcondition 'forall (uint j) !(0 <= j && j < _ids.length) || (_from != _to) || (con._balances[_ids[j]][_from] == con_old._balances[_ids[j]][_from])' might not hold at end of function.
+ - ERC1155_merge.sol:115:5: Postcondition '_to != _from' might not hold at end of function.
+Refinement::[implicit_constructor]: OK
+Errors were found by the verifier.
+"

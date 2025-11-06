@@ -2,7 +2,7 @@
 Smart Contract Verification System
 
 This script implements a system for verifying smart contract specifications using OpenAI's API
-and solc-verify. It handles the verification process for ERC20, ERC721, and ERC1155 token standards.
+and solc-verify. It handles the verification process for ERC20, ERC721, ERC1155, and ERC7683 token standards.
 
 Key Features:
 - Automated verification of smart contract specifications
@@ -17,6 +17,7 @@ import openai
 import time
 import sys
 import re
+import os
 import pandas as pd
 from dataclasses import dataclass
 from typing import List, Dict, Any, Optional
@@ -55,6 +56,7 @@ INTERFACE_PATHS = {
     "erc20": "../assets/file_search/erc20_interface.md",
     "erc721": "../assets/file_search/erc721_interface.md",
     "erc1155": "../assets/file_search/erc1155_interface.md",
+    "erc7683": "../assets/file_search/erc7683_interface.md",
     "ercx": "../assets/file_search/ercx_interface.md",
 }
 
@@ -62,6 +64,7 @@ EIP_PATHS = {
     "erc20": "../assets/file_search/erc-20.md",
     "erc721": "../assets/file_search/erc-721.md",
     "erc1155": "../assets/file_search/erc-1155.md",
+    "erc7683": "../assets/file_search/erc-7683.md",
     "ercx": "../assets/file_search/erc-x.md",
 }
 
@@ -69,6 +72,7 @@ REFERENCE_SPEC_PATHS = {
     "erc20": "../assets/file_search/erc20_ref_spec.md",
     "erc721": "../assets/file_search/erc721_ref_spec.md",
     "erc1155": "../assets/file_search/erc1155_ref_spec.md",
+    "erc7683": "../assets/file_search/erc7683_ref_spec.md",
     "ercx": "../assets/file_search/ercx_ref_spec.md",
     "": ""
 }
@@ -306,6 +310,7 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/templates/imp_spec_merge.template',
         "erc721": './solc_verify_generator/ERC721/templates/imp_spec_merge.template',
         "erc1155": './solc_verify_generator/ERC1155/templates/imp_spec_merge.template',
+        "erc7683": './solc_verify_generator/ERC7683/templates/imp_spec_merge.template',
         "ercx": './solc_verify_generator/ERCX/templates/imp_spec_merge.template',
     }
     
@@ -313,6 +318,7 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/imp/ERC20_merge.sol',
         "erc721": './solc_verify_generator/ERC721/imp/ERC721_merge.sol',
         "erc1155": './solc_verify_generator/ERC1155/imp/ERC1155_merge.sol',
+        "erc7683": './solc_verify_generator/ERC7683/imp/ERC7683_merge.sol',
         "ercx": './solc_verify_generator/ERCX/imp/ERCX_merge.sol',
     }
 
@@ -505,7 +511,7 @@ def generate_prompt(requested_type, context_types):
     """
     # Load the target interface and eip document
     target_interface = load_target_interface(requested_type)
-    eip_doc = Utils.extract_content_from_markdown(EIP_PATHS.get(requested_type, ""))
+    eip_doc = Utils.read_file_content(EIP_PATHS.get(requested_type, ""))
     
     # Build examples section from context types
     examples_text = ""
@@ -604,8 +610,7 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
         raise ValueError(f"Assistant key '{assistant_key}' not found in ASSISTANT_IDS.")
     if requested_type not in INTERFACE_PATHS:
         raise ValueError(f"Requested type '{requested_type}' not found in INTERFACE_PATHS.")
-    # Ensure os is imported if not already at the top level of the module
-    import os 
+    
     # Validate context types
     for ct in context_types:
         if ct and ct not in REFERENCE_SPEC_PATHS: # Allow empty string for "none" context
@@ -614,6 +619,7 @@ def run_verification_process(requested_type, context_types, assistant_key="4o-mi
     logging.info(f"Running verification for: Requested Type='{requested_type}', Context Types={context_types}, Assistant Key='{assistant_key}', Target Runs={num_runs}, Max Iterations={max_iterations}")
 
     prompt = generate_prompt(requested_type, context_types)
+
     context_str = "_".join([c for c in context_types if c]) if any(c for c in context_types) else "none" # Ensure "none" if context_types is empty or just [""]
     
     results_base_dir = "results_entire_contract"
@@ -744,10 +750,10 @@ def main():
     """Main entry point for the verification process"""
     parser = argparse.ArgumentParser(description='Run contract verification with different contexts')
     parser.add_argument('--requested', type=str, required=True, 
-                        choices=['erc20', 'erc721', 'erc1155', 'ercx'],
+                        choices=['erc20', 'erc721', 'erc1155', 'erc7683', 'ercx'],
                         help='The contract type to verify')
     parser.add_argument('--context', type=str, required=True,
-                        help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155,ercx")')
+                        help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155,erc7683,ercx")')
     parser.add_argument('--assistant', type=str, default='4o-mini',
                         choices=list(ASSISTANT_IDS.keys()),
                         help='The assistant to use')

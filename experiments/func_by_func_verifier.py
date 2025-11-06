@@ -57,6 +57,7 @@ INTERFACE_PATHS = {
     "erc20": "../assets/file_search/erc20_interface.md",
     "erc721": "../assets/file_search/erc721_interface.md",
     "erc1155": "../assets/file_search/erc1155_interface.md",
+    "erc7683": "../assets/file_search/erc7683_interface_empty.md",
 }
 
 # File paths for EIP documentation
@@ -64,6 +65,7 @@ EIP_PATHS = {
     "erc20": "../assets/file_search/erc-20.md",
     "erc721": "../assets/file_search/erc-721.md",
     "erc1155": "../assets/file_search/erc-1155.md",
+    "erc7683": "../assets/file_search/erc-7683.md",
 }
 
 # File paths for reference specifications
@@ -71,6 +73,7 @@ REFERENCE_SPEC_PATHS = {
     "erc20": "../assets/file_search/erc20_ref_spec.md",
     "erc721": "../assets/file_search/erc721_ref_spec.md",
     "erc1155": "../assets/file_search/erc1155_ref_spec.md",
+    "erc7683": "../assets/file_search/erc7683_ref_spec.md",
     "": ""
 }
 
@@ -112,51 +115,140 @@ verification_status = []
 def parse_solidity_interface(solidity_code: str):
     """
     Parses Solidity interface code to extract components.
-    Returns a dictionary containing 'pragma', 'state_vars', 'events', 'functions'.
+    Returns a dictionary containing 'pragma', 'pragma_experimental', 'state_vars', 'events', 'functions', 'library'.
     Functions value is a list of {'signature': str, 'body': str}.
     """
     components = {
         'pragma': "pragma solidity ^0.8.0;", # Default pragma if not found
+        'pragma_experimental': "",  # For ABIEncoderV2 or other experimental features
         'state_vars': [],
         'events': [],
-        'functions': []
+        'functions': [],
+        'library': ""
     }
 
-    # Extract pragma
+    # Extract pragma solidity
     pragma_match = re.search(r"^\s*pragma solidity[^;]+;", solidity_code, re.MULTILINE)
     if pragma_match:
         components['pragma'] = pragma_match.group(0).strip()
     else:
         logging.warning("No pragma directive found in solidity_code. Using default.")
+    
+    # Extract pragma experimental (e.g., ABIEncoderV2) which is needed for ERC7683 struct parameters
+    pragma_experimental_match = re.search(r"^\s*pragma experimental[^;]+;", solidity_code, re.MULTILINE)
+    if pragma_experimental_match:
+        components['pragma_experimental'] = pragma_experimental_match.group(0).strip()
+        logging.info(f"Found experimental pragma: {components['pragma_experimental']}")
 
-    # Extract state variables (simple version: assumes they are declared outside functions)
-    # Matches lines like: mapping(...) private _variable; string private _uri; uint256 constant VALUE = 10;
-    state_var_pattern = re.compile(r"^\s*(mapping\(.+?\)|bytes32|uint\d*|int\d*|string|address|bool|bytes)\s+(public|private|internal|constant)?\s*(\w+)\s*(?:=.*?)?;", re.MULTILINE)
-    for match in state_var_pattern.finditer(solidity_code):
-      components['state_vars'].append(match.group(0).strip()) # Store the full declaration line
+    # Extract library definitions (for ERC7683Types)
+    # Use a more robust approach to extract the complete library block
+    lines = solidity_code.split('\n')
+    in_library = False
+    brace_count = 0
+    library_lines = []
+    
+    for line in lines:
+        if 'library ERC7683Types' in line:
+            in_library = True
+            library_lines.append(line)
+            brace_count = line.count('{') - line.count('}')
+            continue
+            
+        if in_library:
+            library_lines.append(line)
+            brace_count += line.count('{') - line.count('}')
+            if brace_count <= 0:
+                break
+    
+    if library_lines:
+        components['library'] = '\n'.join(library_lines).strip()
+        logging.info(f"Extracted library: ERC7683Types with {len(library_lines)} lines")
 
-    # Extract events
+    # Context-aware parsing to distinguish between struct/library/contract content
+    lines = solidity_code.split('\n')
+    inside_contract = False
+    inside_library = False
+    inside_struct = False
+    brace_depth = 0
+    struct_depth = 0
+
+    for line in lines:
+        stripped_line = line.strip()
+        
+        # Track context changes
+        if re.match(r'^\s*contract\s+\w+', stripped_line):
+            inside_contract = True
+            inside_library = False
+            inside_struct = False
+            brace_depth = 0
+        elif re.match(r'^\s*library\s+\w+', stripped_line):
+            inside_library = True
+            inside_contract = False
+            inside_struct = False
+            brace_depth = 0
+        elif re.match(r'^\s*struct\s+\w+', stripped_line):
+            inside_struct = True
+            struct_depth = 0
+        
+        # Count braces to track nesting depth
+        brace_depth += stripped_line.count('{') - stripped_line.count('}')
+        if inside_struct:
+            struct_depth += stripped_line.count('{') - stripped_line.count('}')
+            if struct_depth <= 0:
+                inside_struct = False
+        
+        # Reset context when we exit a block
+        if brace_depth <= 0:
+            if inside_contract:
+                inside_contract = False
+            elif inside_library:
+                inside_library = False
+
+        # Only extract state variables from contracts, not from structs or libraries
+        if inside_contract and not inside_struct and not inside_library:
+            # Extract state variables (matches lines like: mapping(...) private _variable; string private _uri; uint256 constant VALUE = 10;)
+            state_var_pattern = re.compile(r"^\s*(mapping\(.+?\)|bytes32|uint\d*|int\d*|string|address|bool|bytes)\s+(public|private|internal|constant)?\s*(\w+)\s*(?:=.*?)?;", re.MULTILINE)
+            if state_var_pattern.match(stripped_line):
+                components['state_vars'].append(stripped_line)
+
+    # Extract events (only from contracts)
     event_pattern = re.compile(r"^\s*event\s+(\w+)\((.*?)\);", re.MULTILINE | re.DOTALL)
     for match in event_pattern.finditer(solidity_code):
-        components['events'].append(match.group(0).strip())
+        # Check if the event is inside a contract (not library)
+        event_start = match.start()
+        # Find the nearest contract/library keyword before this event
+        before_event = solidity_code[:event_start]
+        last_contract = before_event.rfind('contract ')
+        last_library = before_event.rfind('library ')
+        
+        if last_contract > last_library:  # Event is in a contract
+            components['events'].append(match.group(0).strip())
 
-    # Extract functions (including modifiers and return types)
-    # This regex is complex and might need refinement for edge cases
+    # Extract functions (only from contracts)
     function_pattern = re.compile(
         r"^\s*function\s+(?P<name>\w+)\s*\((?P<params>.*?)\)\s*(?P<modifiers>.*?)\s*(?:returns\s*\((?P<returns>.*?)\))?\s*;",
         re.MULTILINE | re.DOTALL
     )
 
     for match in function_pattern.finditer(solidity_code):
-        func_dict = match.groupdict()
-        signature = f"function {func_dict['name']}({func_dict['params'].strip()}) {func_dict['modifiers'].strip()}"
-        if func_dict['returns']:
-            signature += f" returns ({func_dict['returns'].strip()})"
-        signature += ";"
-        # We assume the interface has no body, just the signature ending in ';'
-        components['functions'].append({'signature': signature.strip(), 'name': func_dict['name']})
+        # Check if the function is inside a contract (not library)
+        func_start = match.start()
+        before_func = solidity_code[:func_start]
+        last_contract = before_func.rfind('contract ')
+        last_library = before_func.rfind('library ')
+        
+        if last_contract > last_library:  # Function is in a contract
+            func_dict = match.groupdict()
+            signature = f"function {func_dict['name']}({func_dict['params'].strip()}) {func_dict['modifiers'].strip()}"
+            if func_dict['returns']:
+                signature += f" returns ({func_dict['returns'].strip()})"
+            signature += ";"
+            # We assume the interface has no body, just the signature ending in ';'
+            components['functions'].append({'signature': signature.strip(), 'name': func_dict['name']})
 
     logging.info(f"Parsed components: {len(components['state_vars'])} state vars, {len(components['events'])} events, {len(components['functions'])} functions. Pragma: {components['pragma']}")
+    if components['library']:
+        logging.info(f"Extracted library with {len(components['library'])} characters")
 
     return components
 
@@ -374,6 +466,7 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/templates/imp_spec_merge.template',
         "erc721": './solc_verify_generator/ERC721/templates/imp_spec_merge.template',
         "erc1155": './solc_verify_generator/ERC1155/templates/imp_spec_merge.template',
+        "erc7683": './solc_verify_generator/ERC7683/templates/imp_spec_merge.template',
     }
     
     # Merge paths for different ERC standards
@@ -381,6 +474,7 @@ class SolcVerifyWrapper:
         "erc20": './solc_verify_generator/ERC20/imp/ERC20_merge.sol',
         "erc721": './solc_verify_generator/ERC721/imp/ERC721_merge.sol',
         "erc1155": './solc_verify_generator/ERC1155/imp/ERC1155_merge.sol',
+        "erc7683": './solc_verify_generator/ERC7683/imp/ERC7683_merge.sol',
     }
 
     @classmethod
@@ -478,8 +572,9 @@ class SolcVerifyWrapper:
 
                 generate_merge(
                   "spec.sol",
-                  absolute_template_path, 
-                  merge_file_basename
+                  absolute_template_path,
+                  merge_file_basename,
+                  "base_llm"
                 )
             except RuntimeError as e:
                 logging.error(f"Error during generate_merge: {e}")
@@ -635,13 +730,29 @@ def assemble_partial_contract(pragma_str: str, contract_name: str, components: d
     Args:
         pragma_str: Solidity pragma directive
         contract_name: Name of the contract
-        components: Dictionary containing contract components (events, state vars, functions)
+        components: Dictionary containing contract components (events, state vars, functions, library)
         current_annotations: Dictionary mapping function signatures to their annotations
         
     Returns:
         Complete contract string with annotations
     """
-    code = f"{pragma_str}\n\ncontract {contract_name} {{\n\n"
+    code = f"{pragma_str}\n"
+    
+    # Add experimental pragma if present (needed for ERC7683 struct parameters)
+    pragma_experimental = components.get('pragma_experimental', "")
+    if not pragma_experimental and contract_name.upper() == "ERC7683":
+        # ERC7683 interfaces rely on ABIEncoderV2 for struct parameters; ensure it is always present
+        pragma_experimental = "pragma experimental ABIEncoderV2;"
+    if pragma_experimental:
+        code += f"{pragma_experimental}\n"
+    
+    code += "\n"
+    
+    # Add library definitions if present (for ERC7683)
+    if components.get('library'):
+        code += f"{components['library']}\n\n"
+
+    code += f"contract {contract_name} {{\n\n"
 
     # Add Events
     code += "    // Events\n"
@@ -755,6 +866,8 @@ def process_single_function(thread: Thread, func_info: dict, components: dict, p
         logging.info(f"Found function-specific file for {func_name} at {func_md_path}")
     except:
         logging.info(f"No function-specific file found for {func_name} at {func_md_path}")
+    
+    target_interface = load_target_interface(requested_type)
 
     # Format prompt based on available documentation
     if func_md_content:
@@ -772,6 +885,9 @@ EIP markdown below:
 <eip>
 {eip_doc}
 </eip>
+
+FULL CONTRACT INTERFACE:
+{target_interface}
 """).lstrip()
     else:
         current_prompt = textwrap.dedent(f"""{base_instructions}
@@ -785,6 +901,9 @@ contract {contract_name} {{
 {func_sig}
 }}
 ```
+
+FULL CONTRACT INTERFACE:
+{target_interface}
 
 EIP Documentation Snippet (if relevant to `{func_name}`):
 <eip>
@@ -991,8 +1110,8 @@ def main():
     Parses command line arguments and initiates the verification process.
     """
     parser = argparse.ArgumentParser(description='Run contract verification with different contexts')
-    parser.add_argument('--requested', type=str, required=True, 
-                        choices=['erc20', 'erc721', 'erc1155', 'erc123'],
+    parser.add_argument('--requested', type=str, required=True,
+                        choices=['erc20', 'erc721', 'erc1155', 'erc7683'],
                         help='The contract type to verify')
     parser.add_argument('--context', type=str, required=True,
                         help='Comma-separated list of context contract types (e.g., "erc20,erc721,erc1155,erc123")')
